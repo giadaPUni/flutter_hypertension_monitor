@@ -18,7 +18,7 @@ class AdaptiveScaffold extends StatelessWidget {
         this.actions, 
     }); 
 
-    final String title; 
+    final Widget? title; 
 
     final Widget body;
 
@@ -63,9 +63,10 @@ class AdaptiveScaffold extends StatelessWidget {
     Widget _buildMobileScaffold(BuildContext context) {
         return Scaffold(
             appBar: AppBar(
-                title: Text(title), 
+                title: title, 
                 actions: actions, 
             ), 
+            drawer: _buildDrawer(context), 
             body: body, 
             floatingActionButton: floatingActionButton, 
         ); 
@@ -74,10 +75,26 @@ class AdaptiveScaffold extends StatelessWidget {
     Widget _buildTabletScaffold(BuildContext context) {
         return Scaffold(
             appBar: AppBar(
-                title: Text(title), 
+                title: title, 
                 actions: actions, 
             ), 
-            body: body, 
+            drawer: _buildDrawer(context), 
+
+            body: Row(
+
+                children: [
+                    _buildNavigationRail(
+                        extended: false,
+                    ), 
+
+                    const VerticalDivider(width: 1),
+
+                    Expanded(
+                        child: body, 
+                    ), 
+                ],
+            ),
+
             floatingActionButton: floatingActionButton, 
         ); 
     }
@@ -85,11 +102,81 @@ class AdaptiveScaffold extends StatelessWidget {
     Widget _buildDesktopScaffold(BuildContext context) {
         return Scaffold(
             appBar: AppBar(
-                title: Text(title), 
+                title: title, 
                 actions: actions, 
             ), 
-            body: body, 
+            /// drawer: null, 
+            body: Row(
+                children: [
+
+                    _buildNavigationRail(
+                        extended: true, 
+                    ),
+
+                    const VerticalDivider(width: 1), 
+
+                    Expanded(
+                        child: body, 
+                    ),
+                ],
+            ),
+
             floatingActionButton: floatingActionButton, 
+        ); 
+    }
+
+
+    Widget _buildDrawer(BuildContext context) {
+        return Drawer(
+            child: SafeArea(
+                child: ListView.builder(
+                    itemCount: destinations.length, 
+                    itemBuilder: (context, index) {
+                        final destionation = destinations[index]; 
+
+                        return ListTile(
+                            leading: Icon(
+                                index == selectedIndex
+                                    ? destination.selectedIcon ?? destination.icon
+                                    : destination.icon, 
+                            ), 
+                            title: Text(destination.label), 
+                            selected: index == selectedIndex, 
+                            onTap: () {
+                                Navigator.of(context).pop(); 
+                                onDestionationSelected(index); 
+                            },
+                        );
+                    },
+                ),
+            ),
+        );
+    }
+
+
+    Widget _buildNavigationRail({
+        required bool extended, 
+    }) {
+        return NavigationRail(
+            extended: extended,
+
+            selectedIndex: selectedIndex, 
+
+            onDestionationSelected: onDestionationSelected, 
+
+            destinations: destinations
+                .map(
+                    (destination) => NavigationRailDestination(
+                        icon: Icon(destination.icon), 
+
+                        selectedIcon: Icon(
+                            destination.selectedIcon ?? destination.icon, 
+                        ), 
+
+                        label: Text(destination.label),
+                    ), 
+                )
+                .toList(),
         ); 
     }
 
