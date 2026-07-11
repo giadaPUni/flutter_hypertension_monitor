@@ -13,7 +13,7 @@ class AdaptiveScaffold extends StatelessWidget {
         required this.body, 
         required this.destinations, 
         required this.selectedIndex, 
-        required this.onDestionationSelected, 
+        required this.onDestinationSelected, 
         this.floatingActionButton, 
         this.actions, 
     }); 
@@ -26,7 +26,7 @@ class AdaptiveScaffold extends StatelessWidget {
 
     final int selectedIndex; 
 
-    final ValueChanged<int> onDestionationSelected; 
+    final ValueChanged<int> onDestinationSelected; 
 
     final Widget? floatingActionButton; 
 
@@ -69,6 +69,7 @@ class AdaptiveScaffold extends StatelessWidget {
             drawer: _buildDrawer(context), 
             body: body, 
             floatingActionButton: floatingActionButton, 
+            bottomNavigationBar: _buildBottomNavigationBar(), 
         ); 
     }
 
@@ -132,7 +133,7 @@ class AdaptiveScaffold extends StatelessWidget {
                 child: ListView.builder(
                     itemCount: destinations.length, 
                     itemBuilder: (context, index) {
-                        final destionation = destinations[index]; 
+                        final destination = destinations[index]; 
 
                         return ListTile(
                             leading: Icon(
@@ -144,7 +145,7 @@ class AdaptiveScaffold extends StatelessWidget {
                             selected: index == selectedIndex, 
                             onTap: () {
                                 Navigator.of(context).pop(); 
-                                onDestionationSelected(index); 
+                                onDestinationSelected(index); 
                             },
                         );
                     },
@@ -162,7 +163,7 @@ class AdaptiveScaffold extends StatelessWidget {
 
             selectedIndex: selectedIndex, 
 
-            onDestionationSelected: onDestionationSelected, 
+            onDestinationSelected: onDestinationSelected, 
 
             destinations: destinations
                 .map(
@@ -178,6 +179,32 @@ class AdaptiveScaffold extends StatelessWidget {
                 )
                 .toList(),
         ); 
+    }
+
+    BottomNavigationBar _buildBottomNavigationBar() {
+        return BottomNavigationBar(
+            currentIndex: 0, 
+            onTap: (index) {
+                // to connect 
+            }, 
+            items: const [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.dashboard_outlined), 
+                    activeIcon: Icon(Icons.dashboard), 
+                    label: 'Dashboard',
+                ), 
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.favorite_outline),
+                    activeIcon: Icon(Icons.favorite), 
+                    label: 'Pressure',
+                ), 
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.bar_chart_outlined), 
+                    activeIcon: Icon(Icons.bar_chart), 
+                    label: 'Statics',
+                ), 
+            ], 
+        );
     }
 
 }
