@@ -5,7 +5,7 @@ import 'package:flutter_hypertension_monitor/core/theme/app_theme.dart';
 import 'package:flutter_hypertension_monitor/data/hive/hive_initializer.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/app_route_generator.dart'; 
 import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart'; 
-import 'package:flutter_hypertension_monitor/providers/navigation_service_provider.dart'; 
+import 'package:flutter_hypertension_monitor/core/navigation/navigation_service_provider.dart'; 
 
 Future<void> main() async {
 
