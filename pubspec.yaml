@@ -14,8 +14,6 @@ dependencies:
   # state management 
   flutter_riverpod: ^3.0.0
   
-  # navigation 
-  #go_router: ^16.0.0  # da togliere 
 
   # local database
   # si utilizza hive community edition perché è attivamente mantenuta
