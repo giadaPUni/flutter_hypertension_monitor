@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_hypertension_monitor/core/navigation/navigation_section.dart'; 
 import 'package:flutter_hypertension_monitor/shared/layout/main_layout.dart'; 
+import 'package:flutter_hypertension_monitor/features/patients/patient_page.dart'; 
+import 'package:flutter_hypertension_monitor/features/medical_history/medical_history_page.dart'; 
+import 'package:flutter_hypertension_monitor/features/measurements/measurements_page.dart'; 
+import 'package:flutter_hypertension_monitor/features/statistics/statistics_page.dart'; 
+import 'package:flutter_hypertension_monitor/features/settings/settings_page.dart'; 
+
 
 
 class DashboardPage extends StatefulWidget {
@@ -50,50 +56,34 @@ class _DashboardPageState extends State<DashboardPage> {
 
         switch (_currentSection) {
 
-            case NavigationSection.dashboard: 
+            case NavigationSection.dashboard:
                 return const Center(
                     child: Text(
                         'Dashboard',
-                    ), 
-                ); 
-
-            case NavigationSection.patients: 
-                return const Center(
-                    child: Text(
-                        'Patients',
                     ),
                 );
 
+            case NavigationSection.patients: 
+                return const PatientPage(); 
+
             case NavigationSection.medicalHistory: 
-                return const Center(
-                    child: Text(
-                        'Medical History', 
-                    ),
-                ); 
+                return const MedicalHistoryPage(); 
 
             case NavigationSection.measurements: 
-                return const Center(
-                    child: Text(
-                        'Measurements', 
-                    ), 
-                ); 
+                return const MeasurementsPage(); 
 
             case NavigationSection.statistics:
-                return const Center(
-                    child: Text(
-                        'Statistics', 
-                    ),
-                ); 
+                return const StatisticsPage(); 
             
             case NavigationSection.settings: 
-                return const Center(
-                    child: Text(
-                        'Settings', 
-                    ), 
-                ); 
+                return const SettingsPage(); 
 
             default: 
-                return const SizedBox(); 
+                return const Center(
+                    child: Text(
+                        'Section not available', 
+                    ),
+                ); 
 
         }
 
