@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MeasurementPage extends StatelessWidget {
-  const MeasurementPage({
+class MeasurementsPage extends StatelessWidget {
+  const MeasurementsPage({
     super.key,
   });
 

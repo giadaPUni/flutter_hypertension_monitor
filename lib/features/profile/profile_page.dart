@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class DashboardPage extends StatelessWidget {
-  const DashboardPage({
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({
     super.key,
   });
 
