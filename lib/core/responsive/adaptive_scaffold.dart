@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_destination.dart';
 import 'package:flutter_hypertension_monitor/core/responsive/breakpoints.dart';
 import 'package:flutter_hypertension_monitor/core/responsive/navigation_type.dart';
-
+import 'package:flutter_hypertension_monitor/core/navigation/navigation_section.dart';
+import 'package:flutter_hypertension_monitor/core/navigation/app_destinations.dart';
 
 class AdaptiveScaffold extends StatelessWidget {
 
@@ -11,9 +12,8 @@ class AdaptiveScaffold extends StatelessWidget {
         super.key, 
         required this.title, 
         required this.body, 
-        required this.destinations, 
-        required this.selectedIndex, 
-        required this.onDestinationSelected, 
+        required this.selectedSection, 
+        required this.onSectionSelected, 
         this.floatingActionButton, 
         this.actions, 
     }); 
@@ -22,11 +22,9 @@ class AdaptiveScaffold extends StatelessWidget {
 
     final Widget body;
 
-    final List<AppNavigationDestination> destinations; 
+    final NavigationSection selectedSection; 
 
-    final int selectedIndex; 
-
-    final ValueChanged<int> onDestinationSelected; 
+    final ValueChanged<NavigationSection> onSectionSelected; 
 
     final Widget? floatingActionButton; 
 
@@ -34,17 +32,32 @@ class AdaptiveScaffold extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
+        
         final navigationType = _navigationType(context); 
+
+        final destinations = _destinationsFor(
+            navigationType,
+        );     
+
 
         switch (navigationType) {
             case NavigationType.bottomNavigationBar:
-                return _buildMobileScaffold(context); 
+                return _buildMobileScaffold(
+                    context, 
+                    destinations,
+                ); 
 
             case NavigationType.navigationRail:
-                return _buildTabletScaffold(context); 
+                return _buildTabletScaffold(
+                    context,
+                    destinations, 
+                ); 
             
             case NavigationType.navigationRailExtended:
-                return _buildDesktopScaffold(context); 
+                return _buildDesktopScaffold(
+                    context, 
+                    destinations, 
+                ); 
         }
     }
 
@@ -60,32 +73,75 @@ class AdaptiveScaffold extends StatelessWidget {
         return NavigationType.bottomNavigationBar; 
     }
 
-    Widget _buildMobileScaffold(BuildContext context) {
+    List<AppNavigationDestination> _destinationsFor(
+        NavigationType type,
+    ) {
+
+        switch(type){
+
+            case NavigationType.bottomNavigationBar:
+                return AppDestinations.mobileBottom;
+
+            case NavigationType.navigationRail:
+            case NavigationType.navigationRailExtended:
+                return AppDestinations.rail;
+        }
+
+    }
+
+
+    int _selectedIndex(
+        List<AppNavigationDestination> destinations,
+    ) {
+
+        return destinations.indexWhere(
+            (destination) =>
+                destination.section == selectedSection,
+        );
+
+    }
+
+    Widget _buildMobileScaffold(
+        BuildContext context, 
+        List<AppNavigationDestination> destinations, 
+    ) {
         return Scaffold(
+            resizeToAvoidBottomInset: true,
             appBar: AppBar(
                 title: title, 
                 actions: actions, 
             ), 
-            drawer: _buildDrawer(context), 
+            drawer: _buildDrawer(
+                context, 
+                destinations, 
+            ), 
             body: body, 
             floatingActionButton: floatingActionButton, 
-            bottomNavigationBar: _buildBottomNavigationBar(), 
+            bottomNavigationBar: _buildBottomNavigationBar(destinations), 
         ); 
     }
 
-    Widget _buildTabletScaffold(BuildContext context) {
+    Widget _buildTabletScaffold(
+        BuildContext context, 
+        List<AppNavigationDestination> destinations,
+    ) {
         return Scaffold(
+            resizeToAvoidBottomInset: true,
             appBar: AppBar(
                 title: title, 
                 actions: actions, 
             ), 
-            drawer: _buildDrawer(context), 
+            drawer: _buildDrawer(
+                context, 
+                destinations, 
+            ), 
 
             body: Row(
 
                 children: [
                     _buildNavigationRail(
                         extended: false,
+                        destinations: destinations, 
                     ), 
 
                     const VerticalDivider(width: 1),
@@ -100,8 +156,12 @@ class AdaptiveScaffold extends StatelessWidget {
         ); 
     }
 
-    Widget _buildDesktopScaffold(BuildContext context) {
+    Widget _buildDesktopScaffold(
+        BuildContext context, 
+        List<AppNavigationDestination> destinations,
+    ) {
         return Scaffold(
+            resizeToAvoidBottomInset: true,
             appBar: AppBar(
                 title: title, 
                 actions: actions, 
@@ -111,7 +171,8 @@ class AdaptiveScaffold extends StatelessWidget {
                 children: [
 
                     _buildNavigationRail(
-                        extended: true, 
+                        extended: true,
+                        destinations: destinations, 
                     ),
 
                     const VerticalDivider(width: 1), 
@@ -127,7 +188,10 @@ class AdaptiveScaffold extends StatelessWidget {
     }
 
 
-    Widget _buildDrawer(BuildContext context) {
+    Widget _buildDrawer(
+        BuildContext context, 
+        List<AppNavigationDestination> destinations,
+    ) {
         return Drawer(
             child: SafeArea(
                 child: ListView.builder(
@@ -136,16 +200,20 @@ class AdaptiveScaffold extends StatelessWidget {
                         final destination = destinations[index]; 
 
                         return ListTile(
+
                             leading: Icon(
-                                index == selectedIndex
+                                destination.section == selectedSection
                                     ? destination.selectedIcon ?? destination.icon
                                     : destination.icon, 
                             ), 
+
                             title: Text(destination.label), 
-                            selected: index == selectedIndex, 
+
+                            selected: destination.section == selectedSection,
+                            
                             onTap: () {
                                 Navigator.of(context).pop(); 
-                                onDestinationSelected(index); 
+                                onSectionSelected(destination.section); 
                             },
                         );
                     },
@@ -157,13 +225,19 @@ class AdaptiveScaffold extends StatelessWidget {
 
     Widget _buildNavigationRail({
         required bool extended, 
+        required List<AppNavigationDestination> destinations,
     }) {
         return NavigationRail(
             extended: extended,
 
-            selectedIndex: selectedIndex, 
+            selectedIndex: _selectedIndex(destinations), 
 
-            onDestinationSelected: onDestinationSelected, 
+            onDestinationSelected: (index) {
+
+                onSectionSelected(
+                    destinations[index].section, 
+                );
+            },
 
             destinations: destinations
                 .map(
@@ -181,29 +255,44 @@ class AdaptiveScaffold extends StatelessWidget {
         ); 
     }
 
-    BottomNavigationBar _buildBottomNavigationBar() {
+    BottomNavigationBar _buildBottomNavigationBar(
+        List<AppNavigationDestination> destinations, 
+    ) {
+        
         return BottomNavigationBar(
-            currentIndex: 0, 
-            onTap: (index) {
-                // to connect 
+
+            currentIndex: _selectedIndex(destinations),
+
+            onTap: (index){
+
+                onSectionSelected(
+                    destinations[index].section, 
+                ); 
+
             }, 
-            items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.dashboard_outlined), 
-                    activeIcon: Icon(Icons.dashboard), 
-                    label: 'Dashboard',
-                ), 
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.favorite_outline),
-                    activeIcon: Icon(Icons.favorite), 
-                    label: 'Pressure',
-                ), 
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.bar_chart_outlined), 
-                    activeIcon: Icon(Icons.bar_chart), 
-                    label: 'Statics',
-                ), 
-            ], 
+
+            type: BottomNavigationBarType.fixed, 
+
+            items: destinations.map(
+
+                (destination) {
+
+                    return BottomNavigationBarItem(
+
+                        icon: Icon(destination.icon), 
+
+                        activeIcon: Icon(
+                            destination.selectedIcon ?? destination.icon, 
+                        ), 
+
+                        label: destination.label, 
+                    
+                    );
+                    
+                },
+            
+            ).toList(), 
+
         );
     }
 

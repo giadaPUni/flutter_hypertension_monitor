@@ -48,6 +48,13 @@ class _HomePageState extends State<HomePage> {
 
             body: _buildBody(), 
 
+            floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                    // TODO: aprire nuova misurazione
+                },
+                child: const Icon(Icons.add),
+            ),            
+
         ); 
 
     }

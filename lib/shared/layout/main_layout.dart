@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart'; 
 
-import 'package:flutter_hypertension_monitor/core/navigation/app_destinations.dart'; 
 import 'package:flutter_hypertension_monitor/core/navigation/navigation_section.dart'; 
 import 'package:flutter_hypertension_monitor/core/responsive/adaptive_scaffold.dart'; 
 
@@ -13,6 +12,7 @@ class MainLayout extends StatelessWidget {
         required this.currentSection, 
         required this.onSectionSelected, 
         required this.body, 
+        this.floatingActionButton, 
     }); 
 
     final Widget title; 
@@ -23,17 +23,7 @@ class MainLayout extends StatelessWidget {
 
     final Widget body; 
 
-    static const List<NavigationSection> _sections = [
-        NavigationSection.home,
-        NavigationSection.patients, 
-        NavigationSection.measurements, 
-        NavigationSection.statistics, 
-        NavigationSection.medicalHistory, 
-        //NavigationSection.profile, 
-        NavigationSection.settings, 
-    ]; 
-
-    int get _selectedIndex => _sections.indexOf(currentSection); 
+    final Widget? floatingActionButton;
 
     @override 
     Widget build(BuildContext context) {
@@ -42,17 +32,13 @@ class MainLayout extends StatelessWidget {
 
             title: title, 
 
-            destinations: AppDestinations.all, 
+            selectedSection: currentSection, 
 
-            selectedIndex: _selectedIndex, 
-
-            onDestinationSelected: (index) {
-                onSectionSelected(
-                    _sections[index], 
-                );
-            },
+            onSectionSelected: onSectionSelected, 
 
             body: body, 
+
+            floatingActionButton: floatingActionButton, 
 
         );
 
