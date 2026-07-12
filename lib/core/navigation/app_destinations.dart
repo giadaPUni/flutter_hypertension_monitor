@@ -44,9 +44,9 @@ abstract final class AppDestinations {
     static const all = [
         dashboard, 
         patients, 
-        medicalHistory, 
-        measurements, 
+        measurements,
         statistics, 
+        medicalHistory, 
         settings, 
     ]; 
 

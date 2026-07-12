@@ -6,6 +6,6 @@ enum NavigationSection {
     measurements, 
     statistics, 
     medicalHistory, 
-    profile, 
     settings, 
+    profile, 
 }

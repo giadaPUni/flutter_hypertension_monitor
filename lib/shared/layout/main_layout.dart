@@ -29,7 +29,7 @@ class MainLayout extends StatelessWidget {
         NavigationSection.measurements, 
         NavigationSection.statistics, 
         NavigationSection.medicalHistory, 
-        NavigationSection.profile, 
+        //NavigationSection.profile, 
         NavigationSection.settings, 
     ]; 
 

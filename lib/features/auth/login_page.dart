@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({
@@ -7,9 +8,15 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'Login',
+    return Center(
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.pushReplacementNamed(
+            context,
+            AppRoutes.dashboard,
+          );
+        },
+        child: const Text('Go to Dashboard'),
       ),
     );
   }
