@@ -36,7 +36,7 @@ class AppRouteGenerator {
 
             case AppRoutes.dashboard: 
                 return MaterialPageRoute(
-                    builder: (_) => DashboardPage(), 
+                    builder: (_) => const DashboardPage(), 
                 ); 
             
             case AppRoutes.patients: 
