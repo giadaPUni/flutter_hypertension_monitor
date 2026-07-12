@@ -11,8 +11,8 @@ abstract final class AppDestinations {
         selectedIcon: Icons.dashboard,
     ); 
 
-    static const patient = AppNavigationDestination(
-        label: 'Patient', 
+    static const patients = AppNavigationDestination(
+        label: 'Patients', 
         icon: Icons.person_outline, 
         selectedIcon: Icons.person, 
     ); 
@@ -23,8 +23,8 @@ abstract final class AppDestinations {
         selectedIcon: Icons.assignment, 
     ); 
 
-    static const bloodPressure = AppNavigationDestination(
-        label: 'Blood Pressure', 
+    static const measurements = AppNavigationDestination(
+        label: 'Measurements', 
         icon: Icons.favorite_outline, 
         selectedIcon: Icons.favorite, 
     ); 
@@ -42,11 +42,10 @@ abstract final class AppDestinations {
     ); 
 
     static const all = [
-
         dashboard, 
-        patient, 
+        patients, 
         medicalHistory, 
-        bloodPressure, 
+        measurements, 
         statistics, 
         settings, 
     ]; 
