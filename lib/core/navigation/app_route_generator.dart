@@ -71,10 +71,10 @@ class AppRouteGenerator {
 
             default: 
                 return MaterialPageRoute(
-                    builder: (_) => const Scaffold(
+                    builder: (_) => Scaffold(
                         body: Center(
                             child: Text(
-                                'Route not found',
+                                'Route not found: ${settings.name}',
                             ),
                         ),
                     ),

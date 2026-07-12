@@ -113,7 +113,7 @@ class AdaptiveScaffold extends StatelessWidget {
             ), 
             drawer: _buildDrawer(
                 context, 
-                destinations, 
+                AppDestinations.drawer,
             ), 
             body: body, 
             floatingActionButton: floatingActionButton, 
@@ -128,6 +128,7 @@ class AdaptiveScaffold extends StatelessWidget {
         return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
+                automaticallyImplyLeading: false,
                 title: title, 
                 actions: actions, 
             ), 
@@ -163,10 +164,11 @@ class AdaptiveScaffold extends StatelessWidget {
         return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
+                automaticallyImplyLeading: false,
                 title: title, 
                 actions: actions, 
             ), 
-            /// drawer: null, 
+            
             body: Row(
                 children: [
 
