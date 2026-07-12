@@ -13,10 +13,10 @@ class LoginPage extends StatelessWidget {
         onPressed: () {
           Navigator.pushReplacementNamed(
             context,
-            AppRoutes.dashboard,
+            AppRoutes.home,
           );
         },
-        child: const Text('Go to Dashboard'),
+        child: const Text('Go to Home'),
       ),
     );
   }

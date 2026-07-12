@@ -24,7 +24,7 @@ class MainLayout extends StatelessWidget {
     final Widget body; 
 
     static const List<NavigationSection> _sections = [
-        NavigationSection.dashboard,
+        NavigationSection.home,
         NavigationSection.patients, 
         NavigationSection.measurements, 
         NavigationSection.statistics, 

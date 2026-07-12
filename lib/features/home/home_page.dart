@@ -10,20 +10,20 @@ import 'package:flutter_hypertension_monitor/features/settings/settings_page.dar
 
 
 
-class DashboardPage extends StatefulWidget {
+class HomePage extends StatefulWidget {
 
-    const DashboardPage({
+    const HomePage({
         super.key, 
     }); 
 
     @override
-    State<DashboardPage> createState() => _DashboardPageState(); 
+    State<HomePage> createState() => _HomePageState(); 
 
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _HomePageState extends State<HomePage> {
 
-    NavigationSection _currentSection = NavigationSection.dashboard; 
+    NavigationSection _currentSection = NavigationSection.home; 
 
     @override
     Widget build(BuildContext context) {
@@ -56,10 +56,10 @@ class _DashboardPageState extends State<DashboardPage> {
 
         switch (_currentSection) {
 
-            case NavigationSection.dashboard:
+            case NavigationSection.home:
                 return const Center(
                     child: Text(
-                        'Dashboard',
+                        'Home',
                     ),
                 );
 

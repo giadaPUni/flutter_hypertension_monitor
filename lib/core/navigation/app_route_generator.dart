@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_hypertension_monitor/features/auth/login_page.dart';
 import 'package:flutter_hypertension_monitor/features/auth/register_page.dart'; 
-import 'package:flutter_hypertension_monitor/features/dashboard/dashboard_page.dart'; 
+import 'package:flutter_hypertension_monitor/features/home/home_page.dart'; 
 import 'package:flutter_hypertension_monitor/features/medical_history/medical_history_page.dart'; 
 import 'package:flutter_hypertension_monitor/features/measurements/measurements_page.dart'; 
 import 'package:flutter_hypertension_monitor/features/patients/patient_page.dart'; 
@@ -34,9 +34,9 @@ class AppRouteGenerator {
                     builder: (_) => const RegisterPage(),
                 );
 
-            case AppRoutes.dashboard: 
+            case AppRoutes.home: 
                 return MaterialPageRoute(
-                    builder: (_) => const DashboardPage(), 
+                    builder: (_) => const HomePage(), 
                 ); 
             
             case AppRoutes.patients: 

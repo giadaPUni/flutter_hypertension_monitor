@@ -1,7 +1,7 @@
 enum NavigationSection {
     login, 
     register, 
-    dashboard, 
+    home, 
     patients, 
     measurements, 
     statistics, 

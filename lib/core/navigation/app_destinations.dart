@@ -5,10 +5,10 @@ import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_dest
 
 abstract final class AppDestinations {
 
-    static const dashboard = AppNavigationDestination(
-        label: 'Dashboard', 
-        icon: Icons.dashboard_outlined, 
-        selectedIcon: Icons.dashboard,
+    static const home = AppNavigationDestination(
+        label: 'Home', 
+        icon: Icons.home_outlined, 
+        selectedIcon: Icons.home,
     ); 
 
     static const patients = AppNavigationDestination(
@@ -41,13 +41,38 @@ abstract final class AppDestinations {
         selectedIcon: Icons.settings, 
     ); 
 
-    static const all = [
-        dashboard, 
+
+    // BottomNavigationBar (smartphone)
+    static const mobileBottom = [
+        home, 
+        statistics, 
+    ]; 
+
+    // Drawer (smartphone)
+    static const drawer = [
+        home, 
+        patients, 
+        medicalHistory, 
+        settings, 
+    ]; 
+
+    // NavigationRail (tablet/desktop/web)
+    static const rail = [
+        home, 
+        patients, 
+        medicalHistory, 
+        statistics, 
+        settings, 
+    ]; 
+/** 
+    static const mobileBottom = [
+        home, 
         patients, 
         measurements,
         statistics, 
         medicalHistory, 
         settings, 
     ]; 
+*/
 
 }
