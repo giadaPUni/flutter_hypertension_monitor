@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 
-import 'core/theme/app_theme.dart';
-
-import 'data/hive/hive_initializer.dart';
-
-
-import 'package:flutter_hypertension_monitor/core/navigation/app_destinations.dart';
-import 'package:flutter_hypertension_monitor/core/responsive/adaptive_scaffold.dart';
+import 'package:flutter_hypertension_monitor/core/theme/app_theme.dart';
+import 'package:flutter_hypertension_monitor/data/hive/hive_initializer.dart';
+import 'package:flutter_hypertension_monitor/core/navigation/app_route_generator.dart'; 
+import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart'; 
+import 'package:flutter_hypertension_monitor/providers/navigation_service_provider.dart'; 
 
 Future<void> main() async {
 
@@ -15,18 +14,28 @@ Future<void> main() async {
   await HiveInitializer.initialize();
 
   runApp(
-    const HypertensionMonitorApp(),
+    const ProviderScope(
+      child: HypertensionMonitorApp(),
+    ),
   );
 }
 
-class HypertensionMonitorApp extends StatelessWidget {
+class HypertensionMonitorApp extends ConsumerWidget {
 
   const HypertensionMonitorApp({
     super.key
   }); 
 
   @override 
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context, 
+    WidgetRef ref, 
+  ) {
+
+    final navigationService =
+      ref.read(
+        navigationServiceProvider,
+      );
 
     return MaterialApp(
       
@@ -36,43 +45,16 @@ class HypertensionMonitorApp extends StatelessWidget {
 
       theme: AppTheme.lightTheme, 
 
-      home: const HomePage(), 
+      //home: const HomePage(), 
+
+      navigatorKey: navigationService.navigationKey, 
+
+      initialRoute: AppRoutes.login, 
+
+      onGenerateRoute: AppRouteGenerator.generateRoute, 
 
     ); 
 
   }
 
 } 
-
-
-class HomePage extends StatelessWidget {
-  const HomePage({
-    super.key
-  }); 
-
-  @override
-  Widget build(BuildContext context) {
-
-    return AdaptiveScaffold(
-      title: const Text(
-        'Hypertension Monitor', 
-      ), 
-
-      destinations: AppDestinations.all, 
-
-      selectedIndex: 0, 
-
-      onDestinationSelected: (index) {
-        // todo 
-      }, 
-
-      body: Center(
-        child: Text(
-          'Benvenuto', 
-          style: Theme.of(context).textTheme.headlineMedium, 
-        ),
-      ),
-    ); 
-  }
-
-}
