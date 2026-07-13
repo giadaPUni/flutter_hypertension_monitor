@@ -32,7 +32,10 @@ class AdaptiveScaffold extends StatelessWidget {
 
     @override
     Widget build(BuildContext context) {
+
         
+
+
         final navigationType = _navigationType(context); 
 
         final destinations = _destinationsFor(
@@ -62,6 +65,12 @@ class AdaptiveScaffold extends StatelessWidget {
     }
 
     NavigationType _navigationType(BuildContext context) {
+        
+
+        if (!AppBreakpoints.canShowNavigationRail(context)) {
+            return NavigationType.bottomNavigationBar;
+        }        
+
         if (AppBreakpoints.isDesktop(context)) {
             return NavigationType.navigationRailExtended;
         }
@@ -117,7 +126,9 @@ class AdaptiveScaffold extends StatelessWidget {
             ), 
             body: body, 
             floatingActionButton: floatingActionButton, 
-            bottomNavigationBar: _buildBottomNavigationBar(destinations), 
+            bottomNavigationBar: MediaQuery.sizeOf(context).height > 250
+                ? _buildBottomNavigationBar(destinations)
+                : null,
         ); 
     }
 
@@ -138,18 +149,23 @@ class AdaptiveScaffold extends StatelessWidget {
             ), 
 
             body: Row(
-
                 children: [
-                    _buildNavigationRail(
-                        extended: false,
-                        destinations: destinations, 
-                    ), 
 
-                    const VerticalDivider(width: 1),
+                    SizedBox(
+                        height: double.infinity,
+                        child: _buildNavigationRail(
+                            extended: false,
+                            destinations: destinations, 
+                        ),
+                    ),
+
+                    const VerticalDivider(width: 1), 
 
                     Expanded(
-                        child: body, 
-                    ), 
+                        child: SingleChildScrollView(
+                            child: body, 
+                        ),
+                    ),
                 ],
             ),
 
@@ -172,15 +188,20 @@ class AdaptiveScaffold extends StatelessWidget {
             body: Row(
                 children: [
 
-                    _buildNavigationRail(
-                        extended: true,
-                        destinations: destinations, 
+                    SizedBox(
+                        height: double.infinity,
+                        child: _buildNavigationRail(
+                            extended: true,
+                            destinations: destinations, 
+                        ),
                     ),
 
                     const VerticalDivider(width: 1), 
 
                     Expanded(
-                        child: body, 
+                        child: SingleChildScrollView(
+                            child: body, 
+                        ),
                     ),
                 ],
             ),
@@ -263,7 +284,9 @@ class AdaptiveScaffold extends StatelessWidget {
         
         return BottomNavigationBar(
 
-            currentIndex: _selectedIndex(destinations),
+            currentIndex: _selectedIndex(destinations) >= 0
+                ? _selectedIndex(destinations)
+                : 0,
 
             onTap: (index){
 

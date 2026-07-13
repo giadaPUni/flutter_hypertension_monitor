@@ -58,7 +58,9 @@ abstract final class AppDestinations {
     static const drawer = [
         home, 
         patients, 
-        medicalHistory, 
+        measurements, 
+        medicalHistory,
+        statistics,  
         settings, 
     ]; 
 

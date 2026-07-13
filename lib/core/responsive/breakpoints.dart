@@ -12,6 +12,8 @@ abstract final class AppBreakpoints {
 
     static const double desktop = 1200; 
 
+    static const double minimumRailHeight = 600;
+
     static bool isMobile(BuildContext context) {
         return MediaQuery.sizeOf(context).width < mobile; 
     }
@@ -34,5 +36,9 @@ abstract final class AppBreakpoints {
     static bool isLandscape(BuildContext context) {
         return MediaQuery.orientationOf(context) == Orientation.landscape;
     }
+
+    static bool canShowNavigationRail(BuildContext context) {
+        return MediaQuery.sizeOf(context).height >= minimumRailHeight;
+    }    
 
 }
