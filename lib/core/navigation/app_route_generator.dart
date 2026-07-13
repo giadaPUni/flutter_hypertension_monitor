@@ -9,6 +9,7 @@ import 'package:flutter_hypertension_monitor/features/patients/patient_page.dart
 import 'package:flutter_hypertension_monitor/features/profile/profile_page.dart';
 import 'package:flutter_hypertension_monitor/features/settings/settings_page.dart';
 import 'package:flutter_hypertension_monitor/features/statistics/statistics_page.dart';
+import 'package:flutter_hypertension_monitor/features/measurements/add_measurement_page.dart';
 
 import 'app_routes.dart'; 
 
@@ -53,6 +54,11 @@ class AppRouteGenerator {
                 return MaterialPageRoute(
                     builder: (_) => MeasurementsPage(),
                 ); 
+
+            case AppRoutes.addMeasurement:
+                return MaterialPageRoute(
+                    builder: (_) => const AddMeasurementPage(),
+                );                
         
             case AppRoutes.statistics: 
                 return MaterialPageRoute(

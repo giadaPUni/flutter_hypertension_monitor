@@ -17,6 +17,7 @@ class MainLayout extends ConsumerWidget {
         required this.body, 
         this.bottomDestinations, 
         this.floatingActionButton, 
+        this.actions, 
     }); 
 
     final Widget title; 
@@ -30,6 +31,8 @@ class MainLayout extends ConsumerWidget {
     final List<AppNavigationDestination>? bottomDestinations;
 
     final Widget? floatingActionButton;
+
+    final List<Widget>? actions;
 
     @override 
     Widget build(
@@ -65,6 +68,8 @@ class MainLayout extends ConsumerWidget {
 
             floatingActionButton: floatingActionButton, 
 
+            actions: actions,
+            
         );
 
     }

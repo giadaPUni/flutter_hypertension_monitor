@@ -189,7 +189,7 @@ class AdaptiveScaffold extends StatelessWidget {
                 ],
             ),
 
-            floatingActionButton: floatingActionButton, 
+            floatingActionButton: null, 
         ); 
     }
 
@@ -226,7 +226,7 @@ class AdaptiveScaffold extends StatelessWidget {
                 ],
             ),
 
-            floatingActionButton: floatingActionButton, 
+            floatingActionButton: null, 
         ); 
     }
 
