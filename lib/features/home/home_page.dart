@@ -167,107 +167,117 @@ class _HomePageState extends ConsumerState<HomePage> {
 
             padding: const EdgeInsets.all(16),
 
-            child: Column(
+            child: Center(
 
-                crossAxisAlignment: CrossAxisAlignment.start,
+                child: ConstrainedBox(
+                    
+                    constraints: const BoxConstraints(
+                        maxWidth: 600, 
+                    ), 
+                
+                    child: Column(
 
-                children: [
+                        crossAxisAlignment: CrossAxisAlignment.start,
 
-                    Text(
-                        'Welcome',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium,
-                    ),
+                        children: [
 
-
-                    const SizedBox(
-                        height: 24,
-                    ),
-
-
-                    Card(
-
-                        child: ListTile(
-
-                            leading: const Icon(
-                                Icons.favorite,
+                            Text(
+                                'Welcome',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium,
                             ),
 
-                            title: const Text(
-                                'Add blood pressure measurement',
+
+                            const SizedBox(
+                                height: 24,
                             ),
 
-                            subtitle: const Text(
-                                'Record a new blood pressure value',
-                            ),
 
-                            trailing: const Icon(
-                                Icons.arrow_forward,
-                            ),
+                            Card(
 
-                            onTap: () {
+                                child: ListTile(
 
-                                final user = ref.read(
-                                    currentUserProvider,
-                                );
-
-
-                                if (user == null ||
-                                    user.patientId == null) {
-
-                                    return;
-
-                                }
-
-
-                                Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (_) =>
-                                            AddMeasurementPage(
-                                                patientId:
-                                                    user.patientId!,
-                                            ),
+                                    leading: const Icon(
+                                        Icons.favorite,
                                     ),
-                                );
 
-                            },
+                                    title: const Text(
+                                        'Add blood pressure measurement',
+                                    ),
 
-                        ),
+                                    subtitle: const Text(
+                                        'Record a new blood pressure value',
+                                    ),
+
+                                    trailing: const Icon(
+                                        Icons.arrow_forward,
+                                    ),
+
+                                    onTap: () {
+
+                                        final user = ref.read(
+                                            currentUserProvider,
+                                        );
+
+
+                                        if (user == null ||
+                                            user.patientId == null) {
+
+                                            return;
+
+                                        }
+
+
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    AddMeasurementPage(
+                                                        patientId:
+                                                            user.patientId!,
+                                                    ),
+                                            ),
+                                        );
+
+                                    },
+
+                                ),
+
+                            ),
+
+
+                            const SizedBox(
+                                height: 24,
+                            ),
+
+
+                            Card(
+
+                                child: ListTile(
+
+                                    leading: const Icon(
+                                        Icons.history,
+                                    ),
+
+                                    title: const Text(
+                                        'Recent measurements',
+                                    ),
+
+                                    subtitle: const Text(
+                                        'No measurements available',
+                                    ),
+
+                                ),
+
+                            ),
+
+                        ],
 
                     ),
 
-
-                    const SizedBox(
-                        height: 24,
-                    ),
-
-
-                    Card(
-
-                        child: ListTile(
-
-                            leading: const Icon(
-                                Icons.history,
-                            ),
-
-                            title: const Text(
-                                'Recent measurements',
-                            ),
-
-                            subtitle: const Text(
-                                'No measurements available',
-                            ),
-
-                        ),
-
-                    ),
-
-                ],
-
-            ),
-
-        );        
+                ), 
+            ), 
+        ); 
 
     }    
 

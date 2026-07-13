@@ -77,9 +77,16 @@ class AppTheme {
 
             // ----- CARD ---- 
             cardTheme: CardThemeData(
+
                 color: AppColors.surface, 
 
-                elevation: 2, 
+                elevation: 1, 
+                
+                shadowColor: Colors.black12, 
+
+                margin: const EdgeInsets.symmetric(
+                    vertical: 2, 
+                ),
 
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
