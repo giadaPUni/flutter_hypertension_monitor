@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter_hypertension_monitor/data/models/blood_pressure_measurement.dart';
-import 'package:flutter_hypertension_monitor/data/repositories/blood_pressure_measurement_repository_provider.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/measurement_detail_page.dart';
+import 'package:flutter_hypertension_monitor/features/measurements/measurements_provider.dart';
 
 class MeasurementsPage extends ConsumerWidget {
   const MeasurementsPage({

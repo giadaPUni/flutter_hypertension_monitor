@@ -56,7 +56,11 @@ class BloodPressureMeasurementsNotifier
         );
 
 
-        state = repository.findAll();
+        state = [
+            for (final measurement in state)
+                if (measurement.id != id)
+                    measurement,
+        ];
 
     }
 
