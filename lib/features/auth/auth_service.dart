@@ -1,6 +1,6 @@
 import 'package:flutter_hypertension_monitor/core/user/app_user.dart';
 import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
-import 'package:flutter_hypertension_monitor/data/models/user.dart';
+//import 'package:flutter_hypertension_monitor/data/models/user.dart';
 import 'package:flutter_hypertension_monitor/data/repositories/user_repository.dart';
 
 
@@ -45,13 +45,12 @@ class AuthService {
 
             email: user.username, 
 
-            role: user.patientId.isNotEmpty
+            role: user.patientId != null
                 ? UserRole.patient
                 : UserRole.doctor, 
 
-            patientId: user.patientId.isEmpty
-                ? null
-                : user.patientId, 
+            patientId: user.patientId, 
+
         ); 
 
     }
