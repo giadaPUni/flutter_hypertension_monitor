@@ -1,20 +1,33 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 
 import 'app_user.dart'; 
-import 'user_role.dart'; 
 
-final currentUserProvider = Provider<AppUser?>(
+class CurrentUserNotifier extends Notifier<AppUser?>{
 
-    (ref) {
+    @override
+    AppUser? build() {
 
-        return const AppUser(
-            id: '001', 
-            name: 'Mario Rossi', 
-            email: 'mario@gmail.com', 
-            role: UserRole.patient, 
-            patientId: 'patient_001', 
-        ); 
+        return null;
 
-    },
+    }
 
-); 
+    void login(
+        AppUser user, 
+    ) {
+
+        state = user; 
+
+    }
+
+    void logout() {
+
+        state = null; 
+
+    }
+
+}
+
+final currentUserProvider = 
+    NotifierProvider<CurrentUserNotifier, AppUser?>(
+        CurrentUserNotifier.new, 
+    ); 
