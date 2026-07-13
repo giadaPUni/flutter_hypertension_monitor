@@ -163,7 +163,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     Widget _buildHomeContent(BuildContext context) {
 
-        return Padding(
+        return SingleChildScrollView(
 
             padding: const EdgeInsets.all(16),
 
@@ -213,21 +213,21 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 );
 
 
-                                if (user == null) {
-                                    return;
-                                }
+                                if (user == null ||
+                                    user.patientId == null) {
 
-
-                                if (user.patientId == null) {
                                     return;
+
                                 }
 
 
                                 Navigator.of(context).push(
                                     MaterialPageRoute(
-                                        builder: (_) => AddMeasurementPage(
-                                            patientId: user.patientId!,
-                                        ),
+                                        builder: (_) =>
+                                            AddMeasurementPage(
+                                                patientId:
+                                                    user.patientId!,
+                                            ),
                                     ),
                                 );
 
@@ -267,7 +267,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
             ),
 
-        );
+        );        
 
     }    
 
