@@ -52,24 +52,26 @@ class MainLayout extends ConsumerWidget {
             user,
         );        
 
-        return AdaptiveScaffold(
+        return SafeArea(
 
-            title: title, 
+            child: AdaptiveScaffold(
 
-            destinations: destinations, 
+                title: title, 
 
-            bottomDestinations: bottomDestinations,
+                destinations: destinations, 
 
-            selectedSection: currentSection, 
+                bottomDestinations: bottomDestinations,
 
-            onSectionSelected: onSectionSelected, 
+                selectedSection: currentSection, 
 
-            body: body, 
+                onSectionSelected: onSectionSelected, 
 
-            floatingActionButton: floatingActionButton, 
+                body: body, 
 
-            actions: actions,
-            
+                floatingActionButton: floatingActionButton, 
+
+                actions: actions,
+            ), 
         );
 
     }
