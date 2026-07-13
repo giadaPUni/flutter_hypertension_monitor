@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_hypertension_monitor/core/navigation/navigation_section.dart'; 
 import 'package:flutter_hypertension_monitor/core/responsive/adaptive_scaffold.dart'; 
+import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
+import 'package:flutter_hypertension_monitor/core/navigation/navigation_config.dart';
+import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_destination.dart';
 
-
-class MainLayout extends StatelessWidget {
+class MainLayout extends ConsumerWidget {
 
     const MainLayout({
         super.key, 
@@ -12,6 +15,7 @@ class MainLayout extends StatelessWidget {
         required this.currentSection, 
         required this.onSectionSelected, 
         required this.body, 
+        this.bottomDestinations, 
         this.floatingActionButton, 
     }); 
 
@@ -23,14 +27,35 @@ class MainLayout extends StatelessWidget {
 
     final Widget body; 
 
+    final List<AppNavigationDestination>? bottomDestinations;
+
     final Widget? floatingActionButton;
 
     @override 
-    Widget build(BuildContext context) {
+    Widget build(
+        BuildContext context, 
+        WidgetRef ref, 
+    ) {
+
+        final user = ref.watch(
+            currentUserProvider, 
+        ); 
+
+        final destinations = NavigationConfig.forUser(
+            user,
+        );
+
+        final bottomDestinations = NavigationConfig.bottom(
+            user,
+        );        
 
         return AdaptiveScaffold(
 
             title: title, 
+
+            destinations: destinations, 
+
+            bottomDestinations: bottomDestinations,
 
             selectedSection: currentSection, 
 

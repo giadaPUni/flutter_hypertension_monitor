@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_destination.dart';
 import 'package:flutter_hypertension_monitor/core/responsive/breakpoints.dart';
 import 'package:flutter_hypertension_monitor/core/responsive/navigation_type.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/navigation_section.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/app_destinations.dart';
+import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_destination.dart';
+import 'package:flutter_hypertension_monitor/core/responsive/adaptive_scaffold.dart';
 
 class AdaptiveScaffold extends StatelessWidget {
 
@@ -13,7 +15,9 @@ class AdaptiveScaffold extends StatelessWidget {
         required this.title, 
         required this.body, 
         required this.selectedSection, 
-        required this.onSectionSelected, 
+        required this.onSectionSelected,
+        required this.destinations, 
+        required this.bottomDestinations, 
         this.floatingActionButton, 
         this.actions, 
     }); 
@@ -23,6 +27,10 @@ class AdaptiveScaffold extends StatelessWidget {
     final Widget body;
 
     final NavigationSection selectedSection; 
+
+    final List<AppNavigationDestination> destinations;
+
+    final List<AppNavigationDestination> bottomDestinations;
 
     final ValueChanged<NavigationSection> onSectionSelected; 
 
@@ -38,9 +46,13 @@ class AdaptiveScaffold extends StatelessWidget {
 
         final navigationType = _navigationType(context); 
 
+        /*
         final destinations = _destinationsFor(
             navigationType,
-        );     
+        );    
+
+        */ 
+
 
 
         switch (navigationType) {
@@ -82,6 +94,7 @@ class AdaptiveScaffold extends StatelessWidget {
         return NavigationType.bottomNavigationBar; 
     }
 
+/*
     List<AppNavigationDestination> _destinationsFor(
         NavigationType type,
     ) {
@@ -97,7 +110,7 @@ class AdaptiveScaffold extends StatelessWidget {
         }
 
     }
-
+*/
 
     int _selectedIndex(
         List<AppNavigationDestination> destinations,
@@ -115,20 +128,27 @@ class AdaptiveScaffold extends StatelessWidget {
         List<AppNavigationDestination> destinations, 
     ) {
         return Scaffold(
+
             resizeToAvoidBottomInset: true,
+
             appBar: AppBar(
                 title: title, 
                 actions: actions, 
             ), 
+
             drawer: _buildDrawer(
                 context, 
-                AppDestinations.drawer,
+                destinations,
             ), 
-            body: body, 
+
+            body: body,
+
             floatingActionButton: floatingActionButton, 
+
             bottomNavigationBar: MediaQuery.sizeOf(context).height > 250
-                ? _buildBottomNavigationBar(destinations)
+                ? _buildBottomNavigationBar(bottomDestinations)
                 : null,
+            
         ); 
     }
 

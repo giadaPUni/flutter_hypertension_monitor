@@ -40,6 +40,13 @@ abstract final class AppDestinations {
         selectedIcon: Icons.bar_chart, 
     ); 
 
+    static const profile = AppNavigationDestination(
+        section: NavigationSection.profile,
+        label: 'Profile',
+        icon: Icons.person_outline,
+        selectedIcon: Icons.person,
+    );
+
     static const settings = AppNavigationDestination(
         section: NavigationSection.settings,
         label: 'Settings', 
@@ -70,7 +77,9 @@ abstract final class AppDestinations {
         patients, 
         medicalHistory, 
         statistics, 
+        profile, 
         settings, 
+        
     ]; 
 /** 
     static const mobileBottom = [

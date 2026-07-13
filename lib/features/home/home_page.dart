@@ -7,8 +7,8 @@ import 'package:flutter_hypertension_monitor/features/medical_history/medical_hi
 import 'package:flutter_hypertension_monitor/features/measurements/measurements_page.dart'; 
 import 'package:flutter_hypertension_monitor/features/statistics/statistics_page.dart'; 
 import 'package:flutter_hypertension_monitor/features/settings/settings_page.dart'; 
-
-
+import 'package:flutter_hypertension_monitor/features/profile/profile_page.dart'; 
+import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_destination.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -81,6 +81,9 @@ class _HomePageState extends State<HomePage> {
 
             case NavigationSection.statistics:
                 return const StatisticsPage(); 
+
+            case NavigationSection.profile:
+                return const ProfilePage();
             
             case NavigationSection.settings: 
                 return const SettingsPage(); 
