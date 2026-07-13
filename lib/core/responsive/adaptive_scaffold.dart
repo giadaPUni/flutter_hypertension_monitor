@@ -182,9 +182,7 @@ class AdaptiveScaffold extends StatelessWidget {
                     const VerticalDivider(width: 1), 
 
                     Expanded(
-                        child: SingleChildScrollView(
-                            child: body, 
-                        ),
+                        child: body, 
                     ),
                 ],
             ),
@@ -219,9 +217,7 @@ class AdaptiveScaffold extends StatelessWidget {
                     const VerticalDivider(width: 1), 
 
                     Expanded(
-                        child: SingleChildScrollView(
-                            child: body, 
-                        ),
+                        child: body, 
                     ),
                 ],
             ),

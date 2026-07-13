@@ -75,6 +75,7 @@ abstract final class AppDestinations {
     static const rail = [
         home, 
         patients, 
+        measurements,
         medicalHistory, 
         statistics, 
         profile, 
