@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_hypertension_monitor/core/navigation/navigation_section.dart'; 
 import 'package:flutter_hypertension_monitor/shared/layout/main_layout.dart'; 
@@ -10,19 +11,21 @@ import 'package:flutter_hypertension_monitor/features/settings/settings_page.dar
 import 'package:flutter_hypertension_monitor/features/profile/profile_page.dart'; 
 import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_destination.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
+import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
+import 'package:flutter_hypertension_monitor/features/measurements/add_measurement_page.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
 
     const HomePage({
         super.key, 
     }); 
 
     @override
-    State<HomePage> createState() => _HomePageState(); 
+    ConsumerState<HomePage> createState() => _HomePageState();
 
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
 
     NavigationSection _currentSection = NavigationSection.home; 
 
@@ -51,21 +54,66 @@ class _HomePageState extends State<HomePage> {
 
             floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                    Navigator.of(context).pushNamed(
-                        AppRoutes.addMeasurement, 
-                    ); 
+
+                    final user = ref.read(
+                        currentUserProvider,
+                    );
+
+
+                    if (user == null) {
+                        return;
+                    }
+
+
+                    if (user.patientId == null) {
+                        return;
+                    }
+
+
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => AddMeasurementPage(
+                                patientId: user.patientId!,
+                            ),
+                        ),
+                    );
+
                 },
-                child: const Icon(Icons.add),
-            ),    
+
+                child: const Icon(
+                    Icons.add,
+                ),
+            ),   
 
             actions: [
                 IconButton(
                     icon: const Icon(Icons.add),
+
                     tooltip: 'New Measurement',
+
                     onPressed: () {
 
-                        Navigator.of(context).pushNamed(
-                            AppRoutes.addMeasurement,
+                        final user = ref.read(
+                            currentUserProvider,
+                        );
+
+
+                        if (user == null) {
+                            return;
+                        }
+
+
+                        if (user.patientId == null) {
+                            return;
+                        }
+
+
+                        Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => AddMeasurementPage(
+                                    patientId: user.patientId!,
+                                ),
+                            ),
                         );
 
                     },
@@ -160,8 +208,27 @@ class _HomePageState extends State<HomePage> {
 
                             onTap: () {
 
-                                Navigator.of(context).pushNamed(
-                                    AppRoutes.addMeasurement,
+                                final user = ref.read(
+                                    currentUserProvider,
+                                );
+
+
+                                if (user == null) {
+                                    return;
+                                }
+
+
+                                if (user.patientId == null) {
+                                    return;
+                                }
+
+
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (_) => AddMeasurementPage(
+                                            patientId: user.patientId!,
+                                        ),
+                                    ),
                                 );
 
                             },
