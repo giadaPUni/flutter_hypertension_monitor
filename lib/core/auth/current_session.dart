@@ -1,8 +1,9 @@
 import 'package:hive_ce/hive.dart'; 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Stores info about the current session
+/// It manages the authenticated user session
+
 /// The User's information is loaded from the UserRepository
-/// It stores the current session id 
 
 class CurrentSession {
 
@@ -12,6 +13,8 @@ class CurrentSession {
 
     Box get _box => Hive.box(_boxName); 
 
+
+    // savesthe user identifier 
     Future<void> saveCurrentUserId(
         String userId, 
     ) async {
@@ -23,6 +26,7 @@ class CurrentSession {
 
     }
 
+    // return the user identifier is a session already exists 
     String? getCurrentUserId() {
 
         return _box.get(
@@ -30,6 +34,7 @@ class CurrentSession {
         ) as String?; 
     }
 
+    // remove the current session 
     Future<void> clearSession() async {
 
         await _box.delete(
@@ -39,3 +44,14 @@ class CurrentSession {
     }
 
 }
+
+final currentSessionProvider = 
+    Provider<CurrentSession>(
+
+        (ref) {
+
+            return CurrentSession(); 
+
+        },
+
+    ); 
