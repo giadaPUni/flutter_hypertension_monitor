@@ -1,5 +1,4 @@
 enum UserRole {
     patient, 
-    doctor,
-    admin, 
+    user, 
 }
