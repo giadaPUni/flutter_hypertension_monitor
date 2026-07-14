@@ -1,6 +1,8 @@
 import 'package:uuid/uuid.dart'; 
 import 'package:hive_ce/hive.dart'; 
 
+import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
+
 part 'user.g.dart'; 
 
 @HiveType(typeId: 0)
@@ -10,9 +12,11 @@ class User {
 
         String? id, 
         required this.username, 
+        required this.email, 
         required this.passwordHash, 
         required this.registrationDate, 
-        required this.patientId, 
+        required this.role, 
+        this.patientId, 
 
     }) : id = id ?? const Uuid().v4(); 
 
@@ -23,12 +27,18 @@ class User {
     String username; 
 
     @HiveField(2)
-    String passwordHash; 
+    String email; 
 
     @HiveField(3)
-    DateTime registrationDate; 
+    String passwordHash; 
 
     @HiveField(4)
-    final String patientId; 
+    DateTime registrationDate; 
+
+    @HiveField(5)
+    final String? patientId; 
+
+    @HiveField(6)
+    UserRole role; 
 
 }
