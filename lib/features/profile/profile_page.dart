@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart'; 
+import 'package:flutter_hypertension_monitor/features/auth/auth_service_provider.dart';
+import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
 
 class ProfilePage extends ConsumerWidget {
 
@@ -28,6 +30,7 @@ class ProfilePage extends ConsumerWidget {
     }
 
     return Center(
+
       child: Column(
         mainAxisSize: MainAxisSize.min, 
 
@@ -45,10 +48,46 @@ class ProfilePage extends ConsumerWidget {
             user.role.name, 
           ), 
 
+        
+
+          const SizedBox(height: 32), 
+
+          FilledButton.icon(
+
+            onPressed: () async {
+
+              await ref 
+                .read(authServiceProvider)
+                .logout(); 
+
+              ref.read(
+                currentUserProvider.notifier, 
+              )
+              .logout(); 
+
+              if (!context.mounted) {
+                return; 
+              }
+
+              Navigator.pushReplacementNamed(
+                context, 
+                AppRoutes.login, 
+              ); 
+
+            }, 
+
+            icon: const Icon(
+              Icons.logout, 
+            ), 
+
+            label: const Text(
+              'Logout',
+            ), 
+
+          ),
+
         ], 
-      ), 
+      ),
     ); 
-
-
   }
 }
