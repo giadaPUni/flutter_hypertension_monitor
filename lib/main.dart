@@ -6,6 +6,24 @@ import 'package:flutter_hypertension_monitor/data/hive/hive_initializer.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/app_route_generator.dart'; 
 import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart'; 
 import 'package:flutter_hypertension_monitor/core/navigation/navigation_service_provider.dart'; 
+import 'package:flutter_hypertension_monitor/core/auth/current_session.dart';
+import 'package:flutter_hypertension_monitor/data/repositories/user_repository_provider.dart';
+import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
+
+Future<String> getInitialRoute() async {
+
+  final currentSession = CurrentSession();
+
+  final userId = currentSession.getCurrentUserId();
+
+  if (userId != null) {
+    return AppRoutes.home;
+  }
+
+  return AppRoutes.login;
+
+}
+
 
 Future<void> main() async {
 
@@ -13,23 +31,41 @@ Future<void> main() async {
 
   await HiveInitializer.initialize();
 
+  final initialRoute = await getInitialRoute(); 
+
   runApp(
-    const ProviderScope(
-      child: HypertensionMonitorApp(),
+    ProviderScope(
+      child: HypertensionMonitorApp(
+
+        initialRoute: initialRoute,
+
+      ),
     ),
   );
 }
 
-class HypertensionMonitorApp extends ConsumerWidget {
+class HypertensionMonitorApp extends ConsumerStatefulWidget {
 
   const HypertensionMonitorApp({
-    super.key
+    super.key, 
+    required this.initialRoute, 
   }); 
+
+  final String initialRoute; 
+
+  @override
+  ConsumerState<HypertensionMonitorApp> createState() =>
+      _HypertensionMonitorAppState();
+
+} 
+
+
+
+class _HypertensionMonitorAppState extends ConsumerState<HypertensionMonitorApp> {
 
   @override 
   Widget build(
     BuildContext context, 
-    WidgetRef ref, 
   ) {
 
     final navigationService =
@@ -49,7 +85,8 @@ class HypertensionMonitorApp extends ConsumerWidget {
 
       navigatorKey: navigationService.navigationKey, 
 
-      initialRoute: AppRoutes.login, 
+      //initialRoute: AppRoutes.login, 
+      initialRoute: widget.initialRoute, 
 
       onGenerateRoute: AppRouteGenerator.generateRoute, 
 
@@ -57,4 +94,4 @@ class HypertensionMonitorApp extends ConsumerWidget {
 
   }
 
-} 
+}
