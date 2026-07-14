@@ -1,6 +1,6 @@
 import 'package:flutter_hypertension_monitor/core/user/app_user.dart';
 import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
-//import 'package:flutter_hypertension_monitor/data/models/user.dart';
+import 'package:flutter_hypertension_monitor/data/models/user.dart';
 import 'package:flutter_hypertension_monitor/data/repositories/user_repository.dart';
 
 
@@ -9,7 +9,8 @@ import 'package:flutter_hypertension_monitor/data/repositories/user_repository.d
  * Functionalities: 
  * verify username/password 
  * create AppUser
- * handling login
+ * handle login
+ * register new username/users
 */
 
 class AuthService {
@@ -43,13 +44,83 @@ class AuthService {
 
             name: user.username, 
 
-            email: user.username, 
+            email: user.email, 
 
             role: user.patientId != null
                 ? UserRole.patient
-                : UserRole.doctor, 
+                : UserRole.user, 
 
             patientId: user.patientId, 
+
+        ); 
+
+    }
+
+    AppUser? register({
+
+        required String username, 
+
+        required String email, 
+
+        required String password, 
+
+        required UserRole role, 
+
+        String? patientId, 
+
+    }) {
+
+        // to avoid accounts with the same username or the same email 
+        
+        final existingUser = userRepository.findByUsername(
+            username,
+        ); 
+
+        if (existingUser != null) {
+            return null; 
+        }
+
+
+        final existingEmail = userRepository.findByEmail(
+            email, 
+        ); 
+
+        if (existingEmail != null) {
+            return null;
+        }
+
+
+        final user = User(
+
+            username: username,
+
+            email: email, 
+            
+            passwordHash: password, 
+
+            registrationDate: DateTime.now(), 
+
+            role: role, 
+
+            patientId: patientId,
+        ); 
+
+        userRepository.save(
+            user,
+        ); 
+
+
+        return AppUser(
+
+            id: user.id, 
+
+            name: user.username, 
+
+            email: user.email, 
+
+            role: user.role, 
+
+            patientId: user.patientId,
 
         ); 
 
