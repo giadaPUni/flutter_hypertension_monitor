@@ -53,7 +53,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   }
 
 
-  void _register() {
+  Future<void> _register() async {
 
     if (!_formKey.currentState!.validate()) {
       return;
@@ -65,14 +65,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
     final password = _passwordController.text; 
 
-    final role = _selectedRole; 
-
+    // final role = _selectedRole; 
 
     final authService = ref.read(
       authServiceProvider, 
     ); 
 
-    final user = authService.register(
+    final user = await authService.register(
 
       username: username, 
 
@@ -82,8 +81,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
       role: _selectedRole, 
 
-    ); 
+    );
+  
 
+    if (!mounted) {
+      return; 
+    }
 
     if (user == null) {
 
