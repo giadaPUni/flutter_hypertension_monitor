@@ -31,10 +31,37 @@ Future<void> main() async {
 
   await HiveInitializer.initialize();
 
-  final initialRoute = await getInitialRoute(); 
+  final container = ProviderContainer(); 
+
+  final appUser = await CurrentSession()
+    .restoreSession(
+      container.read(
+        userRepositoryProvider, 
+      ),
+    ); 
+
+  if (appUser != null) {
+
+    container.read(
+      currentUserProvider.notifier, 
+    )
+    .login(
+      appUser, 
+    ); 
+
+  }
+
+  final initialRoute = 
+    appUser != null
+      ? AppRoutes.home
+      : AppRoutes.login; 
 
   runApp(
-    ProviderScope(
+
+    UncontrolledProviderScope(
+
+      container: container, 
+
       child: HypertensionMonitorApp(
 
         initialRoute: initialRoute,
