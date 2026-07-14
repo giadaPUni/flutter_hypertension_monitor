@@ -5,6 +5,7 @@ import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
 import 'package:flutter_hypertension_monitor/features/auth/auth_service_provider.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
+import 'package:flutter_hypertension_monitor/core/auth/current_session.dart';
 
 /// Registration page.
 ///
@@ -110,6 +111,18 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       user, 
     ); 
 
+
+    // save current user id 
+    await ref.read(
+      currentSessionProvider,
+    ).saveCurrentUserId(
+      user.id, 
+    ); 
+
+
+    if (!mounted) {
+      return; 
+    }
 
     ScaffoldMessenger.of(context)
       .showSnackBar(

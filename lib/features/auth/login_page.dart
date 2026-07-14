@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 import 'package:flutter_hypertension_monitor/features/auth/auth_service_provider.dart';
+import 'package:flutter_hypertension_monitor/core/auth/current_session.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
 
@@ -38,7 +39,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   }
 
-  void _login() {
+  Future<void> _login() async {
 
     final username = usernameController.text.trim(); 
 
@@ -63,11 +64,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     }
 
+
     ref.read(
       currentUserProvider.notifier, 
     ).login(
       user, 
     ); 
+
+    // save current user id 
+    await ref.read(
+      currentSessionProvider, 
+    ).saveCurrentUserId(
+      user.id, 
+    ); 
+
+    if (!mounted) {
+      return; 
+    }
 
     Navigator.pushReplacementNamed(
       context, 
