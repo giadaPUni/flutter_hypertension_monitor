@@ -33,6 +33,42 @@ class UserRepository {
             .firstOrNull; 
     }
 
+    User? findByEmail(String email) {
+
+        return _box.values
+            .where(
+                (user) => user.email == email, 
+            )
+            .firstOrNull; 
+            
+    }
+
+
+
+    User? login(
+        String username,
+        String passwordHash,
+    ) {
+
+
+    for(final user in _box.values){
+
+        if(user.username == username &&
+        user.passwordHash == passwordHash){
+
+            return user;
+
+        }
+
+    }
+
+
+    return null;
+
+
+    }
+
+
     List<User> findAll() {
         return _box.values.toList(); 
     }
