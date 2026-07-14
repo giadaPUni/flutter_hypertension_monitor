@@ -21,7 +21,7 @@ abstract final class AppRoutes {
 
     static const String measurements = '/measurements';
 
-    static const String addMeasurement = 'add-measurement';
+    static const String addMeasurement = '/add-measurement';
 
     static const String statistics = '/statistics'; 
 
