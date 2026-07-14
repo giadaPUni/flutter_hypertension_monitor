@@ -2,6 +2,7 @@ import 'package:flutter_hypertension_monitor/core/user/app_user.dart';
 import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
 import 'package:flutter_hypertension_monitor/data/models/user.dart';
 import 'package:flutter_hypertension_monitor/data/repositories/user_repository.dart';
+import 'package:flutter_hypertension_monitor/core/auth/current_session.dart';
 
 /*
  * Authentication Service 
@@ -16,10 +17,14 @@ class AuthService {
 
     AuthService({
         required this.userRepository, 
+        required this.currentSession, 
     }); 
 
     final UserRepository userRepository; 
 
+    final CurrentSession currentSession; 
+
+    // login 
     AppUser? login(
         String username, 
         String password, 
@@ -53,6 +58,7 @@ class AuthService {
 
     }
 
+    // registration 
     Future<AppUser?> register({
 
         required String username, 
@@ -120,6 +126,13 @@ class AuthService {
             patientId: user.patientId,
 
         ); 
+
+    }
+
+    // logout 
+    Future<void> logout() async {
+
+        await currentSession.clearSession();  
 
     }
 
