@@ -3,6 +3,7 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
+import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
 import 'package:flutter_hypertension_monitor/data/models/blood_pressure_measurement.dart';
 import 'package:flutter_hypertension_monitor/data/models/medical_history.dart';
 import 'package:flutter_hypertension_monitor/data/models/patient.dart';
@@ -14,6 +15,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(MedicalHistoryAdapter());
     registerAdapter(PatientAdapter());
     registerAdapter(UserAdapter());
+    registerAdapter(UserRoleAdapter());
   }
 }
 
@@ -23,5 +25,6 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(MedicalHistoryAdapter());
     registerAdapter(PatientAdapter());
     registerAdapter(UserAdapter());
+    registerAdapter(UserRoleAdapter());
   }
 }
