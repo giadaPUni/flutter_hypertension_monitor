@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app_user.dart'; 
 
-class CurrentUserNotifier extends Notifier<AppUser?>{
+class CurrentUserNotifier extends Notifier<AppUser?> {
 
     @override
     AppUser? build() {
