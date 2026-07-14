@@ -3,7 +3,6 @@ import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
 import 'package:flutter_hypertension_monitor/data/models/user.dart';
 import 'package:flutter_hypertension_monitor/data/repositories/user_repository.dart';
 
-
 /*
  * Authentication Service 
  * Functionalities: 
@@ -46,9 +45,7 @@ class AuthService {
 
             email: user.email, 
 
-            role: user.patientId != null
-                ? UserRole.patient
-                : UserRole.user, 
+            role: user.role, 
 
             patientId: user.patientId, 
 
@@ -56,7 +53,7 @@ class AuthService {
 
     }
 
-    AppUser? register({
+    Future<AppUser?> register({
 
         required String username, 
 
@@ -68,10 +65,10 @@ class AuthService {
 
         String? patientId, 
 
-    }) {
+    }) async {
 
         // to avoid accounts with the same username or the same email 
-        
+
         final existingUser = userRepository.findByUsername(
             username,
         ); 
@@ -105,10 +102,10 @@ class AuthService {
             patientId: patientId,
         ); 
 
-        userRepository.save(
+        await userRepository.save(
             user,
         ); 
-
+    
 
         return AppUser(
 
