@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
+import 'package:flutter_hypertension_monitor/features/auth/auth_service_provider.dart';
+import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
+import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
 
 /// Registration page.
 ///
 /// Allows the user to:
-/// - create an application account;
-/// - choose how the application will be used;
-/// - register either as a patient or as a user managing patients.
-class RegisterPage extends StatefulWidget {
+/// - create an application account through AuthService;
+/// - choose how the application will be used: 
+///   - User handling one or more patients 
+///   - Patient monitoring own values 
+/// 
+
+
+
+class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({
     super.key,
   });
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
 
   final _formKey = GlobalKey<FormState>();
 
@@ -58,22 +67,64 @@ class _RegisterPageState extends State<RegisterPage> {
 
     final role = _selectedRole; 
 
-    debugPrint('Username: $username'); 
-    debugPrint('Email: $email'); 
-    debugPrint('role: $role');
+
+    final authService = ref.read(
+      authServiceProvider, 
+    ); 
+
+    final user = authService.register(
+
+      username: username, 
+
+      email: email, 
+
+      password: password, 
+
+      role: _selectedRole, 
+
+    ); 
 
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    if (user == null) {
 
-      const SnackBar(
+      ScaffoldMessenger.of(context)
+        .showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Username o email già esistente', 
+            ), 
+          ), 
+        ); 
 
-        content: Text(
-          'Registration validated',
+        return; 
+
+    }
+
+    ref.read(
+      currentUserProvider.notifier, 
+    )
+    .login(
+      user, 
+    ); 
+
+
+    ScaffoldMessenger.of(context)
+      .showSnackBar(
+
+        const SnackBar(
+
+          content: Text(
+            'Registrazione completata con successo',
+          ),
+
         ),
 
-      ),
-
     );
+
+    Navigator.pushReplacementNamed(
+      context, 
+      AppRoutes.home,
+    ); 
 
   }
 
@@ -84,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
       appBar: AppBar(
         title: const Text(
-          'Create account',
+          'Crea account',
         ),
       ),
 
@@ -120,7 +171,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
 
                       Text(
-                        'Create Account',
+                        'Crea Account',
                         style: Theme.of(context)
                             .textTheme
                             .headlineMedium,
@@ -129,7 +180,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 8),
 
                       Text(
-                        'Create your Hypertension Monitor account.',
+                        "Crea il tuo account per monitorare l'ipertensione",
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium,
@@ -149,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         validator: (value) {
 
                           if (value == null || value.trim().isEmpty) {
-                            return 'Username is required';
+                            return 'Username è un campo obbligatorio';
                           }
 
                           return null;
@@ -174,7 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         validator: (value) {
 
                           if (value == null || value.trim().isEmpty) {
-                            return 'Email is required';
+                            return 'Email è un campo obbligatorio';
                           }
 
                           return null;
@@ -199,7 +250,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         validator: (value) {
 
                           if (value == null || value.length < 6) {
-                            return 'Minimum 6 characters';
+                            return 'Minimo 6 caratteri';
                           }
 
                           return null;
@@ -217,14 +268,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         obscureText: true,
 
                         decoration: const InputDecoration(
-                          labelText: 'Confirm password',
+                          labelText: 'Conferma password',
                           prefixIcon: Icon(Icons.lock_outline),
                         ),
 
                         validator: (value) {
 
                           if (value != _passwordController.text) {
-                            return 'Passwords do not match';
+                            return 'Passwords non corrispondenti';
                           }
 
                           return null;
@@ -236,7 +287,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 32),
 
                       Text(
-                        'How will you use the application?',
+                        "Come intendi usare l'applicazione?",
                         style: Theme.of(context)
                             .textTheme
                             .titleMedium,
@@ -271,11 +322,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               value: UserRole.patient, 
 
                               title: const Text(
-                                'Patient',
+                                'Paziente',
                               ), 
 
                               subtitle: const Text(
-                                'Manage you own health data',
+                                'Gestire i propri dati clinici',
                               ),
 
                             ), 
@@ -289,7 +340,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ), 
 
                               subtitle: const Text(
-                                'Manage one or more patients',
+                                'Gestire uno o più pazienti',
                               ),
 
                             ), 
@@ -309,7 +360,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: _register, 
 
                         child: const Text(
-                          'Create account',
+                          'Crea account',
                         ),
 
                       ),
