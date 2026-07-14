@@ -155,6 +155,28 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                 ), 
 
+
+                const SizedBox(
+                  height: 16, 
+                ), 
+
+                ElevatedButton(
+
+                  onPressed: () {
+
+                    Navigator.pushNamed(
+                      context, 
+                      AppRoutes.register, 
+                    ); 
+
+                  }, 
+
+                  child: const Text(
+                    'Create account',
+                  ), 
+
+                ),
+
             ], 
 
           ), 
