@@ -36,7 +36,7 @@ class User {
     DateTime registrationDate; 
 
     @HiveField(5)
-    final String? patientId; 
+    String? patientId; 
 
     @HiveField(6)
     UserRole role; 

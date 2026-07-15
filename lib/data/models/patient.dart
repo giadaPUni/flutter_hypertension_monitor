@@ -11,6 +11,7 @@ class Patient {
 
     Patient({
         String? id, 
+        required this.ownerId, 
         required this.firstName, 
         required this.lastName,
         required this.birthDate, 
@@ -23,21 +24,24 @@ class Patient {
     final String id; 
 
     @HiveField(1)
-    String firstName; 
+    final String ownerId; 
 
     @HiveField(2)
-    String lastName; 
+    String firstName; 
 
     @HiveField(3)
-    DateTime birthDate; 
+    String lastName; 
 
     @HiveField(4)
-    String sex; 
+    DateTime birthDate; 
 
     @HiveField(5)
-    double height; 
+    String sex; 
 
     @HiveField(6)
+    double height; 
+
+    @HiveField(7)
     double weight; 
 
 

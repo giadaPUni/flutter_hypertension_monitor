@@ -17,6 +17,35 @@ class UserRepository {
         await _box.put(user.id, user); 
     }
 
+    Future<void> updatePatientId(
+        String userId,
+        String patientId,
+    ) async {
+
+
+        final user = _box.get(
+            userId,
+        );
+
+
+        if(user == null){
+
+            return;
+
+        }
+
+
+        user.patientId = patientId;
+
+
+        await _box.put(
+            user.id,
+            user,
+        );
+
+    }
+
+
     Future<void> delete(String userId) async {
         await _box.delete(userId); 
     }

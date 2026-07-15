@@ -2,6 +2,11 @@ import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_dest
 import 'package:flutter_hypertension_monitor/core/navigation/app_destinations.dart';
 import 'package:flutter_hypertension_monitor/core/user/app_user.dart';
 
+
+/*
+* Menu structure according to the User (simple user or user AND patient)
+*/
+
 abstract final class NavigationConfig {
 
 
@@ -43,7 +48,13 @@ abstract final class NavigationConfig {
 
                 AppDestinations.home,
 
+                AppDestinations.patients, 
+
+                //AppDestinations.personalInformation, 
+
                 AppDestinations.measurements,
+
+                AppDestinations.medicalHistory, 
 
                 AppDestinations.statistics,
 
@@ -56,7 +67,7 @@ abstract final class NavigationConfig {
         }
 
 
-        if (user.isDoctor) {
+        if (user.isUser) {
 
             return [
 
@@ -64,7 +75,7 @@ abstract final class NavigationConfig {
 
                 AppDestinations.patients,
 
-                AppDestinations.measurements,
+                //AppDestinations.measurements,
 
                 AppDestinations.statistics,
 

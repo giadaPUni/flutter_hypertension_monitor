@@ -20,8 +20,6 @@ class HiveInitializer {
 
         await _openBoxes(); 
 
-        await _createInitialData();
-
     }
 
     static Future<void> _openBoxes() async {
@@ -43,33 +41,5 @@ class HiveInitializer {
 
     }
 
-    static Future<void> _createInitialData() async {
-
-        final patientBox = Hive.box<Patient>(
-            'patients',
-        );
-
-
-        if (patientBox.isEmpty) {
-
-            final patient = Patient(
-                id: 'patient_001',
-                firstName: 'Mario',
-                lastName: 'Rossi',
-                birthDate: DateTime(1980,5,10),
-                sex: 'M',
-                height: 180,
-                weight: 80,
-            );
-
-
-            await patientBox.put(
-                patient.id,
-                patient,
-            );
-
-        }
-
-    }
 
 }

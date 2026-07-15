@@ -4,7 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_hypertension_monitor/data/models/patient.dart';
 import 'package:flutter_hypertension_monitor/features/patients/patients_provider.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
+import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
+import 'package:flutter_hypertension_monitor/data/repositories/user_repository_provider.dart';
 
+// to create a Patient 
 
 class CreatePatientPage extends ConsumerStatefulWidget {
 
@@ -56,20 +59,18 @@ class _CreatePatientPageState
 
   Future<void> savePatient() async {
 
+    final currentUser = ref.read(
+      currentUserProvider, 
+    ); 
 
-    final user = ref.read(
-      currentUserProvider,
-    );
-
-
-    if (user == null) {
-      return;
+    if (currentUser == null) {
+      return; 
     }
 
 
     final patient = Patient(
 
-      ownerId: user.id,
+      ownerId: currentUser.id, 
 
       firstName: firstNameController.text,
 
@@ -97,6 +98,21 @@ class _CreatePatientPageState
       patient,
     );
 
+    // if the account is also the patient, 
+    // save the relation user -> patient
+    if (currentUser.role == UserRole.patient) {
+
+      await ref.read(
+        currentUserProvider.notifier, 
+      )
+      .updatePatientId(
+        patient.id, 
+        ref.read(
+          userRepositoryProvider, 
+        ),
+      );
+
+    }
 
     if (!mounted) {
       return;
