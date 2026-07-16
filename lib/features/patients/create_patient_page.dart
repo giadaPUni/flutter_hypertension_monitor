@@ -56,6 +56,29 @@ class _CreatePatientPageState
   }
 
 
+  Future<void> selectBirthDate() async {
+
+    final picked = await showDatePicker(
+
+      context: context, 
+
+      initialDate: birthDate, 
+
+      firstDate: DateTime(1900), 
+
+      lastDate: DateTime.now(), 
+    ); 
+
+    if (picked != null) {
+
+      setState((){
+
+        birthDate = picked; 
+
+      }); 
+    }
+  }
+
 
   Future<void> savePatient() async {
 
@@ -67,6 +90,56 @@ class _CreatePatientPageState
       return; 
     }
 
+    // to avoid a Patient account can create more than one profile
+    if(
+      currentUser.role == UserRole.patient &&
+      currentUser.patientId != null
+    ){
+
+        return;
+
+    }
+
+
+    if( 
+      firstNameController.text.isEmpty || 
+      lastNameController.text.isEmpty
+    ){
+
+      ScaffoldMessenger.of(context)
+      .showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Inserisci nome e cognome', 
+          ),
+        ), 
+      ); 
+
+      return; 
+    }
+
+
+    final height = double.tryParse(
+      heightController.text, 
+    ); 
+
+    final weight = double.tryParse(
+      weightController.text,
+    ); 
+
+    if (height == null || weight == null) {
+
+      ScaffoldMessenger.of(context)
+        .showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Inserisci altezza e peso validi', 
+            ),
+          ),
+        ); 
+
+        return; 
+    }
 
     final patient = Patient(
 
@@ -80,13 +153,9 @@ class _CreatePatientPageState
 
       sex: sex,
 
-      height: double.parse(
-        heightController.text,
-      ),
+      height: height, 
 
-      weight: double.parse(
-        weightController.text,
-      ),
+      weight: weight, 
 
     );
 
@@ -182,6 +251,19 @@ class _CreatePatientPageState
                 labelText: 'Peso (kg)',
               ),
             ),
+
+
+            ListTile(
+              title: Text(
+                'Data di nascita: ${birthDate.day}/${birthDate.month}/${birthDate.year}', 
+              ), 
+
+              trailing: const Icon(
+                Icons.calendar_month, 
+              ), 
+
+              onTap: selectBirthDate, 
+            ), 
 
 
 

@@ -25,14 +25,16 @@ class PatientRepository {
     }
 
 
-    List<Patient> findByOwner(
-        String ownerId, 
-    ){
+    List<Patient> findByOwnerId(String ownerId) {
         return _box.values
             .where(
                 (patient) => patient.ownerId == ownerId,
             )
             .toList();
+    }
+
+    List<Patient> findAll() {
+        return _box.values.toList(); 
     }
 
     bool exists(String patientId) {

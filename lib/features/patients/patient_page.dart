@@ -8,7 +8,6 @@ import 'package:flutter_hypertension_monitor/features/patients/create_patient_pa
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
 
-import 'package:flutter_hypertension_monitor/data/repositories/patient_repository_provider.dart';
 
 class PatientPage extends ConsumerWidget {
 
@@ -49,14 +48,15 @@ class PatientPage extends ConsumerWidget {
 
           child: FilledButton(
 
-            onPressed: (){
+            onPressed: () async {
 
-              Navigator.of(context).push(
+              await Navigator.of(context).push(
                 
                 MaterialPageRoute(
                   builder: (_) => const CreatePatientPage(),
                 ),
               ); 
+            
             },
 
             child: const Text(
@@ -68,13 +68,15 @@ class PatientPage extends ConsumerWidget {
 
       }
 
-      final repository = ref.read(
-        patientRepositoryProvider, 
+      
+      final patients = ref.watch(
+        patientsProvider, 
       ); 
 
-      final patient = repository.findById(
-        currentUser.patientId!, 
-      ); 
+      final patient = patients.where(
+        (patient) => patient.id == currentUser.patientId,
+      ).firstOrNull; 
+      
 
       if (patient == null) {
 
@@ -86,7 +88,7 @@ class PatientPage extends ConsumerWidget {
       }
 
       return PatientDetailPage(
-        patient: patient, 
+        patientId: patient.id, 
       ); 
 
     }
@@ -104,70 +106,131 @@ class PatientPage extends ConsumerWidget {
 
       return Center(
 
-        child: FilledButton(
-          
-          onPressed: (){
+        child: Column(
 
-            Navigator.of(context).push(
+          mainAxisSize: MainAxisSize.min, 
 
-              MaterialPageRoute(
-                builder: (_) => const CreatePatientPage(), 
+          children: [
+
+            const Text(
+              'Non ci sono pazienti registrati', 
+            ), 
+
+            const SizedBox(
+              height: 20, 
+            ), 
+
+            FilledButton.icon(
+
+              icon: const Icon(
+                Icons.add,
               ), 
-            ); 
-          }, 
 
-          child: const Text(
-            'Aggiungi paziente', 
-          ), 
-        ),
-      
+              label: const Text(
+                'Aggiungi paziente', 
+              ), 
+
+              onPressed: () async {
+
+                await Navigator.push(
+                  context, 
+                  
+                  MaterialPageRoute(
+
+                    builder: (_) => 
+                      const CreatePatientPage(), 
+
+                  ), 
+
+                );
+
+
+              },
+
+            ), 
+
+          ],
+
+        ), 
+
+
       );
 
     }
 
+    return Scaffold(
 
-    // There's at least one registered patient 
-    return ListView.builder(
+      floatingActionButton: FloatingActionButton(
 
-      itemCount: patients.length,
+        onPressed: () async {
 
-      itemBuilder: (context, index) {
+          await Navigator.push(
 
-        final patient = patients[index];
+            context, 
 
+            MaterialPageRoute(
 
-        return ListTile(
+              builder: (_) => 
+                const CreatePatientPage(), 
+            
+            ), 
+            
+          ); 
 
-          title: Text(
-            '${patient.firstName} ${patient.lastName}',
-          ), 
+        }, 
 
-          subtitle: Text(
-            'BMI ${patient.bmi.toStringAsFixed(1)}',
-          ), 
+        child: const Icon(
+          Icons.add,
+        ),
 
-          onTap: (){
+      ), 
 
-            Navigator.push(
-              context, 
+      body: ListView.builder(
 
-              MaterialPageRoute(
+        padding: const EdgeInsets.all(16), 
 
-                builder: (_) => 
-                  PatientDetailPage(
-                    patient: patient, 
+        itemCount: patients.length, 
+
+        itemBuilder: (context, index) {
+
+          final patient = patients[index]; 
+
+          return Card(
+
+            child: ListTile(
+
+              leading: const Icon(Icons.person), 
+
+              title: Text(
+                '${patient.firstName} ${patient.lastName}',
+              ), 
+
+              subtitle: Text(
+                'BMI ${patient.bmi.toStringAsFixed(1)}',
+              ), 
+
+              trailing: const Icon(Icons.chevron_right), 
+
+              onTap: () {
+
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (_) => PatientDetailPage(
+                      patientId: patient.id, 
+                    ),
                   ), 
+                );
+              },
 
-              ),
-              
-            );
-          }, 
+            ),
 
-        );
+          );
 
-      },
+        },
+      ), 
 
-    );
+    ); 
 
   }
 

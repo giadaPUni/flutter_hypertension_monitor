@@ -1,92 +1,76 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_hypertension_monitor/data/models/patient.dart';
+import 'package:flutter_hypertension_monitor/data/repositories/patient_repository.dart';
 import 'package:flutter_hypertension_monitor/data/repositories/patient_repository_provider.dart';
+import 'package:flutter_hypertension_monitor/core/user/app_user.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 
 
-class PatientsNotifier
-extends Notifier<List<Patient>> {
+class PatientsNotifier extends Notifier<List<Patient>> {
 
+    PatientRepository get repository => ref.read(patientRepositoryProvider); 
 
-@override
-List<Patient> build(){
+    AppUser? get currentUser => ref.read(currentUserProvider); 
 
+    @override
+    List<Patient> build() {
 
-    final user = ref.watch(
-        currentUserProvider,
-    );
+        final user = ref.watch(currentUserProvider);  
 
+        if (user == null) {
+            return []; 
+        }
 
-    if(user == null){
-        return [];
+        return repository.findByOwnerId(user.id); 
+    }
+
+    void _reload() {
+
+        final user = currentUser; 
+
+        if (user == null) {
+
+            state = []; 
+
+            return; 
+        }
+
+        state = repository.findByOwnerId(
+            user.id, 
+        ); 
+    }
+
+    Future<void> add(Patient patient) async {
+
+        await repository.save(patient);
+
+        _reload(); 
+
     }
 
 
-    final repository = ref.read(
-        patientRepositoryProvider,
-    );
+    Future<void> update(Patient patient) async {
+
+        await repository.update(patient);
+
+        _reload(); 
+
+    }
 
 
-    return repository.findByOwner(
-        user.id,
-    );
+    Future<void> delete(String patientId) async {
 
-}
+        await repository.delete(patientId);
 
+        _reload(); 
 
-
-Future<void> add(
-    Patient patient,
-) async {
-
-
-    final repository = ref.read(
-        patientRepositoryProvider,
-    );
-
-
-    await repository.save(
-        patient,
-    );
-
-
-    state = [
-        ...state,
-        patient
-    ];
+    }
 
 }
 
-Future<void> delete(
-    String id,
-) async {
-
-    final repository = ref.read(
-        patientRepositoryProvider,
-    );
-
-
-    await repository.delete(
-        id,
-    );
-
-
-    state = [
-        for (final patient in state)
-            if (patient.id != id)
-                patient,
-    ];
-
-}
-
-
-}
 
 final patientsProvider =
-    NotifierProvider<
-        PatientsNotifier,
-        List<Patient>
-    >(
+    NotifierProvider<PatientsNotifier, List<Patient>>(
         PatientsNotifier.new,
-    );
+);

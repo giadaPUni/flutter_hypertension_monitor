@@ -2,7 +2,6 @@ import 'package:hive_ce/hive.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_hypertension_monitor/core/user/app_user.dart';
-import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 import 'package:flutter_hypertension_monitor/data/repositories/user_repository.dart';
 
 
