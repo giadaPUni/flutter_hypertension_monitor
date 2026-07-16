@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart'; 
-import 'package:flutter_hypertension_monitor/features/auth/auth_service_provider.dart';
-import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
 
 class ProfilePage extends ConsumerWidget {
 
@@ -23,71 +21,150 @@ class ProfilePage extends ConsumerWidget {
 
       return const Center(
         child: Text(
-          'No user logged',
+          'Nessun utente autenticato',
         ),
       );
     
     }
 
-    return Center(
+    return SingleChildScrollView(
 
-      child: Column(
-        mainAxisSize: MainAxisSize.min, 
+      padding: const EdgeInsets.all(24), 
 
-        children: [
+      child: Center(
 
-          Text(
-            user.name, 
+        child: ConstrainedBox(
+
+          constraints: const BoxConstraints(
+            maxWidth: 600, 
           ), 
 
-          Text(
-            user.email, 
+          child: Column(
+
+            children: [
+
+              CircleAvatar(
+
+                radius: 48, 
+
+                child: Text(
+
+                  user.name.characters.first.toUpperCase(), 
+
+                  style: const TextStyle(
+                    fontSize: 32, 
+                    fontWeight: FontWeight.bold,
+                  ), 
+
+                ), 
+
+              ), 
+
+              const SizedBox(height: 16), 
+
+              Text(
+
+                user.name, 
+
+                style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall, 
+
+              ), 
+
+              const SizedBox(height: 4), 
+
+              Text(
+
+                'Account personale', 
+
+                style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium, 
+
+              ), 
+
+              const SizedBox(height: 32), 
+
+              _ProfileTile(
+
+                icon: Icons.person_outline, 
+
+                title: 'Username', 
+
+                value: user.name, 
+
+              ), 
+
+              const SizedBox(height: 16), 
+
+              _ProfileTile(
+
+                icon: Icons.email_outlined, 
+
+                title: 'Email', 
+
+                value: user.email, 
+
+              ), 
+
+              const SizedBox(height: 16), 
+
+              _ProfileTile(
+                icon: Icons.badge_outlined, 
+
+                title: 'Tipo account', 
+
+                value: user.isPatient
+                  ? 'Paziente \nMonitoraggio personale'
+                  : 'Utente \nGestione multi-paziente'
+              ), 
+
+            ], 
+
           ), 
 
-          Text(
-            user.role.name, 
-          ), 
+        ), 
 
-        
+      ), 
 
-          const SizedBox(height: 32), 
+    ); 
 
-          FilledButton.icon(
+  }
 
-            onPressed: () async {
+}
 
-              await ref 
-                .read(authServiceProvider)
-                .logout(); 
+class _ProfileTile extends StatelessWidget {
 
-              ref.read(
-                currentUserProvider.notifier, 
-              )
-              .logout(); 
+  const _ProfileTile({
 
-              if (!context.mounted) {
-                return; 
-              }
+    required this.icon, 
 
-              Navigator.pushReplacementNamed(
-                context, 
-                AppRoutes.login, 
-              ); 
+    required this.title, 
 
-            }, 
+    required this.value,
 
-            icon: const Icon(
-              Icons.logout, 
-            ), 
+  });
 
-            label: const Text(
-              'Logout',
-            ), 
+  final IconData icon; 
 
-          ),
+  final String title; 
 
-        ], 
-      ),
+  final String value; 
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Card(
+
+      child: ListTile(
+
+        leading: Icon(icon), 
+
+        title: Text(title), 
+
+        subtitle: Text(value),
+      ), 
     ); 
   }
 }
