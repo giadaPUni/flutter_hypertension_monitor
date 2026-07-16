@@ -271,9 +271,12 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     Widget _buildHomeContent(BuildContext context) {
 
+        final user = ref.watch(currentUserProvider); 
+
+
         return SingleChildScrollView(
 
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(24),
 
             child: Center(
 
@@ -290,94 +293,185 @@ class _HomePageState extends ConsumerState<HomePage> {
                         children: [
 
                             Text(
-                                'Welcome',
+                                'Benvenuto ${user?.name ?? ""}',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headlineMedium,
+                                    .headlineLarge, //Medium
                             ),
 
 
                             const SizedBox(
-                                height: 24,
+                                height: 8, //24
                             ),
 
+                            Text(
+                                'Monitora l\'ipertensione e mantiene sotto controllo la tua salute.', 
+                                style: Theme.of(context).textTheme.bodyLarge, 
+                            ), 
 
-                            Card(
+                            const SizedBox(height: 32), 
 
-                                child: ListTile(
+                            if (user?.isPatient ?? false) ...[
 
-                                    leading: const Icon(
-                                        Icons.favorite,
-                                    ),
+                                Row(
 
-                                    title: const Text(
-                                        'Add blood pressure measurement',
-                                    ),
+                                    children: [
 
-                                    subtitle: const Text(
-                                        'Record a new blood pressure value',
-                                    ),
+                                        Expanded(
+                                            child: _homeCard(
 
-                                    trailing: const Icon(
-                                        Icons.arrow_forward,
-                                    ),
+                                                context: context, 
 
-                                    onTap: () {
+                                                icon: Icons.favorite, 
 
-                                        final user = ref.read(
-                                            currentUserProvider,
-                                        );
+                                                title: 'Nuova misurazione', 
 
+                                                subtitle: 'Valore',
 
-                                        if (user == null ||
-                                            user.patientId == null) {
+                                                color: Theme.of(context).colorScheme.primary, 
 
-                                            return;
+                                                onTap: () {
+                                                
+                                                    Navigator.push(
+                                                        context, 
+                                                        MaterialPageRoute(
+                                                            builder: (_) => AddMeasurementPage(
+                                                                patientId: user!.patientId!, 
+                                                            ), 
+                                                        ),
+                                                    );
 
-                                        }
+                                                }, 
+                                            ), 
+                                        ),
 
+                                        const SizedBox(width: 16), 
 
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (_) =>
-                                                    AddMeasurementPage(
-                                                        patientId:
-                                                            user.patientId!,
-                                                    ),
+                                        Expanded(
+                                            child: _homeCard(
+                                                context: context, 
+
+                                                icon: Icons.analytics, 
+                                                
+                                                title: 'Statistiche', 
+
+                                                subtitle: 'Visualizza i trend e i grafici.', 
+
+                                                color: Colors.green, 
+
+                                                onTap: () {
+
+                                                    setState((){
+                                                        _currentSection = NavigationSection.statistics;
+                                                    });
+                                                },
                                             ),
-                                        );
+                                        ),
 
-                                    },
+                                    ], 
+                                ), 
 
+                                const SizedBox(height: 24), 
+
+                                Card(
+                                    
+                                    child: ListTile(
+
+                                        leading: const Icon(Icons.history), 
+
+                                        title: const Text("Misurazioni recenti"),
+
+                                        subtitle: const Text(
+                                            "Le misurazioni vengono mostrate qui.", 
+                                        ), 
+                                    ),
                                 ),
 
-                            ),
+                            ]
 
+                            else ...[
 
-                            const SizedBox(
-                                height: 24,
-                            ),
+                                Row(
+                                    children: [
 
+                                        Expanded(
+                                            child: _homeCard(
 
-                            Card(
+                                                context: context, 
 
-                                child: ListTile(
+                                                icon: Icons.people, 
 
-                                    leading: const Icon(
-                                        Icons.history,
-                                    ),
+                                                title: "Pazienti", 
 
-                                    title: const Text(
-                                        'Recent measurements',
-                                    ),
+                                                subtitle: "Gestisci i tuoi pazienti", 
 
-                                    subtitle: const Text(
-                                        'No measurements available',
-                                    ),
+                                                color: Colors.indigo, 
 
+                                                onTap: () {
+
+                                                    setState(() {
+                                                        _currentSection = NavigationSection.patients; 
+
+                                                    });
+                                                },
+                                            ),
+                                        ),
+
+                                        const SizedBox(width: 16), 
+
+                                        Expanded(
+                                            child: _homeCard(
+
+                                                context: context, 
+
+                                                icon: Icons.bar_chart, 
+
+                                                title: 'Statistiche', 
+
+                                                subtitle: 'Statistiche generali', 
+
+                                                color: Colors.green, 
+
+                                                onTap: () {
+
+                                                    setState((){
+                                                        _currentSection = NavigationSection.statistics;
+                                                    });
+                                                },
+                                            ),
+                                        ),
+                                    ],
                                 ),
 
-                            ),
+                                const SizedBox(height: 24), 
+
+                                Card(
+
+                                    child: Padding(
+
+                                        padding: const EdgeInsets.all(24),
+
+                                        child: Column(
+
+                                            crossAxisAlignment: CrossAxisAlignment.start, 
+
+                                            children: [
+
+                                                Text(
+                                                    "Quick Tip", 
+                                                    style: Theme.of(context).textTheme.titleLarge, 
+                                                ),
+
+                                                const SizedBox(height: 8), 
+
+                                                const Text(
+                                                    "Selezionare un paziente dalla sezione Pazienti per visualizzare i dati clinici e registrare nuove misurazioni", 
+                                                ),
+                                            ],
+                                        ),
+                                    ),
+                                ),
+                            ],
 
                         ],
 
@@ -388,5 +482,73 @@ class _HomePageState extends ConsumerState<HomePage> {
         ); 
 
     }    
+
+    Widget _homeCard({
+
+        required BuildContext context, 
+
+        required IconData icon, 
+
+        required String title, 
+
+        required String subtitle, 
+
+        required Color color, 
+
+        required VoidCallback onTap, 
+    }) {
+
+        return Card(
+            
+            clipBehavior: Clip.antiAlias, 
+
+            child: InkWell(
+
+                onTap: onTap, 
+
+                child: Padding(
+
+                    padding: const EdgeInsets.all(20), 
+
+                    child: Column(
+
+                        crossAxisAlignment: CrossAxisAlignment.start, 
+
+                        children: [
+
+                            CircleAvatar(
+                                
+                                radius: 24, 
+
+                                backgroundColor: color.withValues(
+                                    alpha: 0.12,
+                                ),
+
+                                child: Icon(
+                                    icon, 
+                                    color: color, 
+                                    size: 28,
+                                ), 
+                            ),
+
+                            const SizedBox(height: 20), 
+
+                            Text(
+                                title, 
+                                style: Theme.of(context).textTheme.titleLarge, 
+                            ), 
+
+                            const SizedBox(height: 8), 
+
+                            Text(
+                                subtitle, 
+                                style: Theme.of(context).textTheme.bodyMedium,
+                            ), 
+                        ], 
+                    ),
+                ),
+            ),
+        ); 
+    }
 
 }

@@ -13,6 +13,8 @@ class AppTheme {
             
             useMaterial3: true, 
 
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+
             colorScheme: ColorScheme(
                 brightness: Brightness.light, 
 
@@ -39,6 +41,8 @@ class AppTheme {
                 outline: AppColors.divider, 
 
                 shadow: Colors.black, 
+
+                surfaceTint: Colors.transparent,
             ), // end ColorScheme 
 
             scaffoldBackgroundColor: AppColors.background, 
@@ -65,6 +69,7 @@ class AppTheme {
             appBarTheme: AppBarTheme(
                 backgroundColor: AppColors.primary, 
                 foregroundColor: Colors.white, 
+                surfaceTintColor: Colors.transparent, 
 
                 elevation: 0, 
 
@@ -80,18 +85,23 @@ class AppTheme {
 
                 color: AppColors.surface, 
 
-                elevation: 1, 
+                elevation: 0, 
                 
-                shadowColor: Colors.black12, 
+                shadowColor: Colors.black12,
+                
+                clipBehavior: Clip.antiAlias,
 
                 margin: const EdgeInsets.symmetric(
-                    vertical: 2, 
+                    vertical: 8, 
                 ),
 
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                         AppRadius.lg, 
                     ), 
+                    side: const BorderSide(
+                        color: AppColors.divider, 
+                    ),
                 ), 
             ), // end CardThemeData
 
@@ -101,6 +111,11 @@ class AppTheme {
                 filled: true, 
 
                 fillColor: AppColors.surface, 
+
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 18,
+                ),
 
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(
@@ -141,6 +156,8 @@ class AppTheme {
 
                     foregroundColor: Colors.white, 
 
+                    textStyle: AppTextStyles.titleMedium,
+
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             AppRadius.md, 
@@ -171,10 +188,48 @@ class AppTheme {
             ), 
 
 
+            floatingActionButtonTheme:
+                const FloatingActionButtonThemeData(
+
+                    elevation: 2,
+
+                    shape: CircleBorder(),
+
+                ),
+
+            snackBarTheme: SnackBarThemeData(
+
+                behavior: SnackBarBehavior.floating,
+
+                shape: RoundedRectangleBorder(
+
+                    borderRadius:
+                        BorderRadius.circular(
+                            AppRadius.md,
+                        ),
+
+                ),
+
+            ),
+            
+            dialogTheme: DialogThemeData(
+
+                shape: RoundedRectangleBorder(
+
+                    borderRadius:
+                        BorderRadius.circular(
+                            AppRadius.lg,
+                        ),
+
+                ),
+
+            ),            
+
+
             // ----- DIVIDER ---
             dividerTheme: const DividerThemeData(
                 color: AppColors.divider, 
-                thickness: 1, 
+                thickness: .7, 
             ), 
 
         );  // end return 
