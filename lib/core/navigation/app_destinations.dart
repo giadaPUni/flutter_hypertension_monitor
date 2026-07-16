@@ -54,6 +54,13 @@ abstract final class AppDestinations {
         selectedIcon: Icons.settings, 
     ); 
 
+    static const logout = AppNavigationDestination(
+        section: NavigationSection.logout, 
+        label: 'Logout', 
+        icon: Icons.logout, 
+        selectedIcon: Icons.logout,
+        
+    ); 
 
     // BottomNavigationBar (smartphone)
     static const mobileBottom = [
@@ -69,6 +76,7 @@ abstract final class AppDestinations {
         medicalHistory,
         statistics,  
         settings, 
+        logout, 
     ]; 
 
     // NavigationRail (tablet/desktop/web)
@@ -80,6 +88,7 @@ abstract final class AppDestinations {
         statistics, 
         profile, 
         settings, 
+        logout, 
         
     ]; 
 /** 

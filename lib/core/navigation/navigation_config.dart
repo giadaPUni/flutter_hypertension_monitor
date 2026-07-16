@@ -61,6 +61,8 @@ abstract final class NavigationConfig {
                 AppDestinations.profile,
 
                 AppDestinations.settings,
+                
+                AppDestinations.logout,
 
             ];
 
@@ -82,6 +84,8 @@ abstract final class NavigationConfig {
                 AppDestinations.profile,
 
                 AppDestinations.settings,
+
+                AppDestinations.logout,
 
             ];
 

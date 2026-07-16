@@ -9,8 +9,8 @@ import 'package:flutter_hypertension_monitor/features/measurements/measurements_
 import 'package:flutter_hypertension_monitor/features/statistics/statistics_page.dart'; 
 import 'package:flutter_hypertension_monitor/features/settings/settings_page.dart'; 
 import 'package:flutter_hypertension_monitor/features/profile/profile_page.dart'; 
-//import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_destination.dart';
-//import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
+import 'package:flutter_hypertension_monitor/features/auth/auth_service_provider.dart';
+import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/add_measurement_page.dart';
 
@@ -29,6 +29,8 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     NavigationSection _currentSection = NavigationSection.home; 
 
+    bool _loggingOut = false; 
+
     @override
     Widget build(BuildContext context) {
 
@@ -44,7 +46,13 @@ class _HomePageState extends ConsumerState<HomePage> {
 
                 currentSection: _currentSection, 
 
-                onSectionSelected: (section) {
+                onSectionSelected: (section) async {
+
+                    if (section == NavigationSection.logout) {
+                        await _confirmLogout(); 
+
+                        return; 
+                    }
 
                     setState(() {
 
@@ -127,6 +135,102 @@ class _HomePageState extends ConsumerState<HomePage> {
             ), 
         ); 
     }
+
+
+    Future<void> _confirmLogout() async {
+
+        final confirm = await showDialog<bool>(
+
+            context: context, 
+
+            builder: (context) {
+
+                return AlertDialog(
+
+                    title: const Text(
+                        'Logout', 
+                    ), 
+
+                    content: const Text(
+                        'Sei sicuro di voler uscire dall\'applicazione?', 
+                    ), 
+
+                    actions: [
+
+                        TextButton(
+                            onPressed: () {
+
+                                Navigator.pop(
+                                    context, 
+                                    false, 
+                                );
+                            },
+
+                            child: const Text(
+                                'Annulla', 
+                            ), 
+                        ), 
+
+                        FilledButton(
+                            
+                            onPressed: () {
+
+                                Navigator.pop(
+                                    context, 
+                                    true,
+                                ); 
+                            }, 
+
+                            child: const Text(
+                                'Logout', 
+                            ), 
+                        ), 
+                    ], 
+                );
+            }, 
+
+        );
+
+        if (confirm == true) {
+
+            await _logout(); 
+
+        }
+    }
+
+
+    Future<void> _logout() async {
+
+        if (_loggingOut) {
+            return; 
+        }
+
+        _loggingOut = true; 
+
+        await ref
+            .read(authServiceProvider)
+            .logout();
+
+
+        ref
+            .read(currentUserProvider.notifier)
+            .logout();
+
+
+        if (!mounted) {
+            return;
+        }
+
+
+        Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRoutes.login,
+            (route) => false,
+        );
+
+    }
+
+
 
     Widget _buildBody() {
 

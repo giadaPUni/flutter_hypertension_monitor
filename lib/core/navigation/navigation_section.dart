@@ -11,5 +11,6 @@ enum NavigationSection {
 
     profile, 
     settings, 
+    logout, 
     
 }
