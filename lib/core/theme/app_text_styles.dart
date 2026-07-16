@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart'; 
 
@@ -8,57 +9,57 @@ class AppTextStyles {
     
     AppTextStyles._(); 
 
-    static const TextStyle displayLarge = TextStyle(
+    static final TextStyle displayLarge = GoogleFonts.poppins(
         fontSize: 32, 
         fontWeight: FontWeight.bold, 
         color: AppColors.textPrimary, 
     ); 
 
-    static const TextStyle headlineLarge = TextStyle(
+    static final TextStyle headlineLarge = GoogleFonts.poppins(
         fontSize: 24, 
         fontWeight: FontWeight.w700, 
         color: AppColors.textPrimary, 
     ); 
 
-    static const TextStyle headlineMedium = TextStyle(
+    static final TextStyle headlineMedium = GoogleFonts.poppins(
         fontSize: 20, 
         fontWeight: FontWeight.w600, 
         color: AppColors.textPrimary, 
     ); 
 
-    static const TextStyle titleLarge = TextStyle(
+    static final TextStyle titleLarge = GoogleFonts.poppins(
         fontSize: 18, 
         fontWeight: FontWeight.w600, 
         color: AppColors.textPrimary,
     ); 
 
-    static const TextStyle titleMedium = TextStyle(
+    static final TextStyle titleMedium = GoogleFonts.poppins(
         fontSize: 16, 
         fontWeight: FontWeight.w600, 
         color: AppColors.textPrimary,
     ); 
 
-    static const TextStyle bodyLarge = TextStyle(
+    static final TextStyle bodyLarge = GoogleFonts.poppins(
         fontSize: 16,
         fontWeight: FontWeight.w400, 
         color: AppColors.textPrimary, 
         height: 1.4, 
     ); 
 
-    static const TextStyle bodyMedium = TextStyle(
+    static final TextStyle bodyMedium = GoogleFonts.poppins(
         fontSize: 14,
         fontWeight: FontWeight.w400, 
         color: AppColors.textPrimary, 
         height: 1.4, 
     ); 
 
-    static const TextStyle bodySmall = TextStyle(
+    static final TextStyle bodySmall = GoogleFonts.poppins(
         fontSize: 12,
         fontWeight: FontWeight.w400, 
         color: AppColors.textSecondary, 
     );     
 
-    static const TextStyle labelLarge = TextStyle(
+    static final TextStyle labelLarge = GoogleFonts.poppins(
         fontSize: 14,
         fontWeight: FontWeight.w600, 
         color: AppColors.primary, 
