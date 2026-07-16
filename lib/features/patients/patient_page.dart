@@ -88,7 +88,8 @@ class PatientPage extends ConsumerWidget {
       }
 
       return PatientDetailPage(
-        patientId: patient.id, 
+        patientId: patient.id,
+        showBackButton: false,  
       ); 
 
     }

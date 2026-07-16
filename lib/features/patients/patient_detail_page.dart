@@ -10,10 +10,12 @@ class PatientDetailPage extends ConsumerWidget {
     const PatientDetailPage({
         super.key,
         required this.patientId,
+        this.showBackButton = true, 
     });
 
 
     final String patientId;
+    final bool showBackButton; 
 
 
     @override
@@ -45,7 +47,7 @@ class PatientDetailPage extends ConsumerWidget {
 
             appBar: AppBar(
 
-                automaticallyImplyLeading: false, 
+                automaticallyImplyLeading: showBackButton, 
 
                 title: Text(
                     '${patient.firstName} ${patient.lastName}',
