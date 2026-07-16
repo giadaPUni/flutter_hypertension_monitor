@@ -92,64 +92,31 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return PopScope(
 
-      body: Center(
+      canPop: false, 
 
-        child: Padding(
+      child: Scaffold(
+        body: Center(
 
-          padding: const EdgeInsets.all(24), 
+          child: Padding(
 
-          child: Column(
+            padding: const EdgeInsets.all(24), 
 
-            mainAxisSize: MainAxisSize.min, 
+            child: Column(
 
-            children: [
+              mainAxisSize: MainAxisSize.min, 
 
-              TextField(
+              children: [
 
-                controller: usernameController, 
+                TextField(
 
-                decoration: const InputDecoration(
+                  controller: usernameController, 
 
-                  labelText: 'Username', 
+                  decoration: const InputDecoration(
 
-                ), 
+                    labelText: 'Username', 
 
-              ), 
-
-              const SizedBox(
-                height: 16, 
-              ), 
-
-              TextField(
-
-                controller: passwordController, 
-
-                obscureText: true, 
-
-                decoration: const InputDecoration(
-
-                  labelText: 'Password',
-
-                ), 
-
-              ),
-
-              const SizedBox(
-                height: 24, 
-              ), 
-
-              if (errorMessage != null)
-                Text(
-
-                  errorMessage!, 
-
-                  style: TextStyle(
-
-                    color: Theme.of(context)
-                      .colorScheme
-                      .error, 
                   ), 
 
                 ), 
@@ -158,45 +125,82 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   height: 16, 
                 ), 
 
-                ElevatedButton(
+                TextField(
 
-                  onPressed: _login,
+                  controller: passwordController, 
 
-                  child: const Text(
-                    'Login', 
-                  ), 
+                  obscureText: true, 
 
-                ), 
+                  decoration: const InputDecoration(
 
+                    labelText: 'Password',
 
-                const SizedBox(
-                  height: 16, 
-                ), 
-
-                ElevatedButton(
-
-                  onPressed: () {
-
-                    Navigator.pushNamed(
-                      context, 
-                      AppRoutes.register, 
-                    ); 
-
-                  }, 
-
-                  child: const Text(
-                    'Create account',
                   ), 
 
                 ),
 
-            ], 
+                const SizedBox(
+                  height: 24, 
+                ), 
+
+                if (errorMessage != null)
+                  Text(
+
+                    errorMessage!, 
+
+                    style: TextStyle(
+
+                      color: Theme.of(context)
+                        .colorScheme
+                        .error, 
+                    ), 
+
+                  ), 
+
+                  const SizedBox(
+                    height: 16, 
+                  ), 
+
+                  ElevatedButton(
+
+                    onPressed: _login,
+
+                    child: const Text(
+                      'Login', 
+                    ), 
+
+                  ), 
+
+
+                  const SizedBox(
+                    height: 16, 
+                  ), 
+
+                  ElevatedButton(
+
+                    onPressed: () {
+
+                      Navigator.pushNamed(
+                        context, 
+                        AppRoutes.register, 
+                      ); 
+
+                    }, 
+
+                    child: const Text(
+                      'Create account',
+                    ), 
+
+                  ),
+
+              ], 
+
+            ), 
 
           ), 
 
-        ), 
-
-      ),
+        ),
+      ), 
 
     );
 
