@@ -32,65 +32,31 @@ class _HomePageState extends ConsumerState<HomePage> {
     @override
     Widget build(BuildContext context) {
 
-        return MainLayout(
+        return PopScope(
 
-            title: const Text(
-                'Hypertension Monitor', 
-            ),  
+            canPop: false, 
+        
+            child: MainLayout(
 
-            currentSection: _currentSection, 
+                title: const Text(
+                    'Hypertension Monitor', 
+                ),  
 
-            onSectionSelected: (section) {
+                currentSection: _currentSection, 
 
-                setState(() {
+                onSectionSelected: (section) {
 
-                    _currentSection = section; 
+                    setState(() {
 
-                });
+                        _currentSection = section; 
 
-            },
-
-            body: _buildBody(), 
-
-            floatingActionButton: FloatingActionButton(
-                onPressed: () {
-
-                    final user = ref.read(
-                        currentUserProvider,
-                    );
-
-
-                    if (user == null) {
-                        return;
-                    }
-
-
-                    if (user.patientId == null) {
-                        return;
-                    }
-
-
-                    Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (_) => AddMeasurementPage(
-                                patientId: user.patientId!,
-                            ),
-                        ),
-                    );
+                    });
 
                 },
 
-                child: const Icon(
-                    Icons.add,
-                ),
-            ),   
+                body: _buildBody(), 
 
-            actions: [
-                IconButton(
-                    icon: const Icon(Icons.add),
-
-                    tooltip: 'New Measurement',
-
+                floatingActionButton: FloatingActionButton(
                     onPressed: () {
 
                         final user = ref.read(
@@ -117,11 +83,49 @@ class _HomePageState extends ConsumerState<HomePage> {
                         );
 
                     },
-                ),
-            ],                    
 
+                    child: const Icon(
+                        Icons.add,
+                    ),
+                ),   
+
+                actions: [
+                    IconButton(
+                        icon: const Icon(Icons.add),
+
+                        tooltip: 'New Measurement',
+
+                        onPressed: () {
+
+                            final user = ref.read(
+                                currentUserProvider,
+                            );
+
+
+                            if (user == null) {
+                                return;
+                            }
+
+
+                            if (user.patientId == null) {
+                                return;
+                            }
+
+
+                            Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (_) => AddMeasurementPage(
+                                        patientId: user.patientId!,
+                                    ),
+                                ),
+                            );
+
+                        },
+                    ),
+                ],                    
+
+            ), 
         ); 
-
     }
 
     Widget _buildBody() {
