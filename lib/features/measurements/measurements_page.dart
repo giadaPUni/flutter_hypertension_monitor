@@ -9,9 +9,13 @@ import 'package:flutter_hypertension_monitor/features/patients/patients_provider
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 
 class MeasurementsPage extends ConsumerWidget {
+
   const MeasurementsPage({
     super.key,
+    this.patientId, 
   });
+
+  final String? patientId; 
 
   @override
   Widget build(
@@ -19,6 +23,7 @@ class MeasurementsPage extends ConsumerWidget {
       WidgetRef ref,
   ) {
 
+        /*
         final measurements = List<BloodPressureMeasurement>.from(
             ref.watch(
                 bloodPressureMeasurementsProvider,
@@ -28,12 +33,67 @@ class MeasurementsPage extends ConsumerWidget {
             (a,b) => b.measurementDateTime
                 .compareTo(a.measurementDateTime),
         );
+        */
+
+        final allMeasurements = ref.watch(
+            bloodPressureMeasurementsProvider, 
+        ); 
+
+        final measurements = allMeasurements
+            .where(
+                (m) => 
+                    patientId == null || 
+                    m.patientId == patientId, 
+            )
+            .toList()
+
+            ..sort(
+                (a, b) => b.measurementDateTime.compareTo(
+                    a.measurementDateTime,
+                ), 
+            ); 
+
+
 
         if (measurements.isEmpty) {
 
-          return const Center(
-              child: Text(
-                  'No measurements available',
+          return Center(
+              child: Column(
+                  
+                    mainAxisAlignment: MainAxisAlignment.center, 
+
+                    children: [
+
+                        Icon(
+
+                            Icons.monitor_heart_outlined, 
+
+                            size: 70, 
+
+                            color: Colors.grey.shade400, 
+                        ), 
+
+                        const SizedBox(height: 20), 
+
+                        Text(
+
+                            'Non sono presenti misurazioni', 
+
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium, 
+                        ), 
+
+                        const SizedBox(height: 8), 
+
+                        Text(
+                            'Aggiungi la prima misurazione.', 
+
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium, 
+                        ), 
+                    ],
               ),
           );
 
@@ -72,6 +132,9 @@ class MeasurementsPage extends ConsumerWidget {
 
                 return Card(
 
+                    elevation: 2, 
+
+                    margin: const EdgeInsets.only(bottom:14), 
                     child: ListTile(
 
                         onTap: () {
@@ -121,17 +184,22 @@ class MeasurementsPage extends ConsumerWidget {
 
                                         Expanded(
                                             child: Text(
-                                                '${measurement.systolicPressure}/'
+                                                '${measurement.systolicPressure}'
+                                                '/'
                                                 '${measurement.diastolicPressure} mmHg',
+
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge, 
                                             ),
                                         ),
 
 
-                                        Text(
-                                            _pressureStatus(
+                                        
+                                            _pressureChip(
                                                 measurement,
                                             ),
-                                        ),
+                                        
 
                                     ],                                    
 
@@ -143,14 +211,86 @@ class MeasurementsPage extends ConsumerWidget {
                         ),
 
 
-                        subtitle: Text(
-                            'Heart rate: '
+                        subtitle: Column(
+
+                            crossAxisAlignment: CrossAxisAlignment.start, 
+
+                            children: [
+
+                                const SizedBox(height: 8), 
+
+                                Row(
+
+                                    children: [
+
+                                        const Icon(
+                                            Icons.favorite_border, 
+                                            size: 16, 
+                                        ), 
+
+                                        const SizedBox(width: 6), 
+
+                                        Text(
+                                            '${measurement.heartRate} bpm', 
+                                        ), 
+                                    ], 
+                                ), 
+
+                                const SizedBox(height: 4), 
+
+                                Row(
+
+                                    children: [
+
+                                        const Icon(
+                                            Icons.schedule, 
+                                            size: 16, 
+                                        ), 
+
+                                        const SizedBox(width: 6), 
+
+                                        Text(
+                                            _formatDate(
+                                                measurement.measurementDateTime,
+                                            ), 
+                                        ), 
+                                    ], 
+                                ), 
+
+                                if (patientId == null && patientName != 'Unknown')
+
+                                    Padding(
+
+                                        padding: 
+                                            const EdgeInsets.only(top: 4), 
+
+                                        child: Row(
+
+                                            children: [
+
+                                                const Icon(
+                                                    Icons.person_outline, 
+                                                    size: 16, 
+                                                ), 
+
+                                                const SizedBox(width: 6), 
+
+                                                //Text(patientName), 
+                                            ], 
+                                        ),
+                                    ),
+                            ], 
+                        ), 
+                        
+                            /*
+                            Text(
+                            'Frequenza cardiaca: '
                             '${measurement.heartRate} bpm\n'
                             '${_formatDate(
                                 measurement.measurementDateTime,
                             )}',
-                        ),
-
+                            ),
+                            */
                     ),
 
                 );
@@ -169,7 +309,7 @@ class MeasurementsPage extends ConsumerWidget {
 
     }
 
-    // parameters classification 
+    // parameters classification  / da modificare 
     String _pressureStatus(
         BloodPressureMeasurement measurement,
     ) {
@@ -179,23 +319,81 @@ class MeasurementsPage extends ConsumerWidget {
 
 
         if (systolic < 120 && diastolic < 80) {
-            return 'Normal';
+            return 'Normale';
         }
 
 
         if (systolic < 130 && diastolic < 80) {
-            return 'Elevated';
+            return 'Elevata';
         }
 
 
         if (systolic < 140 || diastolic < 90) {
-            return 'High';
+            return 'Ipertensione';
         }
 
 
-        return 'Hypertension';
+        return 'Classificazione';
 
     }
+
+Widget _pressureChip(
+    BloodPressureMeasurement measurement,
+) {
+
+    final status = _pressureStatus(
+        measurement,
+    );
+
+    Color color;
+
+    switch (status) {
+
+        case 'Normale':
+            color = Colors.green;
+            break;
+
+        case 'Elevata':
+            color = Colors.orange;
+            break;
+
+        case 'Alta':
+            color = Colors.deepOrange;
+            break;
+
+        default:
+            color = Colors.red;
+
+    }
+
+    return Chip(
+
+        backgroundColor:
+            color.withValues(
+                alpha: 0.15,
+            ),
+
+        side: BorderSide.none,
+
+        label: Text(
+
+            status,
+
+            style: TextStyle(
+
+                color: color,
+
+                fontWeight:
+                    FontWeight.bold,
+
+            ),
+
+        ),
+
+    );
+
+}
+
 
 
 
