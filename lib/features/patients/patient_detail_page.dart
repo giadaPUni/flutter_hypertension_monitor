@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'package:flutter_hypertension_monitor/features/measurements/add_measurement_page.dart';
 import 'package:flutter_hypertension_monitor/features/patients/edit_patient_page.dart';
 import 'package:flutter_hypertension_monitor/features/patients/patients_provider.dart';
+import 'package:flutter_hypertension_monitor/features/measurements/measurements_provider.dart';
+import 'package:flutter_hypertension_monitor/data/models/blood_pressure_measurement.dart';
+import 'package:flutter_hypertension_monitor/features/measurements/measurement_detail_page.dart';
 
 class PatientDetailPage extends ConsumerWidget {
 
@@ -16,6 +20,20 @@ class PatientDetailPage extends ConsumerWidget {
 
     final String patientId;
     final bool showBackButton; 
+
+    /*
+    // Helper per determinare lo stato e il colore della pressione
+    Color _getPressureColor(int systolic, int diastolic, ThemeData theme) {
+        if (systolic >= 140 || diastolic >= 90) {
+        return Colors.red.shade600; // Ipertensione
+        } else if (systolic >= 120 || diastolic >= 80) {
+        return Colors.orange.shade600; // Pre-ipertensione / Elevata
+        } else {
+        return Colors.green.shade600; // Normale
+        }
+    }
+    */
+
 
 
     @override
@@ -42,6 +60,20 @@ class PatientDetailPage extends ConsumerWidget {
             ); 
         }
 
+    
+        // filtering measurements 
+        final measurements = ref.watch(
+            bloodPressureMeasurementsProvider
+        ) 
+        .where(
+            (m) => m.patientId == patient.id, 
+        )
+        .toList()
+        ..sort(
+            (a,b) => b.measurementDateTime
+                .compareTo(a.measurementDateTime), 
+        );
+
 
         return Scaffold(
 
@@ -50,13 +82,17 @@ class PatientDetailPage extends ConsumerWidget {
                 automaticallyImplyLeading: showBackButton, 
 
                 title: Text(
-                    '${patient.firstName} ${patient.lastName}',
+                    //'${patient.firstName} ${patient.lastName}',
+                    'Scheda Paziente', 
                 ),
 
                 actions: [
 
                     IconButton(
                         icon: const Icon(Icons.edit), 
+
+                        tooltip: 'Modifica paziente', 
+
                         onPressed: () async {
 
                             await Navigator.push(
@@ -72,31 +108,29 @@ class PatientDetailPage extends ConsumerWidget {
                             ref.invalidate(patientsProvider); 
                         },
                     ),
-                    /*
-                    PopupMenuButton(
-                        itemBuilder: (context) => [
+                    
+                    IconButton(
+                        icon: const Icon(
+                            Icons.delete, 
+                        ), 
 
-                            const PopupMenuItem(
-                                value: 'delete', 
-                                child: Text(
-                                    'Elimina paziente',
-                                ), 
-                            ), 
-                        ], 
+                        tooltip: "Elimina profilo paziente",
 
-                        onSelected: (value) {
-                            if (value == 'delete') {
-                                deletePatient(context, ref); 
-                            }
+                        onPressed: () {
+                            _confirmDeletePatient(
+                                context, 
+                                ref, 
+                                patient.id, 
+                            ); 
                         },
                     ),
-                    */
+                    
 
                 ],
 
             ),
 
-            body: Padding(
+            body: SingleChildScrollView(
 
                 padding: const EdgeInsets.all(16),
 
@@ -106,73 +140,137 @@ class PatientDetailPage extends ConsumerWidget {
 
                     children: [
 
+                        Card(
+
+                            child: ListTile(
+
+                                leading: const CircleAvatar(
+                                    child: Icon(Icons.person), 
+                                ), 
+
+
+                                title: Text(
+                                    '${patient.firstName} ${patient.lastName}', 
+                                ), 
+
+                                subtitle: Text(
+                                    'BMI ${patient.bmi.toStringAsFixed(1)}', 
+                                ),
+                            ), 
+                        ), 
+
+                        const SizedBox(height: 20), 
+
                         Text(
-                            'Patient information',
+                            'Azioni veloci',
                             style: Theme.of(context)
                                 .textTheme
-                                .headlineSmall,
+                                .titleLarge,
                         ),
 
 
                         const SizedBox(
-                            height: 16,
+                            height: 12,
                         ),
-
-
-                        Text(
-                            'Name: '
-                            '${patient.firstName} ${patient.lastName}',
-                        ),
-
-
-                        Text(
-                            'Sex: ${patient.sex}',
-                        ),
-
-
-                        Text(
-                            'BMI: ${patient.bmi.toStringAsFixed(1)}',
-                        ),
-
-
-                        const SizedBox(
-                            height: 32,
-                        ),
-
 
                         SizedBox(
 
-                            width: double.infinity,
+                            width: double.infinity, 
 
                             child: FilledButton.icon(
 
-                                onPressed: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-
-                                            builder: (_) =>
-                                                AddMeasurementPage(
-                                                    patientId: patient.id,
-                                                ),
-
-                                        ),
-                                    );
-
-                                },
-
-
-                                icon: const Icon(
-                                    Icons.add,
-                                ),
-
+                                icon: const Icon(Icons.add), 
 
                                 label: const Text(
-                                    'Add measurement',
-                                ),
+                                    'Add measurement'
+                                ), 
+                            
 
-                            ),
+                                onPressed: () {
+                                    
+                                    Navigator.push(
+                                        context, 
+                                        MaterialPageRoute(
+                                            builder: (_) => 
+                                                AddMeasurementPage(
+                                                    patientId: patient.id, 
+                                                ),
+                                        ), 
+                                    ); 
+                                }, 
 
+                            ), 
                         ),
+
+                        const SizedBox(height: 24), 
+
+                        Text(
+                            'Misurazioni recenti', 
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge,
+                        ), 
+
+                        const SizedBox(height: 12), 
+
+                        if (measurements.isEmpty)
+                            const Text(
+                                'Nessuna misurazione disponibile',
+                            )
+                        
+                        else
+
+                            ...measurements
+                                .take(5)
+                                .map(
+                                    (measurement) {
+
+                                        return Card(
+                                            child: ListTile(
+
+                                                leading: const Icon(
+                                                    Icons.favorite, 
+                                                ), 
+
+                                                title: Text(
+                                                    '${measurement.systolicPressure}/'
+                                                    '${measurement.diastolicPressure}'
+                                                    ' mmHg', 
+                                                ), 
+
+                                                subtitle: Text(
+                                                    DateFormat(
+                                                        'dd/MM/yyyy HH:mm', 
+                                                    )
+                                                    .format(
+                                                        measurement
+                                                        .measurementDateTime, 
+                                                    ), 
+                                                ), 
+
+                                                trailing: const Icon(
+                                                    Icons.chevron_right, 
+                                                ), 
+
+                                                onTap: () {
+
+                                                    Navigator.push(
+                                                        context, 
+                                                        MaterialPageRoute(
+                                                            builder: (_) => 
+                                                            MeasurementDetailPage(
+                                                                measurement: 
+                                                                    measurement, 
+                                                            ), 
+                                                        ), 
+                                                    ); 
+
+                                                },
+                                            ),
+                                        );
+                                    },
+                                ), 
+                    
 
                     ],
 
@@ -183,5 +281,87 @@ class PatientDetailPage extends ConsumerWidget {
         );
 
     }
+
+    Future<void> _confirmDeletePatient(
+        BuildContext context,
+        WidgetRef ref,
+        String patientId,
+    ) async {
+
+
+    final confirm =
+        await showDialog<bool>(
+
+        context: context,
+
+        builder: (_) =>
+            AlertDialog(
+
+                title: const Text(
+                    'Cancella profilo paziente',
+                ),
+
+                content: const Text(
+                    'Sei sicuro di voler cancellare il profilo paziente?',
+                ),
+
+                actions: [
+
+                TextButton(
+                    onPressed: (){
+                        Navigator.pop(
+                        context,
+                        false,
+                        );
+                    },
+
+                    child:
+                        const Text('Annulla'),
+                ),
+
+
+                FilledButton(
+
+                    onPressed: (){
+                        Navigator.pop(
+                        context,
+                        true,
+                        );
+                    },
+
+                    child:
+                        const Text('Cancella'),
+
+                ),
+
+                ],
+
+            ),
+
+        );
+
+
+    if(confirm != true){
+        return;
+    }
+
+
+    await ref
+        .read(patientsProvider.notifier)
+        .delete(
+            patientId,
+        );
+
+
+    if(!context.mounted){
+        return;
+    }
+
+
+    Navigator.pop(context);
+
+    }
+
+
 
 }
