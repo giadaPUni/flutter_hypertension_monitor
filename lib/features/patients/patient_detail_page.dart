@@ -6,6 +6,7 @@ import 'package:flutter_hypertension_monitor/features/measurements/add_measureme
 import 'package:flutter_hypertension_monitor/features/patients/edit_patient_page.dart';
 import 'package:flutter_hypertension_monitor/features/patients/patients_provider.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/measurements_provider.dart';
+import 'package:flutter_hypertension_monitor/features/measurements/measurements_page.dart';
 import 'package:flutter_hypertension_monitor/data/models/blood_pressure_measurement.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/measurement_detail_page.dart';
 
@@ -60,19 +61,6 @@ class PatientDetailPage extends ConsumerWidget {
             ); 
         }
 
-    
-        // filtering measurements 
-        final measurements = ref.watch(
-            bloodPressureMeasurementsProvider
-        ) 
-        .where(
-            (m) => m.patientId == patient.id, 
-        )
-        .toList()
-        ..sort(
-            (a,b) => b.measurementDateTime
-                .compareTo(a.measurementDateTime), 
-        );
 
 
         return Scaffold(
@@ -142,36 +130,148 @@ class PatientDetailPage extends ConsumerWidget {
 
                         Card(
 
-                            child: ListTile(
+                            child: Padding(
 
-                                leading: const CircleAvatar(
-                                    child: Icon(Icons.person), 
-                                ), 
+                                padding: const EdgeInsets.all(20), 
+
+                                child: Row(
+
+                                    children: [
+
+                                        const CircleAvatar(
+
+                                            //radius: 34, 
+
+                                            child: Icon(
+                                                Icons.person, 
+                                                size: 34, 
+                                            ), 
+                                        ), 
+
+                                        const SizedBox(width: 20), 
+
+                                        Expanded(
+
+                                            child: Column(
+
+                                                crossAxisAlignment: CrossAxisAlignment.start, 
+
+                                                children: [
 
 
-                                title: Text(
-                                    '${patient.firstName} ${patient.lastName}', 
-                                ), 
+                                                    Text(
+                                                        '${patient.firstName} ${patient.lastName}', 
 
-                                subtitle: Text(
-                                    'BMI ${patient.bmi.toStringAsFixed(1)}', 
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headlineSmall, 
+                                                    ), 
+
+                                                    const SizedBox(height: 6), 
+
+                                                    Text(
+                                                        '${patient.sex} • BMI ${patient.bmi.toStringAsFixed(1)}',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium, 
+                                                    ),
+
+                                                ], 
+                                            ),
+                                        ),
+                                    ],
                                 ),
+
+
                             ), 
                         ), 
 
-                        const SizedBox(height: 20), 
+                        const SizedBox(height: 24), 
+                        
+                        // Patient info 
+                        Card(
 
-                        Text(
-                            'Azioni veloci',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge,
+                            child: Padding(
+
+                                padding: const EdgeInsets.all(20), 
+
+                                child: Column(
+
+                                    crossAxisAlignment: CrossAxisAlignment.start, 
+
+                                    children: [
+
+                                        Text(
+                                            'Informazioni', 
+
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge, 
+                                        ), 
+
+                                        const Divider(height: 24), 
+
+                                        _infoRow(
+                                            'Nome', 
+                                            patient.firstName, 
+                                        ), 
+
+                                        _infoRow(
+                                            'Cognome', 
+                                            patient.lastName,
+                                        ), 
+
+                                        _infoRow(
+                                            'Data di Nascita', 
+                                            DateFormat(
+                                                'dd/MM/yyyy', 
+                                            ).format(
+                                                patient.birthDate, 
+                                            ), 
+                                        ), 
+
+                                        _infoRow(
+                                            'Sesso',
+                                            patient.sex, 
+                                        ), 
+
+                                        _infoRow(
+                                            'Altezza', 
+                                            '${patient.height.toStringAsFixed(0)} cm', 
+                                        ), 
+
+                                        _infoRow(
+                                            'Peso', 
+                                            '${patient.weight.toStringAsFixed(1)} kg',
+                                        ), 
+
+                                        _infoRow(
+                                            'BMI', 
+                                            patient.bmi.toStringAsFixed(1), 
+                                        ), 
+                                    
+                                    ],
+                                ),
+                            ),
                         ),
 
+                        const SizedBox(height: 24),
 
-                        const SizedBox(
-                            height: 12,
-                        ),
+                        // Medical history 
+                        _buildMedicalHistoryCard(
+                            context, 
+                        ), 
+
+                        const SizedBox(height: 24), 
+
+                        _buildLatestMeasurements(
+                            context, 
+                            ref, 
+                            patient.id, 
+                        ), 
+
+                        const SizedBox(height: 24), 
+
 
                         SizedBox(
 
@@ -182,7 +282,7 @@ class PatientDetailPage extends ConsumerWidget {
                                 icon: const Icon(Icons.add), 
 
                                 label: const Text(
-                                    'Add measurement'
+                                    'Aggiungi misurazione'
                                 ), 
                             
 
@@ -201,77 +301,7 @@ class PatientDetailPage extends ConsumerWidget {
 
                             ), 
                         ),
-
-                        const SizedBox(height: 24), 
-
-                        Text(
-                            'Misurazioni recenti', 
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge,
-                        ), 
-
-                        const SizedBox(height: 12), 
-
-                        if (measurements.isEmpty)
-                            const Text(
-                                'Nessuna misurazione disponibile',
-                            )
-                        
-                        else
-
-                            ...measurements
-                                .take(5)
-                                .map(
-                                    (measurement) {
-
-                                        return Card(
-                                            child: ListTile(
-
-                                                leading: const Icon(
-                                                    Icons.favorite, 
-                                                ), 
-
-                                                title: Text(
-                                                    '${measurement.systolicPressure}/'
-                                                    '${measurement.diastolicPressure}'
-                                                    ' mmHg', 
-                                                ), 
-
-                                                subtitle: Text(
-                                                    DateFormat(
-                                                        'dd/MM/yyyy HH:mm', 
-                                                    )
-                                                    .format(
-                                                        measurement
-                                                        .measurementDateTime, 
-                                                    ), 
-                                                ), 
-
-                                                trailing: const Icon(
-                                                    Icons.chevron_right, 
-                                                ), 
-
-                                                onTap: () {
-
-                                                    Navigator.push(
-                                                        context, 
-                                                        MaterialPageRoute(
-                                                            builder: (_) => 
-                                                            MeasurementDetailPage(
-                                                                measurement: 
-                                                                    measurement, 
-                                                            ), 
-                                                        ), 
-                                                    ); 
-
-                                                },
-                                            ),
-                                        );
-                                    },
-                                ), 
                     
-
                     ],
 
                 ),
@@ -281,6 +311,200 @@ class PatientDetailPage extends ConsumerWidget {
         );
 
     }
+
+
+
+    // info row 
+
+    Widget _infoRow(
+        String label, 
+        String value,
+    ) {
+        return Padding(
+
+            padding: const EdgeInsets.symmetric(
+                vertical: 6, 
+            ), 
+
+            child: Row(
+
+                children: [
+
+                    SizedBox(
+                        width: 120, 
+
+                        child: Text(
+
+                            label, 
+
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w600, 
+                            ), 
+                        ), 
+                    ), 
+
+                    Expanded(
+                        child: Text(value), 
+
+                    ), 
+                ], 
+            ), 
+        ); 
+    }
+
+
+    // Medical History 
+    Widget _buildMedicalHistoryCard(
+        BuildContext context, 
+    ) {
+
+        return Card(
+            
+            child: ListTile(
+
+                leading: const Icon(
+                    Icons.medical_information,
+                ), 
+
+                title: const Text(
+                    'Dati Clinici', 
+                ), 
+
+                subtitle: const Text(
+                    'Visualizza i dati clinici',
+                ),
+
+                trailing: const Icon(
+                    Icons.chevron_right, 
+                ), 
+
+                onTap: () {
+
+                    // todo 
+                },
+            ),
+        ); 
+    }
+
+
+    // Last measurements 
+    Widget _buildLatestMeasurements(
+        BuildContext context, 
+        WidgetRef ref, 
+        String patientId, 
+    ) {
+
+    
+        // filtering measurements 
+        final measurements = ref.watch(
+            bloodPressureMeasurementsProvider
+        ) 
+        .where(
+            (m) => m.patientId == patientId, 
+        )
+        .toList()
+        ..sort(
+            (a,b) => b.measurementDateTime
+                .compareTo(a.measurementDateTime), 
+        );
+
+        final latest = measurements.take(5).toList(); 
+
+        return Card(
+
+            child: Padding(
+
+                padding: const EdgeInsets.all(20), 
+
+                child: Column(
+
+                    crossAxisAlignment: CrossAxisAlignment.start, 
+
+                    children: [
+
+                        Text(
+                            'Ultime misurazioni', 
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge, 
+                        ), 
+
+                        const SizedBox(height: 16), 
+
+                        if (latest.isEmpty)
+                            const Text(
+                                'Nessuna misurazione disponibile', 
+                            )
+                        else
+                            ...latest.map(
+
+                                (m) => ListTile(
+
+                                    dense: true, 
+
+                                    contentPadding: EdgeInsets.zero, 
+
+                                    leading: const Icon(Icons.favorite), 
+
+                                    title: Text(
+                                        '${m.systolicPressure}/${m.diastolicPressure} mmHg',
+                                    ), 
+
+                                    subtitle: Text(
+                                        DateFormat(
+                                            'dd/MM/yyyy HH:mm', 
+                                        ).format(
+                                            m.measurementDateTime, 
+                                        ), 
+                                    ), 
+                                ), 
+                            ), 
+
+                            const SizedBox(height: 8), 
+
+                            Align(
+                                alignment: Alignment.centerRight, 
+
+                                child: TextButton.icon(
+
+                                    icon: const Icon(
+                                        Icons.history, 
+                                    ), 
+
+                                    label: const Text(
+                                        'Guarda tutte le misurazioni', 
+                                    ), 
+
+                                    onPressed: () {
+
+                                        Navigator.push(
+                                            
+                                            context, 
+
+                                            MaterialPageRoute(
+                                                
+                                                builder: (_) => MeasurementsPage(
+                                                    patientId: patientId, 
+                                                ), 
+                                            ), 
+                                        ); 
+                                    }, 
+                                ), 
+                            ), 
+
+                    ],
+                ),
+            ),
+        );
+    }
+
+
+
+
+
+
+
+
 
     Future<void> _confirmDeletePatient(
         BuildContext context,
