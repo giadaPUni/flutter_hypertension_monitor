@@ -10,6 +10,8 @@ import 'package:flutter_hypertension_monitor/features/measurements/measurements_
 import 'package:flutter_hypertension_monitor/data/models/blood_pressure_measurement.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/measurement_detail_page.dart';
 
+import 'package:flutter_hypertension_monitor/shared/widgets/blood_pressure_card.dart';
+
 class PatientDetailPage extends ConsumerWidget {
 
     const PatientDetailPage({
@@ -432,31 +434,49 @@ class PatientDetailPage extends ConsumerWidget {
                         const SizedBox(height: 16), 
 
                         if (latest.isEmpty)
-                            const Text(
-                                'Nessuna misurazione disponibile', 
+
+                            const Padding(
+
+                                padding: EdgeInsets.symmetric(vertical: 12), 
+
+                                child: Text(
+                                    'Nessuna misurazione disponibile', 
+                                ),
                             )
                         else
                             ...latest.map(
 
-                                (m) => ListTile(
+                                (m) => Padding(
 
-                                    dense: true, 
+                                    //dense: true, 
 
-                                    contentPadding: EdgeInsets.zero, 
+                                    padding: const EdgeInsets.only(bottom: 12), 
 
-                                    leading: const Icon(Icons.favorite), 
+                                    child: BloodPressureCard(
+                                        
+                                        measurement: m, 
 
-                                    title: Text(
-                                        '${m.systolicPressure}/${m.diastolicPressure} mmHg',
-                                    ), 
+                                        showPatientName: false, 
 
-                                    subtitle: Text(
-                                        DateFormat(
-                                            'dd/MM/yyyy HH:mm', 
-                                        ).format(
-                                            m.measurementDateTime, 
-                                        ), 
-                                    ), 
+                                        embedded: true, 
+
+                                        compact: true, 
+
+                                        onTap: () {
+
+                                            Navigator.push(
+
+                                                context, 
+
+                                                MaterialPageRoute(
+                                                    builder: (_) => MeasurementDetailPage(
+                                                        measurement: m, 
+                                                    ), 
+                                                ),
+                                            );
+                                        },
+                                    ),
+                        
                                 ), 
                             ), 
 
@@ -496,6 +516,8 @@ class PatientDetailPage extends ConsumerWidget {
                 ),
             ),
         );
+
+
     }
 
 
