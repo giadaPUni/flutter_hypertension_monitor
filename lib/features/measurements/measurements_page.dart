@@ -7,6 +7,9 @@ import 'package:flutter_hypertension_monitor/features/measurements/measurement_d
 import 'package:flutter_hypertension_monitor/features/measurements/measurements_provider.dart';
 import 'package:flutter_hypertension_monitor/features/patients/patients_provider.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
+import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
+
+import 'package:flutter_hypertension_monitor/shared/widgets/blood_pressure_card.dart'; 
 
 class MeasurementsPage extends ConsumerWidget {
 
@@ -107,6 +110,17 @@ class MeasurementsPage extends ConsumerWidget {
             currentUserProvider,
         );
 
+        if (currentUser == null) {
+            return const Center(
+                child: Text('Nessun utente autenticato'), 
+            );
+        }
+
+        // case Patient: it's not necessary to show patientName at every measurement
+        // case User: show every patientName of the patients (if it's in the main global page)
+        final showPatientName = 
+            currentUser.role == UserRole.user && patientId == null; 
+
 
         return ListView.builder(
 
@@ -130,170 +144,27 @@ class MeasurementsPage extends ConsumerWidget {
                     .firstOrNull; 
 
 
-                return Card(
+                return BloodPressureCard(
 
-                    elevation: 2, 
+                    measurement: measurement, 
 
-                    margin: const EdgeInsets.only(bottom:14), 
-                    child: ListTile(
+                    patientName: patientName, 
 
-                        onTap: () {
+                    showPatientName: showPatientName,  
 
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        MeasurementDetailPage(
-                                            measurement: measurement,
-                                        ),
-                                ),
-                            );
+                    onTap: () {
 
-                        },
+                        Navigator.push(
+                            context, 
 
-                        leading: CircleAvatar(
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .primaryContainer, 
-                            
-                            child: Icon(
-                                Icons.favorite,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary, 
+                            MaterialPageRoute(
+                                builder: (_) => MeasurementDetailPage(
+                                    measurement: measurement, 
+                                ), 
                             ), 
-                        ),
-
-                        title: Column(
-
-                            crossAxisAlignment: CrossAxisAlignment.start, 
-
-                            children: [
-
-                                if (currentUser?.isUser == true && patientName != null) 
-                                    Text(
-                                        patientName, 
-                                        style:Theme.of(context)
-                                            .textTheme
-                                            .titleMedium, 
-                                    ), 
-                                
-
-                                Row(
-
-                                    children: [
-
-                                        Expanded(
-                                            child: Text(
-                                                '${measurement.systolicPressure}'
-                                                '/'
-                                                '${measurement.diastolicPressure} mmHg',
-
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge, 
-                                            ),
-                                        ),
-
-
-                                        
-                                            _pressureChip(
-                                                measurement,
-                                            ),
-                                        
-
-                                    ],                                    
-
-
-                                ),
-
-                            ],
-
-                        ),
-
-
-                        subtitle: Column(
-
-                            crossAxisAlignment: CrossAxisAlignment.start, 
-
-                            children: [
-
-                                const SizedBox(height: 8), 
-
-                                Row(
-
-                                    children: [
-
-                                        const Icon(
-                                            Icons.favorite_border, 
-                                            size: 16, 
-                                        ), 
-
-                                        const SizedBox(width: 6), 
-
-                                        Text(
-                                            '${measurement.heartRate} bpm', 
-                                        ), 
-                                    ], 
-                                ), 
-
-                                const SizedBox(height: 4), 
-
-                                Row(
-
-                                    children: [
-
-                                        const Icon(
-                                            Icons.schedule, 
-                                            size: 16, 
-                                        ), 
-
-                                        const SizedBox(width: 6), 
-
-                                        Text(
-                                            _formatDate(
-                                                measurement.measurementDateTime,
-                                            ), 
-                                        ), 
-                                    ], 
-                                ), 
-
-                                if (patientId == null && patientName != 'Unknown')
-
-                                    Padding(
-
-                                        padding: 
-                                            const EdgeInsets.only(top: 4), 
-
-                                        child: Row(
-
-                                            children: [
-
-                                                const Icon(
-                                                    Icons.person_outline, 
-                                                    size: 16, 
-                                                ), 
-
-                                                const SizedBox(width: 6), 
-
-                                                //Text(patientName), 
-                                            ], 
-                                        ),
-                                    ),
-                            ], 
-                        ), 
-                        
-                            /*
-                            Text(
-                            'Frequenza cardiaca: '
-                            '${measurement.heartRate} bpm\n'
-                            '${_formatDate(
-                                measurement.measurementDateTime,
-                            )}',
-                            ),
-                            */
-                    ),
-
-                );
+                        ); 
+                    }, 
+                ); 
 
             },
 
