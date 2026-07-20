@@ -23,6 +23,22 @@ class MedicalHistory {
 
         this.antihypertensiveTherapy = false, 
 
+        this.smoker = false, 
+
+        this.alcoholConsumption = false, 
+
+        this.sedentaryLifestyle = false,
+
+        this.highSaltDiet = false, 
+
+        this.dyslipidemia = false, 
+
+        this.previousStroke = false, 
+
+        this.sleepApnea = false, 
+
+        this.currentTherapy = '', 
+
         this.allergies = '', 
 
         this.notes = '', 
@@ -51,9 +67,111 @@ class MedicalHistory {
     bool antihypertensiveTherapy; 
 
     @HiveField(7)
-    String allergies; 
+    bool smoker;
 
     @HiveField(8)
+    bool alcoholConsumption;
+
+    @HiveField(9)
+    bool sedentaryLifestyle;
+
+    @HiveField(10)
+    bool highSaltDiet;
+
+    @HiveField(11)
+    bool dyslipidemia;
+
+    @HiveField(12)
+    bool previousStroke;
+
+    @HiveField(13)
+    bool sleepApnea;
+
+    @HiveField(14)
+    String currentTherapy;    
+
+    @HiveField(15)
+    String allergies; 
+
+    @HiveField(16)
     String notes; 
+
+
+    MedicalHistory copyWith({
+
+        bool? familyHistoryHypertension,
+        bool? diabetes,
+        bool? cardiovascularDisease,
+        bool? kidneyDisease,
+        bool? antihypertensiveTherapy,
+
+        bool? smoker,
+        bool? alcoholConsumption,
+        bool? sedentaryLifestyle,
+        bool? highSaltDiet,
+        bool? dyslipidemia,
+        bool? previousStroke,
+        bool? sleepApnea,
+
+        String? currentTherapy,
+        String? allergies,
+        String? notes,
+
+        }) {
+
+        return MedicalHistory(
+
+            id: id,
+            patientId: patientId,
+
+            familyHistoryHypertension:
+                familyHistoryHypertension ?? this.familyHistoryHypertension,
+
+            diabetes:
+                diabetes ?? this.diabetes,
+
+            cardiovascularDisease:
+                cardiovascularDisease ?? this.cardiovascularDisease,
+
+            kidneyDisease:
+                kidneyDisease ?? this.kidneyDisease,
+
+            antihypertensiveTherapy:
+                antihypertensiveTherapy ?? this.antihypertensiveTherapy,
+
+            smoker:
+                smoker ?? this.smoker,
+
+            alcoholConsumption:
+                alcoholConsumption ?? this.alcoholConsumption,
+
+            sedentaryLifestyle:
+                sedentaryLifestyle ?? this.sedentaryLifestyle,
+
+            highSaltDiet:
+                highSaltDiet ?? this.highSaltDiet,
+
+            dyslipidemia:
+                dyslipidemia ?? this.dyslipidemia,
+
+            previousStroke:
+                previousStroke ?? this.previousStroke,
+
+            sleepApnea:
+                sleepApnea ?? this.sleepApnea,
+
+            currentTherapy:
+                currentTherapy ?? this.currentTherapy,
+
+            allergies:
+                allergies ?? this.allergies,
+
+            notes:
+                notes ?? this.notes,
+
+        );
+
+    }
+
 
 }

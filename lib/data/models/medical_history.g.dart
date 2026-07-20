@@ -24,15 +24,23 @@ class MedicalHistoryAdapter extends TypeAdapter<MedicalHistory> {
       cardiovascularDisease: fields[4] == null ? false : fields[4] as bool,
       kidneyDisease: fields[5] == null ? false : fields[5] as bool,
       antihypertensiveTherapy: fields[6] == null ? false : fields[6] as bool,
-      allergies: fields[7] == null ? '' : fields[7] as String,
-      notes: fields[8] == null ? '' : fields[8] as String,
+      smoker: fields[7] == null ? false : fields[7] as bool,
+      alcoholConsumption: fields[8] == null ? false : fields[8] as bool,
+      sedentaryLifestyle: fields[9] == null ? false : fields[9] as bool,
+      highSaltDiet: fields[10] == null ? false : fields[10] as bool,
+      dyslipidemia: fields[11] == null ? false : fields[11] as bool,
+      previousStroke: fields[12] == null ? false : fields[12] as bool,
+      sleepApnea: fields[13] == null ? false : fields[13] as bool,
+      currentTherapy: fields[14] == null ? '' : fields[14] as String,
+      allergies: fields[15] == null ? '' : fields[15] as String,
+      notes: fields[16] == null ? '' : fields[16] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, MedicalHistory obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -48,8 +56,24 @@ class MedicalHistoryAdapter extends TypeAdapter<MedicalHistory> {
       ..writeByte(6)
       ..write(obj.antihypertensiveTherapy)
       ..writeByte(7)
-      ..write(obj.allergies)
+      ..write(obj.smoker)
       ..writeByte(8)
+      ..write(obj.alcoholConsumption)
+      ..writeByte(9)
+      ..write(obj.sedentaryLifestyle)
+      ..writeByte(10)
+      ..write(obj.highSaltDiet)
+      ..writeByte(11)
+      ..write(obj.dyslipidemia)
+      ..writeByte(12)
+      ..write(obj.previousStroke)
+      ..writeByte(13)
+      ..write(obj.sleepApnea)
+      ..writeByte(14)
+      ..write(obj.currentTherapy)
+      ..writeByte(15)
+      ..write(obj.allergies)
+      ..writeByte(16)
       ..write(obj.notes);
   }
 
