@@ -16,6 +16,10 @@ class MedicalHistoryRepository {
         await _box.put(history.id, history); 
     }
 
+    Future<void> saveOrUpdate(MedicalHistory history) async {
+        await _box.put(history.id, history); 
+    }
+
     Future<void> delete(String historyId) async {
         await _box.delete(historyId); 
     }
