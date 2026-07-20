@@ -30,6 +30,19 @@ class AppColors {
     static const Color warning = Color(0xFFF9A825); 
     static const Color error = Color(0xFFC62828); 
 
+    // Blood pressure colors 
+    static const pressureOptimal = Color(0xFF2E7D32);
+    static const pressureNormal = Color(0xFF43A047);
+    static const pressureHighNormal = Color(0xFFF9A825);
+    static const pressureGrade1 = Color(0xFFFB8C00);
+    static const pressureGrade2 = Color(0xFFF4511E);
+    static const pressureGrade3 = Color(0xFFC62828);
+    static const pressureCrisis = Color(0xFF6A1B9A);    
+
+
+    // Heart rate color 
+    static const heartRate = Color(0xFFE53935);
+
     // Misc 
     static const Color disabled = Color(0xFFBDBDBD); 
 }
