@@ -78,6 +78,8 @@ abstract final class NavigationConfig {
                 AppDestinations.patients,
 
                 AppDestinations.measurements,
+                
+                AppDestinations.medicalHistory,
 
                 AppDestinations.statistics,
 
