@@ -13,6 +13,9 @@ import 'package:flutter_hypertension_monitor/features/auth/auth_service_provider
 import 'package:flutter_hypertension_monitor/core/navigation/app_routes.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/add_measurement_page.dart';
+import 'package:flutter_hypertension_monitor/features/patients/patients_provider.dart';
+import 'package:flutter_hypertension_monitor/features/patients/create_patient_page.dart';
+
 
 class HomePage extends ConsumerStatefulWidget {
 
@@ -33,6 +36,16 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     @override
     Widget build(BuildContext context) {
+
+        
+        final user = ref.watch(currentUserProvider); 
+
+        // Case Patient: 
+        //if user is also the patient and its patientId is not null (that is the profile has been created)
+        // then show the FAB to add new measurements
+        final showFab = 
+            user?.isPatient == true && 
+            user?.patientId != null; 
 
         return PopScope(
 
@@ -64,73 +77,78 @@ class _HomePageState extends ConsumerState<HomePage> {
 
                 body: _buildBody(), 
 
-                floatingActionButton: FloatingActionButton(
-                    onPressed: () {
+                floatingActionButton: 
+                    showFab 
+                        ? FloatingActionButton(
+                            onPressed: () {
 
-                        final user = ref.read(
-                            currentUserProvider,
-                        );
-
-
-                        if (user == null) {
-                            return;
-                        }
+                                final user = ref.read(
+                                    currentUserProvider,
+                                );
 
 
-                        if (user.patientId == null) {
-                            return;
-                        }
+                                if (user == null) {
+                                    return;
+                                }
 
 
-                        Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => AddMeasurementPage(
-                                    patientId: user.patientId!,
-                                ),
-                            ),
-                        );
-
-                    },
-
-                    child: const Icon(
-                        Icons.add,
-                    ),
-                ),   
-
-                actions: [
-                    IconButton(
-                        icon: const Icon(Icons.add),
-
-                        tooltip: 'New Measurement',
-
-                        onPressed: () {
-
-                            final user = ref.read(
-                                currentUserProvider,
-                            );
+                                if (user.patientId == null) {
+                                    return;
+                                }
 
 
-                            if (user == null) {
-                                return;
-                            }
-
-
-                            if (user.patientId == null) {
-                                return;
-                            }
-
-
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => AddMeasurementPage(
-                                        patientId: user.patientId!,
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (_) => AddMeasurementPage(
+                                            patientId: user.patientId!,
+                                        ),
                                     ),
-                                ),
-                            );
+                                );
 
-                        },
-                    ),
-                ],                    
+                            },
+
+                            child: const Icon(
+                                Icons.add,
+                            ),
+                          )   
+                        : null, 
+
+                actions: showFab
+                    ? [
+                        IconButton(
+                            icon: const Icon(Icons.add),
+
+                            tooltip: 'Nuova misurazione',
+
+                            onPressed: () {
+
+                                final user = ref.read(
+                                    currentUserProvider,
+                                );
+
+
+                                if (user == null) {
+                                    return;
+                                }
+
+
+                                if (user.patientId == null) {
+                                    return;
+                                }
+
+
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (_) => AddMeasurementPage(
+                                            patientId: user.patientId!,
+                                        ),
+                                    ),
+                                );
+
+                            },
+                        ),
+                      ]  
+                    : [],                 
 
             ), 
         ); 
@@ -260,7 +278,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             default: 
                 return const Center(
                     child: Text(
-                        'Section not available', 
+                        'Sezione non disponibile', 
                     ),
                 ); 
 
@@ -272,6 +290,16 @@ class _HomePageState extends ConsumerState<HomePage> {
     Widget _buildHomeContent(BuildContext context) {
 
         final user = ref.watch(currentUserProvider); 
+
+        final needsPatientProfile = 
+            user?.isPatient == true && user?.patientId == null; 
+
+        final needsFirstPatient = 
+            user?.isUser == true && ref.watch(patientsProvider).isEmpty; 
+
+        final canAddMeasurement =
+            (user?.isPatient ?? false) && user?.patientId != null;
+
 
 
         return SingleChildScrollView(
@@ -309,88 +337,103 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 style: Theme.of(context).textTheme.bodyLarge, 
                             ), 
 
+                            const SizedBox(height: 24), 
+
+
+                            // Use Case User Account: to add the very first patient 
+                            if (needsFirstPatient)
+                                _buildAddFirstPatientCard(context), 
+
                             const SizedBox(height: 32), 
 
                             if (user?.isPatient ?? false) ...[
+                                
+                                // Use Case Patient Account: it appears only if the patient did not complete its profile yet 
+                                if (needsPatientProfile) ...[
+                                    _buildCompleteProfileCard(context), 
+                                ] else ...[
 
-                                Row(
+                                    Row(
 
-                                    children: [
+                                        children: [
 
-                                        Expanded(
-                                            child: _homeCard(
+                                            Expanded(
+                                                child: _homeCard(
 
-                                                context: context, 
+                                                    context: context, 
 
-                                                icon: Icons.favorite, 
+                                                    icon: Icons.favorite, 
 
-                                                title: 'Nuova misurazione', 
+                                                    title: 'Nuova misurazione', 
 
-                                                subtitle: 'Valore',
+                                                    subtitle: 'Valore',
 
-                                                color: Theme.of(context).colorScheme.primary, 
+                                                    color: Theme.of(context).colorScheme.primary, 
 
-                                                onTap: () {
-                                                
-                                                    Navigator.push(
-                                                        context, 
-                                                        MaterialPageRoute(
-                                                            builder: (_) => AddMeasurementPage(
-                                                                patientId: user!.patientId!, 
-                                                            ), 
-                                                        ),
-                                                    );
+                                                    enabled: canAddMeasurement, 
 
-                                                }, 
+                                                    onTap: () {
+                                                        Navigator.push(
+                                                            context, 
+                                                            MaterialPageRoute(
+                                                                builder: (_) => AddMeasurementPage(
+                                                                    patientId: user!.patientId!, 
+                                                                ), 
+                                                            ),
+                                                        );
+                                                    }, 
+                                                ), 
+                                            ),
+
+                                            const SizedBox(width: 16), 
+
+                                            Expanded(
+                                                child: _homeCard(
+                                                    context: context, 
+
+                                                    icon: Icons.analytics, 
+                                                    
+                                                    title: 'Statistiche', 
+
+                                                    subtitle: 'Visualizza i trend e i grafici.', 
+
+                                                    color: Colors.green, 
+
+                                                    enabled: true, 
+
+                                                    onTap: () {
+
+                                                        setState((){
+                                                            _currentSection = NavigationSection.statistics;
+                                                        });
+                                                    },
+                                                ),
+                                            ),
+
+                                        ], 
+                                    ), 
+
+                                    const SizedBox(height: 24), 
+
+                                    Card(
+                                        
+                                        child: ListTile(
+
+                                            leading: const Icon(Icons.history), 
+
+                                            title: const Text("Misurazioni recenti"),
+
+                                            subtitle: const Text(
+                                                "Le misurazioni vengono mostrate qui.", 
                                             ), 
                                         ),
-
-                                        const SizedBox(width: 16), 
-
-                                        Expanded(
-                                            child: _homeCard(
-                                                context: context, 
-
-                                                icon: Icons.analytics, 
-                                                
-                                                title: 'Statistiche', 
-
-                                                subtitle: 'Visualizza i trend e i grafici.', 
-
-                                                color: Colors.green, 
-
-                                                onTap: () {
-
-                                                    setState((){
-                                                        _currentSection = NavigationSection.statistics;
-                                                    });
-                                                },
-                                            ),
-                                        ),
-
-                                    ], 
-                                ), 
-
-                                const SizedBox(height: 24), 
-
-                                Card(
-                                    
-                                    child: ListTile(
-
-                                        leading: const Icon(Icons.history), 
-
-                                        title: const Text("Misurazioni recenti"),
-
-                                        subtitle: const Text(
-                                            "Le misurazioni vengono mostrate qui.", 
-                                        ), 
                                     ),
-                                ),
-
+                                ],
                             ]
 
                             else ...[
 
+                                // Case User account 
                                 Row(
                                     children: [
 
@@ -406,6 +449,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                                 subtitle: "Gestisci i tuoi pazienti", 
 
                                                 color: Colors.indigo, 
+
+                                                enabled: true, 
 
                                                 onTap: () {
 
@@ -431,6 +476,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                                 subtitle: 'Statistiche generali', 
 
                                                 color: Colors.green, 
+
+                                                enabled: true, 
 
                                                 onTap: () {
 
@@ -458,7 +505,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                             children: [
 
                                                 Text(
-                                                    "Quick Tip", 
+                                                    "Suggerimento", 
                                                     style: Theme.of(context).textTheme.titleLarge, 
                                                 ),
 
@@ -495,59 +542,184 @@ class _HomePageState extends ConsumerState<HomePage> {
 
         required Color color, 
 
+        required bool enabled, 
+
         required VoidCallback onTap, 
     }) {
 
-        return Card(
-            
-            clipBehavior: Clip.antiAlias, 
+        return Opacity(
 
-            child: InkWell(
+            opacity: enabled ? 1.0 : 0.5, 
+            child: Card(
+                
+                clipBehavior: Clip.antiAlias, 
 
-                onTap: onTap, 
+                child: InkWell(
 
-                child: Padding(
+                    onTap: enabled ? onTap : null, 
 
-                    padding: const EdgeInsets.all(20), 
+                    child: Padding(
 
-                    child: Column(
+                        padding: const EdgeInsets.all(20), 
 
-                        crossAxisAlignment: CrossAxisAlignment.start, 
+                        child: Column(
 
-                        children: [
+                            crossAxisAlignment: CrossAxisAlignment.start, 
 
-                            CircleAvatar(
-                                
-                                radius: 24, 
+                            children: [
 
-                                backgroundColor: color.withValues(
-                                    alpha: 0.12,
+                                CircleAvatar(
+                                    
+                                    radius: 24, 
+
+                                    backgroundColor: color.withValues(
+                                        alpha: 0.12,
+                                    ),
+
+                                    child: Icon(
+                                        icon, 
+                                        color: color, 
+                                        size: 28,
+                                    ), 
                                 ),
 
-                                child: Icon(
-                                    icon, 
-                                    color: color, 
-                                    size: 28,
+                                const SizedBox(height: 20), 
+
+                                Text(
+                                    title, 
+                                    style: Theme.of(context).textTheme.titleLarge, 
                                 ), 
-                            ),
 
-                            const SizedBox(height: 20), 
+                                const SizedBox(height: 8), 
 
-                            Text(
-                                title, 
-                                style: Theme.of(context).textTheme.titleLarge, 
-                            ), 
-
-                            const SizedBox(height: 8), 
-
-                            Text(
-                                subtitle, 
-                                style: Theme.of(context).textTheme.bodyMedium,
-                            ), 
-                        ], 
+                                Text(
+                                    subtitle, 
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                ), 
+                            ], 
+                        ),
                     ),
                 ),
-            ),
+            ), 
+
+        );
+        
+        
+    }
+
+    // Case Patient 
+    Widget _buildCompleteProfileCard(BuildContext context) {
+
+        return Card(
+            child: Padding(
+                padding: const EdgeInsets.all(24), 
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, 
+                    children: [
+
+                        const Icon(
+                            Icons.monitor_health,  // person_add //monitor_health
+                            size: 72, 
+                        ), 
+
+                        const SizedBox(height: 16), 
+
+                        Text(
+                            'Completa il tuo profilo', 
+                            style: Theme.of(context).textTheme.titleLarge, 
+                        ), 
+
+                        const SizedBox(height: 8), 
+
+                        const Text(
+                            'Completa il tuo profilo con i tuoi dati anagrafici e antropometrici per iniziare a registrare le misurazioni della pressione.', 
+                        ), 
+
+                        const SizedBox(height: 20), 
+
+                        FilledButton(
+                            onPressed: () async {
+
+                                await Navigator.push(
+                                    
+                                    context, 
+
+                                    MaterialPageRoute(
+                                        
+                                        builder: (_) => const CreatePatientPage(), 
+
+                                    ), 
+                                
+                                ); 
+                            }, 
+
+                            child: const Text(
+                                'Completa il profilo', 
+                            ), 
+                        ), 
+                    ], 
+                ), 
+            ), 
+        ); 
+    }
+
+
+    // Case User Account 
+    Widget _buildAddFirstPatientCard(BuildContext context) {
+
+        return Card(
+            
+            child: Padding(
+
+                padding: const EdgeInsets.all(24), 
+
+                child: Column(
+
+                    crossAxisAlignment: CrossAxisAlignment.start, 
+
+                    children: [
+
+                        const Icon(
+                            Icons.people, 
+                            size: 42, 
+                        ), 
+
+                        const SizedBox(height: 16), 
+
+                        Text(
+                            'Aggiungi il primo paziente', 
+                            style: Theme.of(context).textTheme.titleLarge, 
+                        ), 
+
+                        const SizedBox(height: 8), 
+
+                        const Text(
+                            'Crea il profilo del tuo primo paziente per iniziare a monitorare le misurazioni.', 
+                        ), 
+
+                        const SizedBox(height: 20), 
+
+                        FilledButton(
+                            
+                            onPressed: () async {
+
+                                await Navigator.push(
+                                    context, 
+
+                                    MaterialPageRoute(
+
+                                        builder: (_) => const CreatePatientPage(), 
+                                    ), 
+                                );
+                            },
+
+                            child: const Text(
+                                'Aggiungi un paziente', 
+                            ), 
+                        ), 
+                    ], 
+                ), 
+            ), 
         ); 
     }
 
