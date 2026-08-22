@@ -9,6 +9,7 @@ import 'package:flutter_hypertension_monitor/features/measurements/measurements_
 import 'package:flutter_hypertension_monitor/features/measurements/measurements_page.dart';
 import 'package:flutter_hypertension_monitor/data/models/blood_pressure_measurement.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/measurement_detail_page.dart';
+import 'package:flutter_hypertension_monitor/features/medical_history/medical_history_detail_page.dart';
 
 import 'package:flutter_hypertension_monitor/shared/widgets/blood_pressure_card.dart';
 
@@ -261,6 +262,7 @@ class PatientDetailPage extends ConsumerWidget {
                         // Medical history 
                         _buildMedicalHistoryCard(
                             context, 
+                            patient.id, 
                         ), 
 
                         const SizedBox(height: 24), 
@@ -357,6 +359,7 @@ class PatientDetailPage extends ConsumerWidget {
     // Medical History 
     Widget _buildMedicalHistoryCard(
         BuildContext context, 
+        String patientId, 
     ) {
 
         return Card(
@@ -381,7 +384,15 @@ class PatientDetailPage extends ConsumerWidget {
 
                 onTap: () {
 
-                    // todo 
+                    Navigator.push(
+                        context, 
+                        MaterialPageRoute(
+                            builder: (_) => MedicalHistoryDetailPage(
+                                patientId: patientId,
+                                onDeleted: () => Navigator.pop(context),
+                            ), 
+                        ),
+                    );
                 },
             ),
         ); 
