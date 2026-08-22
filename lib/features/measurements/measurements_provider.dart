@@ -5,8 +5,12 @@ import 'package:flutter_hypertension_monitor/data/repositories/blood_pressure_me
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 import 'package:flutter_hypertension_monitor/features/patients/patients_provider.dart';
 
-class BloodPressureMeasurementsNotifier
-    extends Notifier<List<BloodPressureMeasurement>> {
+
+// Provides all the measurements that the current user is allowed to see. 
+// Case Patient Account: only their own measurements 
+// Case User Account: measurements belonging to their patients 
+
+class BloodPressureMeasurementsNotifier extends Notifier<List<BloodPressureMeasurement>> {
 
 
     @override
@@ -24,7 +28,7 @@ class BloodPressureMeasurementsNotifier
             return []; 
         }
 
-        // Case Patient
+        // Case Patient Account 
         if (user.isPatient) {
 
             if (user.patientId == null) {
@@ -37,7 +41,7 @@ class BloodPressureMeasurementsNotifier
         }
         
 
-        // Case User 
+        // Case User Account 
         if (user.isUser) {
 
             final patients = ref.watch(
@@ -45,12 +49,11 @@ class BloodPressureMeasurementsNotifier
             ); 
 
             final patientIds = patients
-                .map(
-                    (p) => p.id, 
-                )
+                .map((p) => p.id)
                 .toSet(); 
 
-            return repository.findAll() 
+            return repository
+                .findAll() 
                 .where(
                     (measurement) => 
                         patientIds.contains(
@@ -65,6 +68,7 @@ class BloodPressureMeasurementsNotifier
     }
 
 
+    // Add 
     Future<void> add(
         BloodPressureMeasurement measurement,
     ) async {
@@ -87,6 +91,7 @@ class BloodPressureMeasurementsNotifier
     }
 
 
+    // Delete 
     Future<void> delete(
         String id,
     ) async {
@@ -112,6 +117,7 @@ class BloodPressureMeasurementsNotifier
 }
 
 
+// All measurements the current user has access to 
 final bloodPressureMeasurementsProvider =
     NotifierProvider<
         BloodPressureMeasurementsNotifier,
@@ -119,3 +125,56 @@ final bloodPressureMeasurementsProvider =
     >(
         BloodPressureMeasurementsNotifier.new,
     );
+
+
+
+// Sorted Measurements (from newest to oldest) 
+final sortedBloodPressureMeasurementsProvider = Provider<List<BloodPressureMeasurement>>((ref) {
+
+    final measurements = ref.watch(
+        bloodPressureMeasurementsProvider, 
+    ); 
+
+    final sorted = [
+        ...measurements, 
+    ]; 
+
+    sorted.sort(
+        (a, b) => b.measurementDateTime.compareTo(
+            a.measurementDateTime, 
+        ), 
+    );
+
+    return sorted; 
+
+}); 
+
+
+// Sorted measurements of the passed patientId 
+final patientMeasurementsProvider = 
+    Provider.family<
+        List<BloodPressureMeasurement>, 
+        String
+    >(
+        (ref, patientId) {
+            
+            final measurements = ref.watch(
+                bloodPressureMeasurementsProvider,
+            ); 
+
+            final result = measurements
+                .where(
+                    (measurement) => 
+                        measurement.patientId == patientId, 
+                )
+                .toList(); 
+
+            result.sort(
+                (a, b) => b.measurementDateTime.compareTo(
+                    a.measurementDateTime, 
+                ), 
+            ); 
+
+            return result; 
+        }, 
+    ); 
