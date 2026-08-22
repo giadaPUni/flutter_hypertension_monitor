@@ -79,7 +79,6 @@ class BloodPressureCard extends StatelessWidget {
 
                         Icon(
                             Icons.favorite, 
-
                             size: compact ? 18: 24, 
                         ), 
 
@@ -100,6 +99,13 @@ class BloodPressureCard extends StatelessWidget {
                         PressureStatusChip(
                             measurement: measurement, 
                         ), 
+
+                        if (onTap != null) ...[
+                            const SizedBox(height: 8), 
+                            const Icon(
+                                Icons.chevron_right, 
+                            ),
+                        ], 
                     ], 
                 ), 
 
