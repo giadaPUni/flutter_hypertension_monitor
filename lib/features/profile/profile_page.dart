@@ -113,7 +113,7 @@ class ProfilePage extends ConsumerWidget {
               _ProfileTile(
                 icon: Icons.badge_outlined, 
 
-                title: 'Tipo account', 
+                title: 'Tipologia di account', 
 
                 value: user.isPatient
                   ? 'Paziente \nMonitoraggio personale'
