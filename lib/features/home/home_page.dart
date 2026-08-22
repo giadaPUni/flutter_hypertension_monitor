@@ -15,6 +15,11 @@ import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dar
 import 'package:flutter_hypertension_monitor/features/measurements/add_measurement_page.dart';
 import 'package:flutter_hypertension_monitor/features/patients/patients_provider.dart';
 import 'package:flutter_hypertension_monitor/features/patients/create_patient_page.dart';
+import 'package:flutter_hypertension_monitor/features/measurements/measurements_provider.dart';
+
+import 'package:flutter_hypertension_monitor/features/measurements/measurement_detail_page.dart';
+
+import 'package:flutter_hypertension_monitor/shared/widgets/blood_pressure_card.dart';
 
 
 class HomePage extends ConsumerStatefulWidget {
@@ -41,8 +46,8 @@ class _HomePageState extends ConsumerState<HomePage> {
         final user = ref.watch(currentUserProvider); 
 
         // Case Patient: 
-        //if user is also the patient and its patientId is not null (that is the profile has been created)
-        // then show the FAB to add new measurements
+        // if user is also the patient and its patientId is not null (the profile has been created)
+        // then show the FloatingActionButton to add new measurements
         final showFab = 
             user?.isPatient == true && 
             user?.patientId != null; 
@@ -333,7 +338,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ),
 
                             Text(
-                                'Monitora l\'ipertensione e mantiene sotto controllo la tua salute.', 
+                                'Monitora la tua pressione arteriosa e mantieni sotto controllo la tua salute.', 
                                 style: Theme.of(context).textTheme.bodyLarge, 
                             ), 
 
@@ -344,7 +349,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             if (needsFirstPatient)
                                 _buildAddFirstPatientCard(context), 
 
-                            const SizedBox(height: 32), 
+                                const SizedBox(height: 32), 
 
                             if (user?.isPatient ?? false) ...[
                                 
@@ -366,7 +371,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
                                                     title: 'Nuova misurazione', 
 
-                                                    subtitle: 'Valore',
+                                                    subtitle: 'Registra un nuovo valore',
 
                                                     color: Theme.of(context).colorScheme.primary, 
 
@@ -415,6 +420,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
                                     const SizedBox(height: 24), 
 
+                                    /*
                                     Card(
                                         
                                         child: ListTile(
@@ -428,6 +434,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                                             ), 
                                         ),
                                     ),
+                                    */
+
+                                    _buildLatestMeasurementCard(context), 
                                 ],
                             ]
 
@@ -607,6 +616,155 @@ class _HomePageState extends ConsumerState<HomePage> {
         
     }
 
+    Widget _buildLatestMeasurementCard(BuildContext context) {
+
+        final user = ref.watch(currentUserProvider);
+
+        if (user?.patientId == null) {
+            return const SizedBox.shrink();
+        }
+
+        // user and patientId exist 
+        final patientId = user!.patientId!; 
+
+        final measurements = ref
+            .watch(bloodPressureMeasurementsProvider)
+            //.where((m) => m.patientId == user!.patientId)
+            .where((m) => m.patientId == patientId)
+            .toList()
+            ..sort(
+            (a, b) => b.measurementDateTime.compareTo(
+                a.measurementDateTime,
+            ),
+            );
+
+
+        // No measurements registered
+        if (measurements.isEmpty) {
+
+            return Card(
+
+                child: Padding(
+
+                    padding: const EdgeInsets.all(24),
+
+                    child: Column(
+
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+
+                            //// prova 
+                            Icon(
+                                Icons.favorite_border, 
+                                size: 60, 
+                            ), 
+
+                            const SizedBox(height: 16),
+
+                            Text(
+                                "Ultima misurazione",
+                                style: Theme.of(context).textTheme.titleLarge,
+                            ),
+
+                            const SizedBox(height: 12),
+
+                            const Text(
+                                "Nessuna misurazione attualmente registrata.",
+                            ),
+
+                        ],
+                    ),
+                ),
+            );
+        }
+
+        final latest = measurements.first;
+
+        return Card(
+
+            child: Padding(
+
+            padding: const EdgeInsets.all(20),
+
+                child: Column(
+
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
+                    children: [
+
+                        Text(
+                            "Ultima misurazione registrata",
+                            style: Theme.of(context).textTheme.titleLarge,
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        BloodPressureCard(
+
+                            measurement: latest,
+
+                            embedded: true,
+
+                            compact: false,
+
+                            showPatientName: false,
+
+                            onTap: () {
+
+                                Navigator.push(
+
+                                    context,
+
+                                    MaterialPageRoute(
+
+                                        builder: (_) => MeasurementDetailPage(
+                                            measurement: latest,
+                                        ),
+                                    ),
+                                );
+
+                            },
+
+                        ),
+
+
+                        // prova 
+
+                        const SizedBox(height: 16),
+
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                                child: const Text("Tutte le misurazioni"),
+                                onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => Scaffold(
+                                                appBar: AppBar(
+                                                    title: const Text("Tutte le misurazioni"),
+                                                ),
+                                                body: MeasurementsPage(
+                                                    patientId: patientId,
+                                                ),
+                                            ),
+                                        ),
+                                    );
+                                },
+                            ),
+                        ),                        
+                        // end prova 
+
+                    ],
+                ),
+            ),
+        );
+    }
+
+
+
+
     // Case Patient 
     Widget _buildCompleteProfileCard(BuildContext context) {
 
@@ -618,7 +776,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     children: [
 
                         const Icon(
-                            Icons.monitor_health,  // person_add //monitor_health
+                            Icons.person_add,  // person_add //monitor_health
                             size: 72, 
                         ), 
 
