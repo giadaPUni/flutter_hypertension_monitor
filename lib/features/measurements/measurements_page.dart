@@ -27,17 +27,6 @@ class MeasurementsPage extends ConsumerWidget {
   ) {
 
         /*
-        final measurements = List<BloodPressureMeasurement>.from(
-            ref.watch(
-                bloodPressureMeasurementsProvider,
-            ),
-        )
-        ..sort(
-            (a,b) => b.measurementDateTime
-                .compareTo(a.measurementDateTime),
-        );
-        */
-
         final allMeasurements = ref.watch(
             bloodPressureMeasurementsProvider, 
         ); 
@@ -49,12 +38,23 @@ class MeasurementsPage extends ConsumerWidget {
                     m.patientId == patientId, 
             )
             .toList()
-
             ..sort(
                 (a, b) => b.measurementDateTime.compareTo(
                     a.measurementDateTime,
                 ), 
             ); 
+        */
+
+
+        // If patientId is not provided then get all the sorted measurements 
+        // otherwise, get the patient's sorted measurements 
+        final measurements = patientId == null 
+            ? ref.watch(
+                sortedBloodPressureMeasurementsProvider, 
+              )
+            : ref.watch(
+                patientMeasurementsProvider(patientId!), 
+              ); 
 
 
 
@@ -180,6 +180,8 @@ class MeasurementsPage extends ConsumerWidget {
 
     }
 
+
+    //// DA TOGLIERE 
     // parameters classification  / da modificare 
     String _pressureStatus(
         BloodPressureMeasurement measurement,
@@ -208,6 +210,7 @@ class MeasurementsPage extends ConsumerWidget {
 
     }
 
+// DA TOGLIERE 
 Widget _pressureChip(
     BloodPressureMeasurement measurement,
 ) {

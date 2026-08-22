@@ -627,6 +627,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         // user and patientId exist 
         final patientId = user!.patientId!; 
 
+        /*
         final measurements = ref
             .watch(bloodPressureMeasurementsProvider)
             //.where((m) => m.patientId == user!.patientId)
@@ -637,7 +638,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                 a.measurementDateTime,
             ),
             );
+        */
 
+        // Measurements for this patient already sorted from newest to oldest 
+        // (patientMeasurementsProvider in blood_pressure_measurements_provider) 
+        final measurements = ref.watch(
+            patientMeasurementsProvider(patientId) 
+        );
 
         // No measurements registered
         if (measurements.isEmpty) {
@@ -657,7 +664,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             //// prova 
                             Icon(
                                 Icons.favorite_border, 
-                                size: 60, 
+                                //size: 60, 
                             ), 
 
                             const SizedBox(height: 16),
@@ -679,6 +686,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             );
         }
 
+        // Since the provider already sorted the list, first is equal to newest measurement
         final latest = measurements.first;
 
         return Card(
@@ -736,7 +744,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                                child: const Text("Tutte le misurazioni"),
+                                child: const Text("Guarda tutte le misurazioni"),
                                 onPressed: () {
                                     Navigator.push(
                                         context,

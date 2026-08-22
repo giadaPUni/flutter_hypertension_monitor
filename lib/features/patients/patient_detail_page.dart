@@ -64,7 +64,6 @@ class PatientDetailPage extends ConsumerWidget {
         }
 
 
-
         return Scaffold(
 
             appBar: AppBar(
@@ -369,11 +368,11 @@ class PatientDetailPage extends ConsumerWidget {
                 ), 
 
                 title: const Text(
-                    'Dati Clinici', 
+                    'Anamnesi', 
                 ), 
 
                 subtitle: const Text(
-                    'Visualizza i dati clinici',
+                    'Visualizza la storia clinica pregressa',
                 ),
 
                 trailing: const Icon(
@@ -396,7 +395,7 @@ class PatientDetailPage extends ConsumerWidget {
         String patientId, 
     ) {
 
-    
+        /*
         // filtering measurements 
         final measurements = ref.watch(
             bloodPressureMeasurementsProvider
@@ -410,6 +409,15 @@ class PatientDetailPage extends ConsumerWidget {
                 .compareTo(a.measurementDateTime), 
         );
 
+        final latest = measurements.take(5).toList(); 
+        */
+
+        // Measurements for the patient already sorted from newest to oldest 
+        final measurements = ref.watch(
+            patientMeasurementsProvider(patientId), 
+        ); 
+
+        // Only the 5 newest measurements are displayed
         final latest = measurements.take(5).toList(); 
 
         return Card(
@@ -503,8 +511,13 @@ class PatientDetailPage extends ConsumerWidget {
 
                                             MaterialPageRoute(
                                                 
-                                                builder: (_) => MeasurementsPage(
-                                                    patientId: patientId, 
+                                                builder: (_) => Scaffold(
+                                                    appBar: AppBar(
+                                                        title: const Text("Tutte le misurazioni"), 
+                                                    ),
+                                                    body: MeasurementsPage(
+                                                        patientId: patientId, 
+                                                    ), 
                                                 ), 
                                             ), 
                                         ); 
