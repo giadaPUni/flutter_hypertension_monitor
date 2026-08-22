@@ -27,21 +27,20 @@ class PatientPage extends ConsumerWidget {
     ); 
 
 
-    if (currentUser == null) {
-
+    // Case Patient not authenticated (additional check/debug)
+    if (currentUser == null) {.
       return const Center(
         child: Text(
           'Nessun utente autenticato', 
         ), 
       ); 
-
     }
 
     // Case 1 - Patient: 
     // User is also the patient
     if (currentUser.role == UserRole.patient) {
 
-      // if the account has not created the patient profile yet
+      // if the account has not been created the patient profile yet
       if (currentUser.patientId == null) {
       
         return Center(
@@ -51,7 +50,6 @@ class PatientPage extends ConsumerWidget {
             onPressed: () async {
 
               await Navigator.of(context).push(
-                
                 MaterialPageRoute(
                   builder: (_) => const CreatePatientPage(),
                 ),
@@ -79,7 +77,6 @@ class PatientPage extends ConsumerWidget {
       
 
       if (patient == null) {
-
         return const Center(
           child: Text(
             'Profilo paziente non trovato',
