@@ -18,7 +18,11 @@ class MedicalHistoryPage extends ConsumerWidget {
 
   const MedicalHistoryPage({
     super.key,
+    this.patientId, 
   });
+
+  // it can be null (for User Account Case)
+  final String? patientId; 
 
   @override
   Widget build(
@@ -32,9 +36,8 @@ class MedicalHistoryPage extends ConsumerWidget {
 
     //final histories = ref.watch(medicalHistoryProvider);
 
-    //print("MedicalHistoryPage rebuild");
     if (currentUser == null) {
-
+      ////////////
       return const Center(
         child: Text(
           'Utente non autenticato', 
@@ -42,20 +45,31 @@ class MedicalHistoryPage extends ConsumerWidget {
       ); 
     }
 
-    // Case Patient Account
+    // A specific patient was explicitly selected. 
+    // This is used when navigating from PatientDetailPage 
+    if (patientId != null) {
+      return _buildPatientView(
+        context, 
+        ref, 
+        patientId!, 
+      ); 
+    }
 
+    // Use Case: Patient Account 
     if (currentUser.role == UserRole.patient) {
-      
-
-      return _buildPatientView(context, ref, currentUser.patientId); 
-
+      return _buildPatientView(
+        context, 
+        ref, 
+        currentUser.patientId,
+      ); 
     }
 
 
-    // Case User Account 
-  
-    return _buildDoctorView(context, ref); 
-
+    // Use Case: User Account 
+    return _buildDoctorView(
+      context, 
+      ref,
+    ); 
 
   }
 
@@ -66,8 +80,17 @@ class MedicalHistoryPage extends ConsumerWidget {
   ) {
 
     if (patientId == null) {
+      /*
       return const Center(
         child: Text('Profilo paziente non disponibile'), 
+      ); 
+      */
+      return const Scaffold(
+        body: Center(
+          child: Text(
+            'Profilo paziente non disponibile', 
+          ), 
+        ),
       ); 
     }
 
@@ -78,13 +101,25 @@ class MedicalHistoryPage extends ConsumerWidget {
       .firstOrNull; 
 
     if (history == null) {
+      /*
       return _NoMedicalHistoryBody(
         patientId: patientId, 
+      ); 
+      */
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Anamnesi', 
+          ),
+        ), 
+        body: _NoMedicalHistoryBody(
+          patientId: patientId, 
+        ), 
       ); 
     }
 
     return MedicalHistoryDetailPage(
-      patientId: patientId, 
+      patientId: patientId,  
     ); 
 
   }

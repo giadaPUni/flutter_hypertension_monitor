@@ -45,17 +45,21 @@ class MedicalHistoryDetailPage extends ConsumerWidget {
       .firstOrNull; 
 
     
+    // additional check 
     if (history == null) {
-      return const Scaffold(
-        body: Center(
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Storia medica', 
+          ), 
+        ), 
+        body: const Center(
           child: Text(
             'Nessuna anamnesi presente',
           ),
         ),
       );
     }
-
-    print("detail rebuild"); 
 
     return Scaffold(
 
@@ -101,9 +105,6 @@ class MedicalHistoryDetailPage extends ConsumerWidget {
                 ),
 
               );
-
-              print(updated); 
-
 
             },
 
