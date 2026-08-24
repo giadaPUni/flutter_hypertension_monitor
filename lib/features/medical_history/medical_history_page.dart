@@ -19,10 +19,12 @@ class MedicalHistoryPage extends ConsumerWidget {
   const MedicalHistoryPage({
     super.key,
     this.patientId, 
+    this.showBackButton = false, 
   });
 
   // it can be null (for User Account Case)
   final String? patientId; 
+  final bool showBackButton; 
 
   @override
   Widget build(
@@ -66,7 +68,7 @@ class MedicalHistoryPage extends ConsumerWidget {
 
 
     // Use Case: User Account 
-    return _buildDoctorView(
+    return _buildUserView(
       context, 
       ref,
     ); 
@@ -80,11 +82,11 @@ class MedicalHistoryPage extends ConsumerWidget {
   ) {
 
     if (patientId == null) {
-      /*
+      
       return const Center(
         child: Text('Profilo paziente non disponibile'), 
       ); 
-      */
+      /*
       return const Scaffold(
         body: Center(
           child: Text(
@@ -92,6 +94,7 @@ class MedicalHistoryPage extends ConsumerWidget {
           ), 
         ),
       ); 
+      */
     }
 
     final histories = ref.watch(medicalHistoryProvider); 
@@ -108,9 +111,8 @@ class MedicalHistoryPage extends ConsumerWidget {
       */
       return Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Anamnesi', 
-          ),
+          automaticallyImplyLeading: showBackButton, 
+          title: const Text('Anamnesi'),
         ), 
         body: _NoMedicalHistoryBody(
           patientId: patientId, 
@@ -120,11 +122,12 @@ class MedicalHistoryPage extends ConsumerWidget {
 
     return MedicalHistoryDetailPage(
       patientId: patientId,  
+      showBackButton: showBackButton, 
     ); 
 
   }
 
-  Widget _buildDoctorView(
+  Widget _buildUserView(
     BuildContext context, 
     WidgetRef ref, 
   ) {
@@ -227,116 +230,61 @@ class _NoMedicalHistoryBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.sizeOf(context).height,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
 
+              Icon(
+                Icons.medical_information_outlined,
+                size: 64,
+                color: Theme.of(context)
+                  .colorScheme
+                  .primary,
+              ),
 
-    return Center(
+              const SizedBox(height: 16),
 
-      child: Column(
+              Text(
+                'Nessuna anamnesi presente',
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                  .textTheme
+                  .titleLarge,
+              ),
 
-        mainAxisSize:
-            MainAxisSize.min,
+              const SizedBox(height: 16),
 
+              FilledButton.icon(
+                icon: const Icon(Icons.add),
+                label: const Text('Crea anamnesi'),
+                onPressed: () async {
 
-        children: [
-
-
-          Icon(
-
-            Icons.assignment_outlined,
-
-            size: 90,
-            color: Theme.of(context)
-              .colorScheme
-              .primary, 
-
-          ),
-
-
-          const SizedBox(
-            height: 20,
-          ),
-
-
-
-          Text(
-
-            'Nessuna anamnesi presente',
-            style: Theme.of(context)
-              .textTheme
-              .titleLarge, 
-          ),
-
-
-
-          const SizedBox(
-            height: 8,
-          ),
-
-          Text(
-            'Crea la prima anamnesi per iniziare\nil monitoraggio del paziente.',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium,
-          ),
-
-          const SizedBox(height: 24), 
-
-
-          FilledButton.icon(
-
-            icon:
-                const Icon(
-                  Icons.add,
-                ),
-
-
-            label:
-                const Text(
-                  'Crea anamnesi',
-                ),
-
-
-
-            onPressed: () async {
-
-
-              final created = await Navigator.push<bool>(
-
-                context,
-
-                MaterialPageRoute(
-
-                  builder: (_) =>
-                    MedicalHistoryFormPage(
-
-                      patientId:
-                          patientId,
-
+                  final created = await Navigator.push<bool>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MedicalHistoryFormPage(
+                        patientId: patientId,
+                      ),
                     ),
+                  );
 
-                ),
-
-              );
-
-              if (created == true) {
-                onCreated?.call(); 
-              }
-
-
-            },
-
-
+                  if (created == true) {
+                    onCreated?.call();
+                  }
+                },
+              ),
+            ],
           ),
-
-
-        ],
-
+        ),
       ),
-
     );
-
-
   }
 
 }
