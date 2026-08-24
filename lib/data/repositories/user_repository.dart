@@ -19,7 +19,8 @@ class UserRepository {
 
     Future<void> updatePatientId(
         String userId,
-        String patientId,
+        // If a Patient Account is deleted, it is possible to have patientId null
+        String? patientId,
     ) async {
 
 
