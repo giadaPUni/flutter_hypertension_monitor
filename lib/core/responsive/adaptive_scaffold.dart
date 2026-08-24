@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart'; 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+//import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_hypertension_monitor/core/responsive/breakpoints.dart';
 import 'package:flutter_hypertension_monitor/core/responsive/navigation_type.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/navigation_section.dart';
-import 'package:flutter_hypertension_monitor/core/navigation/app_destinations.dart';
+//import 'package:flutter_hypertension_monitor/core/navigation/app_destinations.dart';
 import 'package:flutter_hypertension_monitor/core/navigation/app_navigation_destination.dart';
-import 'package:flutter_hypertension_monitor/core/responsive/adaptive_scaffold.dart';
+//import 'package:flutter_hypertension_monitor/core/responsive/adaptive_scaffold.dart';
 
 class AdaptiveScaffold extends StatelessWidget {
 
@@ -41,19 +41,7 @@ class AdaptiveScaffold extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
 
-        
-
-
         final navigationType = _navigationType(context); 
-
-        /*
-        final destinations = _destinationsFor(
-            navigationType,
-        );    
-
-        */ 
-
-
 
         switch (navigationType) {
             case NavigationType.bottomNavigationBar:
@@ -116,10 +104,12 @@ class AdaptiveScaffold extends StatelessWidget {
         List<AppNavigationDestination> destinations,
     ) {
 
-        return destinations.indexWhere(
+        final index = destinations.indexWhere(
             (destination) =>
                 destination.section == selectedSection,
         );
+        
+        return index >= 0 ? index : 0; 
 
     }
 
@@ -145,8 +135,13 @@ class AdaptiveScaffold extends StatelessWidget {
 
             floatingActionButton: floatingActionButton, 
 
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,            
+
             bottomNavigationBar: MediaQuery.sizeOf(context).height > 250
-                ? _buildBottomNavigationBar(bottomDestinations)
+                ? _buildBottomNavigationBar(
+                    context, 
+                    bottomDestinations, 
+                  )
                 : null,
             
         ); 
@@ -163,14 +158,18 @@ class AdaptiveScaffold extends StatelessWidget {
                 title: title, 
                 actions: actions, 
             ), 
+
+            /*
             drawer: _buildDrawer(
                 context, 
                 destinations, 
             ), 
+            */
 
             body: Row(
                 children: [
 
+                    /*
                     SizedBox(
                         height: double.infinity,
                         child: _buildNavigationRail(
@@ -178,6 +177,11 @@ class AdaptiveScaffold extends StatelessWidget {
                             destinations: destinations, 
                         ),
                     ),
+                    */
+                    _buildNavigationRail(
+                        extended: false, 
+                        destinations: destinations, 
+                    ), 
 
                     const VerticalDivider(width: 1), 
 
@@ -206,6 +210,7 @@ class AdaptiveScaffold extends StatelessWidget {
             body: Row(
                 children: [
 
+                    /*
                     SizedBox(
                         height: double.infinity,
                         child: _buildNavigationRail(
@@ -213,6 +218,12 @@ class AdaptiveScaffold extends StatelessWidget {
                             destinations: destinations, 
                         ),
                     ),
+                    */
+
+                    _buildNavigationRail(
+                        extended: true, 
+                        destinations: destinations,
+                    ), 
 
                     const VerticalDivider(width: 1), 
 
@@ -233,6 +244,8 @@ class AdaptiveScaffold extends StatelessWidget {
     ) {
         return Drawer(
             child: SafeArea(
+                
+                /*
                 child: ListView.builder(
                     itemCount: destinations.length, 
                     itemBuilder: (context, index) {
@@ -257,6 +270,143 @@ class AdaptiveScaffold extends StatelessWidget {
                         );
                     },
                 ),
+                */
+
+                child: Padding(
+
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 16,
+                    ),
+                    child: Column(
+
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
+
+                        children: [
+
+                            Padding(
+
+                                padding:
+                                    const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 12,
+                                    ),
+                                child: Row(
+
+                                    children: [
+
+                                        Container(
+
+                                            width: 42,
+                                            height: 42,
+
+                                            decoration: BoxDecoration(
+
+                                                color:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .primaryContainer,
+
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        14,
+                                                    ),
+                                            ),
+
+                                            child: Icon(
+                                                Icons.favorite_rounded,
+
+                                                color:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+
+                                                size: 22,
+                                            ),
+                                        ),
+
+                                        const SizedBox(
+                                            width: 12,
+                                        ),
+
+                                        Expanded(
+
+                                            child: Text(
+
+                                                'Hypertension\nMonitor', 
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium,
+                                            ),
+                                        ),
+                                    ],
+                                ),
+                            ),
+
+                            const SizedBox(
+                                height: 12,
+                            ),
+                            Expanded(
+
+                                child: ListView(
+
+                                    children: [
+
+                                        ...destinations.map(
+                                            (destination) {
+
+                                                final selected =
+                                                    destination.section ==
+                                                    selectedSection;
+
+                                                return Padding(
+
+                                                    padding:
+                                                        const EdgeInsets
+                                                            .symmetric(
+                                                                vertical: 2,
+                                                            ),
+                                                    child: ListTile(
+
+                                                        selected:
+                                                            selected,
+
+                                                        leading: Icon(
+
+                                                            selected
+                                                                ? destination
+                                                                        .selectedIcon ??
+                                                                    destination
+                                                                        .icon
+                                                                : destination
+                                                                    .icon,
+                                                        ),
+
+                                                        title: Text(
+                                                            destination.label,
+                                                        ),
+
+                                                        onTap: () {
+                                                            Navigator.of(
+                                                                context,
+                                                            ).pop();
+
+                                                            onSectionSelected(
+                                                                destination
+                                                                    .section,
+                                                            );
+                                                        },
+                                                    ),
+                                                );
+                                            },
+                                        ),
+                                    ],
+                                ),
+                            ),
+                        ],
+                    ),                                                                                                                                                                                                                                                   
+                ),
             ),
         );
     }
@@ -278,6 +428,10 @@ class AdaptiveScaffold extends StatelessWidget {
                 );
             },
 
+            labelType: extended
+                ? NavigationRailLabelType.none
+                : NavigationRailLabelType.all,
+
             destinations: destinations
                 .map(
                     (destination) => NavigationRailDestination(
@@ -294,10 +448,12 @@ class AdaptiveScaffold extends StatelessWidget {
         ); 
     }
 
-    BottomNavigationBar _buildBottomNavigationBar(
+    NavigationBar _buildBottomNavigationBar(
+        BuildContext context, 
         List<AppNavigationDestination> destinations, 
     ) {
-        
+
+        /*
         return BottomNavigationBar(
 
             currentIndex: _selectedIndex(destinations) >= 0
@@ -335,6 +491,33 @@ class AdaptiveScaffold extends StatelessWidget {
             ).toList(), 
 
         );
+        */
+
+        return NavigationBar(
+            selectedIndex: _selectedIndex(
+                destinations, 
+            ), 
+
+            onDestinationSelected: (index) {
+                onSectionSelected(
+                    destinations[index].section, 
+                );
+            }, 
+
+            destinations: destinations
+                .map(
+                    (destination) {
+                        return NavigationDestination(
+                            icon: Icon(destination.icon),
+
+                            selectedIcon: Icon(destination.selectedIcon ?? destination.icon), 
+
+                            label: destination.label, 
+                        );
+                    }, 
+                )
+                .toList(),
+        ); 
     }
 
 }
