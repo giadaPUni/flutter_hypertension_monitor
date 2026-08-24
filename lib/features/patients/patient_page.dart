@@ -28,7 +28,7 @@ class PatientPage extends ConsumerWidget {
 
 
     // Case Patient not authenticated (additional check/debug)
-    if (currentUser == null) {.
+    if (currentUser == null) {
       return const Center(
         child: Text(
           'Nessun utente autenticato', 
