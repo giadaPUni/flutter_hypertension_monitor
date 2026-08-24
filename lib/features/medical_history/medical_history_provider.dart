@@ -21,13 +21,13 @@ class MedicalHistoryNotifier extends Notifier<List<MedicalHistory>> {
             medicalHistoryRepositoryProvider,
         ); 
 
-        await repository.saveOrUpdate(
+        //await repository.saveOrUpdate(
+        await repository.save(
             history, 
         ); 
 
         state = repository.findAll(); 
 
-        print("notifier updated"); 
     }
 
 
