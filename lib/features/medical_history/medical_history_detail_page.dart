@@ -18,13 +18,16 @@ class MedicalHistoryDetailPage extends ConsumerWidget {
     //this.canPopAfterDelete = true, 
     this.onDeleted, 
 
+    this.showBackButton = true, 
+
   });
 
 
 
   //final MedicalHistory history;
   final String patientId; 
-  //final bool canPopAfterDelete; 
+  //final bool canPopAfterDelete;
+  final bool showBackButton;  
   final VoidCallback? onDeleted;
 
 
@@ -49,6 +52,7 @@ class MedicalHistoryDetailPage extends ConsumerWidget {
     if (history == null) {
       return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: showBackButton, 
           title: const Text(
             'Storia medica', 
           ), 
@@ -64,7 +68,7 @@ class MedicalHistoryDetailPage extends ConsumerWidget {
     return Scaffold(
 
       appBar: AppBar(
-
+        automaticallyImplyLeading: showBackButton, 
         title: const Text(
           'Storia medica',
         ),
