@@ -11,6 +11,8 @@ import 'package:flutter_hypertension_monitor/data/models/blood_pressure_measurem
 import 'package:flutter_hypertension_monitor/features/measurements/measurement_detail_page.dart';
 import 'package:flutter_hypertension_monitor/features/medical_history/medical_history_detail_page.dart';
 import 'package:flutter_hypertension_monitor/features/medical_history/medical_history_page.dart';
+import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
+import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
 
 import 'package:flutter_hypertension_monitor/shared/widgets/blood_pressure_card.dart';
 
@@ -25,21 +27,6 @@ class PatientDetailPage extends ConsumerWidget {
 
     final String patientId;
     final bool showBackButton; 
-
-    /*
-    // Helper per determinare lo stato e il colore della pressione
-    Color _getPressureColor(int systolic, int diastolic, ThemeData theme) {
-        if (systolic >= 140 || diastolic >= 90) {
-        return Colors.red.shade600; // Ipertensione
-        } else if (systolic >= 120 || diastolic >= 80) {
-        return Colors.orange.shade600; // Pre-ipertensione / Elevata
-        } else {
-        return Colors.green.shade600; // Normale
-        }
-    }
-    */
-
-
 
     @override
     Widget build(
@@ -65,18 +52,30 @@ class PatientDetailPage extends ConsumerWidget {
             ); 
         }
 
+        final currentUser = ref.watch(
+            currentUserProvider, 
+        ); 
+
+        final isPatientAccount = 
+            currentUser?.role == UserRole.patient && 
+            currentUser?.patientId == patient.id; 
 
         return Scaffold(
 
-            appBar: AppBar(
+            appBar: showBackButton
+            
+                ? AppBar(
 
-                automaticallyImplyLeading: showBackButton, 
+                    automaticallyImplyLeading: true, 
 
-                title: Text(
-                    //'${patient.firstName} ${patient.lastName}',
-                    'Scheda Paziente', 
-                ),
+                    title: Text(
+                        //'${patient.firstName} ${patient.lastName}',
+                        'Scheda Paziente', 
+                    ),
+                  )   
+                : null, 
 
+/*
                 actions: [
 
                     IconButton(
@@ -120,6 +119,7 @@ class PatientDetailPage extends ConsumerWidget {
                 ],
 
             ),
+*/
 
             body: SingleChildScrollView(
 
@@ -130,6 +130,15 @@ class PatientDetailPage extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: [
+
+                        Text(
+                            'Scheda Paziente', 
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium, 
+                        ), 
+
+                        const SizedBox(height: 24), 
 
                         Card(
 
@@ -204,13 +213,66 @@ class PatientDetailPage extends ConsumerWidget {
 
                                     children: [
 
-                                        Text(
-                                            'Informazioni', 
+                                        Row(
 
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge, 
+                                            children: [
+                                                Expanded(
+                                                    child: Text(
+                                                        'Informazioni', 
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .titleLarge, 
+                                                    ), 
+                                                ), 
+
+                                                IconButton(
+                                                    icon: const Icon(Icons.edit), 
+                                                    tooltip: 'Modifica informazioni', 
+                                                    onPressed: () async {
+                                                        await Navigator.push(
+                                                            context, 
+                                                            MaterialPageRoute(
+                                                                builder: (_) => EditPatientPage(
+                                                                    patient: patient, 
+                                                                ), 
+                                                            ),
+                                                        );
+
+                                                        ref.invalidate(patientsProvider); 
+                                                    }, 
+                                                ), 
+                                                
+                                                // User Account 
+                                                if (!isPatientAccount)
+                                                    IconButton(
+                                                        icon: const Icon(Icons.delete), 
+                                                        tooltip: 'Elimina paziente', 
+                                                        onPressed: () {
+                                                            _confirmDeletePatient(
+                                                                context, 
+                                                                ref, 
+                                                                patient.id, 
+                                                            ); 
+                                                        }, 
+                                                    ),
+
+                                                // Patient Account 
+                                                if (isPatientAccount)
+                                                    IconButton(
+                                                        icon: const Icon(Icons.person_off),
+                                                        tooltip: 'Disattiva profilo',
+                                                        onPressed: () {
+                                                            _confirmDeactivateProfile(
+                                                                context,
+                                                                ref,
+                                                                patient.id,
+                                                            );
+                                                        },
+                                                    ), 
+                                            ],
+
                                         ), 
+
 
                                         const Divider(height: 24), 
 
@@ -396,6 +458,7 @@ class PatientDetailPage extends ConsumerWidget {
                             */
                             builder: (_) => MedicalHistoryPage(
                                 patientId: patientId, 
+                                showBackButton: true, 
                             ), 
                         ),
                     );
@@ -552,12 +615,7 @@ class PatientDetailPage extends ConsumerWidget {
 
 
 
-
-
-
-
-
-
+    // User Account 
     Future<void> _confirmDeletePatient(
         BuildContext context,
         WidgetRef ref,
@@ -565,79 +623,143 @@ class PatientDetailPage extends ConsumerWidget {
     ) async {
 
 
-    final confirm =
-        await showDialog<bool>(
+        final confirm =
+            await showDialog<bool>(
 
-        context: context,
+            context: context,
 
-        builder: (_) =>
-            AlertDialog(
+            builder: (_) =>
+                AlertDialog(
 
-                title: const Text(
-                    'Cancella profilo paziente',
+                    title: const Text(
+                        'Cancella profilo paziente',
+                    ),
+
+                    content: const Text(
+                        'Sei sicuro di voler cancellare il profilo paziente?',
+                    ),
+
+                    actions: [
+
+                    TextButton(
+                        onPressed: (){
+                            Navigator.pop(
+                            context,
+                            false,
+                            );
+                        },
+
+                        child:
+                            const Text('Annulla'),
+                    ),
+
+
+                    FilledButton(
+
+                        onPressed: (){
+                            Navigator.pop(
+                            context,
+                            true,
+                            );
+                        },
+
+                        child:
+                            const Text('Cancella'),
+
+                    ),
+
+                    ],
+
                 ),
 
-                content: const Text(
-                    'Sei sicuro di voler cancellare il profilo paziente?',
-                ),
-
-                actions: [
-
-                TextButton(
-                    onPressed: (){
-                        Navigator.pop(
-                        context,
-                        false,
-                        );
-                    },
-
-                    child:
-                        const Text('Annulla'),
-                ),
+            );
 
 
-                FilledButton(
-
-                    onPressed: (){
-                        Navigator.pop(
-                        context,
-                        true,
-                        );
-                    },
-
-                    child:
-                        const Text('Cancella'),
-
-                ),
-
-                ],
-
-            ),
-
-        );
+        if (confirm != true) {
+            return;
+        }
 
 
-    if(confirm != true){
-        return;
+        await ref
+            .read(patientsProvider.notifier)
+            .delete(
+                patientId,
+            );
+
+
+        if (!context.mounted){
+            return;
+        }
+
+        
+        Navigator.pop(context);
+
+    
     }
 
+
+// Patient Account 
+Future<void> _confirmDeactivateProfile(
+    BuildContext context,
+    WidgetRef ref,
+    String patientId,
+) async {
+
+    final confirm = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+            title: const Text(
+                'Disattiva profilo',
+            ),
+            content: const Text(
+                'Disattivando il profilo verranno eliminati '
+                'definitivamente il profilo paziente, '
+                'l\'anamnesi e tutte le misurazioni associate. '
+                'Questa operazione non può essere annullata.',
+            ),
+            actions: [
+
+                TextButton(
+                    onPressed: () {
+                        Navigator.pop(
+                            context,
+                            false,
+                        );
+                    },
+                    child: const Text(
+                        'Annulla',
+                    ),
+                ),
+
+                FilledButton(
+                    onPressed: () {
+                        Navigator.pop(
+                            context,
+                            true,
+                        );
+                    },
+                    child: const Text(
+                        'Disattiva',
+                    ),
+                ),
+            ],
+        ),
+    );
+
+    if (confirm != true) {
+        return;
+    }
 
     await ref
         .read(patientsProvider.notifier)
-        .delete(
+        .deactivatePatientProfile(
             patientId,
         );
 
-
-    if(!context.mounted){
+    if (!context.mounted) {
         return;
     }
-
-
-    Navigator.pop(context);
-
-    }
-
+}
 
 
 }
