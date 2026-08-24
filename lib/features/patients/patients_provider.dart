@@ -5,6 +5,7 @@ import 'package:flutter_hypertension_monitor/data/repositories/patient_repositor
 import 'package:flutter_hypertension_monitor/data/repositories/patient_repository_provider.dart';
 import 'package:flutter_hypertension_monitor/core/user/app_user.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
+import 'package:flutter_hypertension_monitor/data/repositories/user_repository_provider.dart';
 
 
 class PatientsNotifier extends Notifier<List<Patient>> {
@@ -66,6 +67,29 @@ class PatientsNotifier extends Notifier<List<Patient>> {
         _reload(); 
 
     }
+
+
+    Future<void> deactivatePatientProfile(
+        String patientId,
+    ) async {
+
+        await repository.delete(patientId);
+
+        final user = currentUser;
+
+        if (user != null &&
+            user.patientId == patientId) {
+
+            await ref
+                .read(currentUserProvider.notifier)
+                .clearPatientId(
+                    ref.read(userRepositoryProvider),
+                );
+        }
+
+        _reload();
+    }
+
 
 }
 
