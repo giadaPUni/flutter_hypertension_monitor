@@ -29,7 +29,7 @@ class CurrentUserNotifier extends Notifier<AppUser?> {
 
 
     Future<void> updatePatientId(
-        String patientId,
+        String? patientId,
         UserRepository repository,
     ) async {
 
@@ -62,6 +62,36 @@ class CurrentUserNotifier extends Notifier<AppUser?> {
         );
 
     } 
+
+
+    Future<void> clearPatientId(
+        UserRepository repository,
+    ) async {
+
+        if (state == null) {
+            return;
+        }
+
+        await repository.updatePatientId(
+            state!.id,
+            null,
+        );
+
+        state = AppUser(
+
+            id: state!.id,
+
+            name: state!.name,
+
+            email: state!.email,
+
+            role: state!.role,
+
+            patientId: null,
+
+        );
+
+    }
 
 }
 
