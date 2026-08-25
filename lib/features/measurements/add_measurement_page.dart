@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart'; 
 import 'package:flutter_riverpod/flutter_riverpod.dart'; 
+import 'package:intl/intl.dart';
 
 import 'package:flutter_hypertension_monitor/data/models/blood_pressure_measurement.dart'; 
 import 'package:flutter_hypertension_monitor/features/measurements/measurements_provider.dart';
@@ -27,7 +28,7 @@ class _AddMeasurementPageState extends ConsumerState<AddMeasurementPage> {
 
     final _heartRateController = TextEditingController();
 
-
+    DateTime measurementDateTime = DateTime.now();
 
     @override
     void dispose() {
@@ -47,11 +48,13 @@ class _AddMeasurementPageState extends ConsumerState<AddMeasurementPage> {
     @override
     Widget build(BuildContext context) {
 
+        final colors = Theme.of(context).colorScheme; 
+
         return Scaffold(
 
             appBar: AppBar(
                 title: const Text(
-                    'Add Measurement',
+                    'Nuova misurazione',
                 ),
             ),
 
@@ -67,286 +70,311 @@ class _AddMeasurementPageState extends ConsumerState<AddMeasurementPage> {
                         child: ConstrainedBox(
                             
                             constraints: const BoxConstraints(
-                                maxWidth: 600, 
+                                maxWidth: 700, 
                             ), 
 
-                            child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 40, 
-                                ), 
 
-                                child: Form(
+                            child: Form(
 
-                                    key: _formKey,
+                                key: _formKey,
 
-                                    child: Column(
+                                child: Column(
 
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
 
-                                        children: [
+                                    children: [
+                                        
+                                        Card(
+                                            child: Padding(
+                                                padding: const EdgeInsets.all(24),
+                                                child: Column(
+                                                    children: [
 
+                                                        Icon(
+                                                            Icons.favorite,
+                                                            size: 40,
+                                                            color: colors.primary,
+                                                        ),
 
-                                            Icon(
-                                                Icons.favorite,
-                                                size: 42,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                            ),
+                                                        const SizedBox(
+                                                            height: 16,
+                                                        ),
 
-                                            const SizedBox(
-                                                height: 16,
-                                            ),
+                                                        Text(
+                                                            'Pressione arteriosa',
+                                                            style: Theme.of(context)
+                                                                .textTheme
+                                                                .titleLarge,
+                                                        ),
 
-                                            Text(
-                                                'Blood pressure values',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headlineSmall,
-                                            ),
+                                                        const SizedBox(
+                                                            height: 10,
+                                                        ),
 
-                                            const SizedBox(
-                                                height: 8,
-                                            ),
 
-                                            Text(
-                                                'Enter the patient current measurements',
-                                                textAlign: TextAlign.center,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium,
-                                            ),
+                                                        Text(
+                                                            'Inserisci i valori della misurazione.',
+                                                            textAlign: TextAlign.center,
+                                                            style: Theme.of(context)
+                                                                .textTheme
+                                                                .bodyMedium,
+                                                        ),
 
+                                                        const SizedBox(
+                                                            height: 32,
+                                                        ),
 
 
-                                            const SizedBox(
-                                                height: 32,
-                                            ),
+                                                        TextFormField(
 
+                                                            controller: _systolicController,
 
-                                            TextFormField(
+                                                            keyboardType: TextInputType.number,
 
-                                                controller: _systolicController,
+                                                            textAlign: TextAlign.center,
 
-                                                keyboardType: TextInputType.number,
+                                                            decoration: const InputDecoration(
+                                                                labelText: 'Pressione sistolica',
+                                                                suffixText: 'mmHg',
+                                                            ),
 
-                                                textAlign: TextAlign.center,
 
-                                                decoration: const InputDecoration(
-                                                    labelText: 'Systolic pressure',
-                                                    suffixText: 'mmHg',
-                                                ),
+                                                            validator: (value) {
 
+                                                                if (value == null ||
+                                                                    value.isEmpty) {
 
-                                                validator: (value) {
+                                                                    return 'Campo obbligatorio';
 
-                                                    if (value == null ||
-                                                        value.isEmpty) {
+                                                                }
 
-                                                        return 'Required field';
 
-                                                    }
+                                                                final number = int.tryParse(value);
 
 
-                                                    final number = int.tryParse(value);
+                                                                if (number == null ||
+                                                                    number < 50 ||
+                                                                    number > 250) {
 
+                                                                    return 'Inserisci un valore valido';
 
-                                                    if (number == null ||
-                                                        number < 50 ||
-                                                        number > 250) {
+                                                                }
 
-                                                        return 'Enter a valid value';
 
-                                                    }
+                                                                return null;
 
+                                                            },
 
-                                                    return null;
+                                                        ),
 
-                                                },
+                                                        const SizedBox(
+                                                            height: 16,
+                                                        ),
 
-                                            ),
 
+                                                        TextFormField(
 
-                                            const SizedBox(
-                                                height: 16,
-                                            ),
+                                                            controller: _diastolicController,
 
+                                                            keyboardType: TextInputType.number,
 
-                                            TextFormField(
+                                                            textAlign: TextAlign.center,
 
-                                                controller: _diastolicController,
+                                                            decoration: const InputDecoration(
+                                                                labelText: 'Pressione diastolica',
+                                                                suffixText: 'mmHg',
+                                                            ),
 
-                                                keyboardType: TextInputType.number,
 
-                                                textAlign: TextAlign.center,
+                                                            validator: (value) {
 
-                                                decoration: const InputDecoration(
-                                                    labelText: 'Diastolic pressure',
-                                                    suffixText: 'mmHg',
-                                                ),
+                                                                if (value == null ||
+                                                                    value.isEmpty) {
 
+                                                                    return 'Campo obbligatorio';
 
-                                                validator: (value) {
+                                                                }
 
-                                                    if (value == null ||
-                                                        value.isEmpty) {
 
-                                                        return 'Required field';
+                                                                final number = int.tryParse(value);
 
-                                                    }
 
+                                                                if (number == null ||
+                                                                    number < 30 ||
+                                                                    number > 150) {
 
-                                                    final number = int.tryParse(value);
+                                                                    return 'Inserisci un valore valido';
 
+                                                                }
 
-                                                    if (number == null ||
-                                                        number < 30 ||
-                                                        number > 150) {
 
-                                                        return 'Enter a valid value';
+                                                                return null;
 
-                                                    }
+                                                            },
 
+                                                        ),
 
-                                                    return null;
+                                                        const SizedBox(
+                                                            height: 16,
+                                                        ),
 
-                                                },
+                                                        TextFormField(
 
-                                            ),
+                                                            controller:
+                                                                _heartRateController,
 
+                                                            keyboardType:
+                                                                TextInputType.number,
 
-                                            const SizedBox(
-                                                height: 16,
-                                            ),
+                                                            textAlign:
+                                                                TextAlign.center,
 
+                                                            decoration:
+                                                                const InputDecoration(
+                                                                    labelText:
+                                                                        'Frequenza cardiaca',
+                                                                    suffixText:
+                                                                        'bpm',
+                                                                ), 
 
-                                            TextFormField(
+                                                            validator: (value) {
 
-                                                controller: _heartRateController,
+                                                                if (value ==
+                                                                        null ||
+                                                                    value.isEmpty) {
+                                                                    return 'Campo obbligatorio';
+                                                                }
 
-                                                keyboardType: TextInputType.number,
+                                                                final number =
+                                                                    int.tryParse(
+                                                                        value,
+                                                                    );
+
+                                                                if (number ==
+                                                                        null ||
+                                                                    number < 30 ||
+                                                                    number > 220) {
+                                                                    return 'Inserisci un valore valido';
+                                                                }
+
+                                                                return null;
+                                                            },
+                                                        ),   
+
+
+                                                        const SizedBox(height: 16), 
+
+                                                        ListTile(
+                                                            contentPadding: EdgeInsets.zero,
+
+                                                            leading: const Icon(
+                                                                Icons.calendar_month_outlined,
+                                                            ),
+
+                                                            title: Text(
+                                                                'Data e ora',
+                                                                style: Theme.of(context)
+                                                                    .textTheme
+                                                                    .bodyMedium,
+                                                            ),
+
+                                                            subtitle: Text(
+                                                                DateFormat(
+                                                                    'dd/MM/yyyy HH:mm',
+                                                                ).format(
+                                                                    measurementDateTime,
+                                                                ),
+                                                            ),
+
+                                                            trailing: const Icon(
+                                                                Icons.edit_calendar_outlined,
+                                                            ),
+
+                                                            onTap: selectMeasurementDateTime,
+                                                        ), 
+
+                                                    ], 
+                                                ), 
+                                            ), 
+                                        ), 
+
+
+                                        const SizedBox(height: 24), 
+
+
+                                        FilledButton.icon(
+
+                                            onPressed: () async {
+
+                                                if (!_formKey.currentState!.validate()) {
+                                                    return; 
+                                                }
+
+                                                final measurement = BloodPressureMeasurement(
                                                 
-                                                textAlign: TextAlign.center,
+                                                    // accessing to the state trough widget (AddMeasurementPage is a StatefulWidget) 
+                                                    patientId: widget.patientId,
 
-                                                decoration: const InputDecoration(
-                                                    labelText: 'Heart rate',
-                                                    suffixText: 'bpm',
-                                                ),
-
-
-                                                validator: (value) {
-
-                                                    if (value == null ||
-                                                        value.isEmpty) {
-
-                                                        return 'Required field';
-
-                                                    }
-
-
-                                                    final number = int.tryParse(value);
-
-
-                                                    if (number == null ||
-                                                        number < 30 ||
-                                                        number > 220) {
-
-                                                        return 'Enter a valid value';
-
-                                                    }
-
-
-                                                    return null;
-
-                                                },
-
-                                            ),
-
-
-                                            const SizedBox(
-                                                height: 32,
-                                            ),
-
-
-                                            SizedBox(
-
-                                                width: double.infinity,
-
-                                                child: FilledButton.icon(
-
-                                                    onPressed: () async {
-
-                                                        if (_formKey.currentState!.validate()) {
-
-
-                                                            final measurement = BloodPressureMeasurement(
-                                                            
-                                                                // accessing to the state trough widget (AddMeasurementPage is a StatefulWidget) 
-                                                                patientId: widget.patientId,
-
-                                                                systolicPressure: int.parse(
-                                                                    _systolicController.text,
-                                                                ),
-
-                                                                diastolicPressure: int.parse(
-                                                                    _diastolicController.text,
-                                                                ),
-
-                                                                heartRate: int.parse(
-                                                                    _heartRateController.text,
-                                                                ),
-
-                                                            );
-
-                                                            final messenger = ScaffoldMessenger.of(context);
-                                                            final navigator = Navigator.of(context);
-
-                                                            await ref
-                                                                .read(
-                                                                    bloodPressureMeasurementsProvider.notifier,
-                                                                )
-                                                                .add(
-                                                                    measurement,
-                                                                );
-                                                            
-
-                                                            if (!mounted) {
-                                                                return; 
-                                                            }
-
-                                                            messenger.showSnackBar(
-                                                                const SnackBar(
-                                                                    content: Text(
-                                                                        'Measurement saved', 
-                                                                    ),
-                                                                ),
-                                                            );
-
-                                                            navigator.pop(); 
-                                                        }
-
-                                                    },
-
-
-                                                    icon: const Icon(
-                                                        Icons.save,
+                                                    systolicPressure: int.parse(
+                                                        _systolicController.text,
                                                     ),
 
-
-                                                    label: const Text(
-                                                        'Save',
+                                                    diastolicPressure: int.parse(
+                                                        _diastolicController.text,
                                                     ),
 
-                                                ),
+                                                    heartRate: int.parse(
+                                                        _heartRateController.text,
+                                                    ),
 
+                                                    measurementDateTime: measurementDateTime,
+
+                                                );
+
+                                                final messenger = ScaffoldMessenger.of(context);
+                                                final navigator = Navigator.of(context);
+
+                                                await ref
+                                                    .read(
+                                                        bloodPressureMeasurementsProvider.notifier,
+                                                    )
+                                                    .add(
+                                                        measurement,
+                                                    );
+                                                
+
+                                                if (!mounted) {
+                                                    return; 
+                                                }
+
+                                                messenger.showSnackBar(
+                                                    const SnackBar(
+                                                        content: Text(
+                                                            'Misurazione salvata', 
+                                                        ),
+                                                    ),
+                                                );
+
+                                                navigator.pop(); 
+                                            },
+
+                                            icon: const Icon(
+                                                Icons.save,
                                             ),
 
-                                        ],
 
-                                    ),
+                                            label: const Text(
+                                                'Save',
+                                            ),
+
+                                        ),
+
+                                    ],
 
                                 ),
-                            ), 
+
+                            ),
+                             
                         ),     
                     ),  
                 ), 
@@ -355,5 +383,42 @@ class _AddMeasurementPageState extends ConsumerState<AddMeasurementPage> {
         );
 
     }
+
+
+    Future<void> selectMeasurementDateTime() async {
+
+        final date = await showDatePicker(
+            context: context,
+            initialDate: measurementDateTime,
+            firstDate: DateTime(1900),
+            lastDate: DateTime.now(),
+        );
+
+        if (date == null) {
+            return;
+        }
+
+        final time = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(
+                measurementDateTime,
+            ),
+        );
+
+        if (time == null) {
+            return;
+        }
+
+        setState(() {
+            measurementDateTime = DateTime(
+                date.year,
+                date.month,
+                date.day,
+                time.hour,
+                time.minute,
+            );
+        });
+    }
+
 
 }

@@ -9,6 +9,7 @@ import 'package:flutter_hypertension_monitor/features/patients/patients_provider
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
 
+import 'package:flutter_hypertension_monitor/features/measurements/add_measurement_page.dart';
 import 'package:flutter_hypertension_monitor/shared/widgets/blood_pressure_card.dart'; 
 
 class MeasurementsPage extends ConsumerWidget {
@@ -21,48 +22,29 @@ class MeasurementsPage extends ConsumerWidget {
   final String? patientId; 
 
   @override
-  Widget build(
-      BuildContext context,
-      WidgetRef ref,
-  ) {
-
-        /*
-        final allMeasurements = ref.watch(
-            bloodPressureMeasurementsProvider, 
-        ); 
-
-        final measurements = allMeasurements
-            .where(
-                (m) => 
-                    patientId == null || 
-                    m.patientId == patientId, 
-            )
-            .toList()
-            ..sort(
-                (a, b) => b.measurementDateTime.compareTo(
-                    a.measurementDateTime,
-                ), 
-            ); 
-        */
-
+    Widget build(
+        BuildContext context,
+        WidgetRef ref,
+    ) {
 
         // If patientId is not provided then get all the sorted measurements 
         // otherwise, get the patient's sorted measurements 
         final measurements = patientId == null 
             ? ref.watch(
                 sortedBloodPressureMeasurementsProvider, 
-              )
+                )
             : ref.watch(
                 patientMeasurementsProvider(patientId!), 
-              ); 
+                ); 
 
 
 
+        /*
         if (measurements.isEmpty) {
 
-          return Center(
-              child: Column(
-                  
+            return Center(
+                child: Column(
+                    
                     mainAxisAlignment: MainAxisAlignment.center, 
 
                     children: [
@@ -97,10 +79,11 @@ class MeasurementsPage extends ConsumerWidget {
                                 .bodyMedium, 
                         ), 
                     ],
-              ),
-          );
+                ),
+            );
 
         }
+        */
 
         final patients = ref.watch(
             patientsProvider, 
@@ -122,62 +105,155 @@ class MeasurementsPage extends ConsumerWidget {
             currentUser.role == UserRole.user && patientId == null; 
 
 
-        return ListView.builder(
-
-            padding: const EdgeInsets.all(16),
-
-            itemCount: measurements.length,
-
-            itemBuilder: (context, index) {
-
-                final measurement = measurements[index];
-
-                final patientName = patients
-                    .where(
-                        (patient) => 
-                            patient.id == measurement.patientId, 
-                    )
-                    .map(
-                        (patient) => 
-                            '${patient.firstName} ${patient.lastName}', 
-                    )
-                    .firstOrNull; 
+        final canAddMeasurement = 
+            currentUser.role == UserRole.patient && 
+            currentUser.patientId != null; 
 
 
-                return BloodPressureCard(
+        return Scaffold(
 
-                    measurement: measurement, 
+            floatingActionButton: canAddMeasurement
+                ? Tooltip(
+                    message: 'Nuova misurazione', 
+                    child: FloatingActionButton(
+                        onPressed: () async {
 
-                    patientName: patientName, 
+                            await Navigator.push(
+                                context, 
+                                MaterialPageRoute(
+                                    builder: (_) => AddMeasurementPage(
+                                        patientId: currentUser.patientId!, 
+                                    ), 
+                                ),
+                            );
+                        },
 
-                    showPatientName: showPatientName,  
+                        child: const Icon(
+                            Icons.add,
+                        ),
+                    ), 
+                  )
+                : null, 
 
-                    onTap: () {
+            body: measurements.isEmpty
 
-                        Navigator.push(
-                            context, 
+                ? _buildEmptyState(
+                    context, 
+                    canAddMeasurement, 
+                  )
 
-                            MaterialPageRoute(
-                                builder: (_) => MeasurementDetailPage(
-                                    measurement: measurement, 
-                                ), 
-                            ), 
+                : ListView.builder(
+
+                    padding: const EdgeInsets.all(16),
+
+                    itemCount: measurements.length,
+
+                    itemBuilder: (context, index) {
+
+                        final measurement = measurements[index];
+
+                        final patientName = patients
+                            .where(
+                                (patient) => 
+                                    patient.id == measurement.patientId, 
+                            )
+                            .map(
+                                (patient) => 
+                                    '${patient.firstName} ${patient.lastName}', 
+                            )
+                            .firstOrNull; 
+
+
+                        return BloodPressureCard(
+
+                            measurement: measurement, 
+
+                            patientName: patientName, 
+
+                            showPatientName: showPatientName,  
+
+                            onTap: () {
+
+                                Navigator.push(
+                                    context, 
+
+                                    MaterialPageRoute(
+                                        builder: (_) => MeasurementDetailPage(
+                                            measurement: measurement, 
+                                        ), 
+                                    ), 
+                                ); 
+                            }, 
                         ); 
-                    }, 
-                ); 
 
-            },
+                    },
+
+                ),
 
         );
-
     }
 
-    String _formatDate(DateTime dateTime) {
+    Widget _buildEmptyState(
+        BuildContext context,
+        bool canAddMeasurement,
+    ) {
+        return Center(
+            child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
 
-        return DateFormat(
-            'dd/MM/yyyy HH:mm',
-        ).format(dateTime);
+                    children: [
 
-    }
+                        Container(
+                            width: 72,
+                            height: 72,
+
+                            decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withValues(alpha: 0.10),
+
+                                shape: BoxShape.circle,
+                            ),
+
+                            child: Icon(
+                                Icons.monitor_heart_outlined,
+                                size: 36,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary,
+                            ),
+                        ),
+                        const SizedBox(
+                            height: 20,
+                        ),
+
+                        Text(
+                            'Nessuna misurazione',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge,
+                        ),
+
+                        const SizedBox(
+                            height: 8,
+                        ),
+
+                        Text(
+                            'Registra le misurazioni della pressione per iniziare a monitorarne i valori.',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium,
+                        ),
+                    ],
+                ),
+            ),
+        );
+    }                    
+
 
 }
