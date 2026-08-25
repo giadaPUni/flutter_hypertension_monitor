@@ -32,6 +32,10 @@ Le principali funzionalità dell'applicazione sono:
 
 All'avvio l'utente può effettuare l'accesso inserendo username e password. Qualora non possieda ancora un account, può accedere alla schermata di registrazione e crerne uno con la tipologia che preferisce. 
 
+<p align="center">
+  <img src="screenshots/statistics.png" width="700">
+</p>
+
 ![Schermata di login](screenshots/login.png)
 ![Schermata di registrazione](screenshots/registrazione.png)
 
