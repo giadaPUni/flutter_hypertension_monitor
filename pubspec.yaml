@@ -21,6 +21,8 @@ dependencies:
   hive_ce_flutter: ^2.3.4
   # path_provider è già una dipendenza di hive_ce_flutter
 
+  http: ^1.5.0
+
   # utilities 
   shared_preferences: ^2.5.5
   fl_chart: ^1.1.1
