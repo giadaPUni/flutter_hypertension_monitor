@@ -33,19 +33,29 @@ Le principali funzionalità dell'applicazione sono:
 All'avvio l'utente può effettuare l'accesso inserendo username e password. Qualora non possieda ancora un account, può accedere alla schermata di registrazione e crerne uno con la tipologia che preferisce. 
 
 <p align="center">
-  <img src="screenshots/statistics.png" width="700">
+  <img src="screenshots/login.png" width="700">
 </p>
 
-![Schermata di login](screenshots/login.png)
-![Schermata di registrazione](screenshots/registrazione.png)
+<p align="center">
+  <img src="screenshots/registrazione.png" width="700">
+</p>
+
+
 
 
 ### Home 
 Dopo aver eseguito il login, l'utente viene indirizzato alla schermata principale (**Home**). 
 Quest'ultima, in seguito aver creato il o un paziente ed in base alla tipologia di account, permette di consultare informazioni e di accedere alle varie sezioni senza ricorrere ai menu. 
 
-![Home Paziente](screenshots/home_patient.png)
-![Home Utente](screenshots/home_user.png)
+<p align="center">
+  <img src="screenshots/home_patient.png" width="700">
+</p>
+
+<p align="center">
+  <img src="screenshots/home_user.png" width="700">
+</p>
+
+
 
 ### Gestione dei Pazienti 
 
@@ -64,7 +74,10 @@ Dalla scheda paziente è possibile modificare le informazioni del profilo oppure
 
 La creazione e la modifica del profilo utilizzano un form comune, che permette di inserire i dati che vengono richiesti. 
 
-![Scheda paziente](screenshots/patient_detail.png)
+
+<p align="center">
+  <img src="screenshots/patient_detail.png" width="700">
+</p>
 
 ### Gestione dell'Anamnesi 
 
@@ -78,7 +91,11 @@ Le misurazioni della pressione possono essere registrate direttamente dalla sche
 
 L'utente può inserire i valori relativi alla pressione sistolica, alla pressione diastolica e alla frequenza cardiaca, insieme alla data ed all'ora della misurazione tramite l'interfaccia dedicata. 
 
-![Inserimento misurazione](screenshots/add_measurement.png)
+
+
+<p align="center">
+  <img src="screenshots/add_measurement.png" width="700">
+</p>
 
 Le misurazioni vengono visualizzate nello storico del paziente o nella pagina delle Misurazioni, ordinate dalla più recente alla più datata. 
 
@@ -99,7 +116,11 @@ Per gli utenti che gestiscono più pazienti si deve selezionare il paziente tram
 - andamento della pressione nel tempo.
 
 Il grafico mostra separatamente la pressione sistolica e diastolica distinguendole con due colori ed una leggenda. Le misurazioni sono ordinate cronologicamente per rappresentare l'evoluzione nel tempo a differenza della visualizzazione nello storico delle misurazioni.
-![Statistiche e grafico](screenshots/statistics.png) 
+
+
+<p align="center">
+  <img src="screenshots/statistics.png" width="700">
+</p>
 
 
 --- 
