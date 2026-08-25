@@ -75,316 +75,271 @@ class PatientDetailPage extends ConsumerWidget {
                   )   
                 : null, 
 
-/*
-                actions: [
+            body: SafeArea(
+                
+                child: SingleChildScrollView(
 
-                    IconButton(
-                        icon: const Icon(Icons.edit), 
+                    padding: const EdgeInsets.all(16),
+                    child: Center(
+                        child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                                maxWidth: 800, 
+                            ), 
 
-                        tooltip: 'Modifica paziente', 
+                            child: Column(
 
-                        onPressed: () async {
+                                crossAxisAlignment: CrossAxisAlignment.start,
 
-                            await Navigator.push(
-                                context, 
-                                MaterialPageRoute(
-                                    builder: (_) => 
-                                        EditPatientPage(
-                                            patient: patient, 
-                                        ),
-                                ), 
-                            ); 
+                                children: [
 
-                            ref.invalidate(patientsProvider); 
-                        },
-                    ),
-                    
-                    IconButton(
-                        icon: const Icon(
-                            Icons.delete, 
-                        ), 
+                                    Text(
+                                        'Scheda Paziente', 
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium, 
+                                    ), 
 
-                        tooltip: "Elimina profilo paziente",
+                                    const SizedBox(height: 24), 
 
-                        onPressed: () {
-                            _confirmDeletePatient(
-                                context, 
-                                ref, 
-                                patient.id, 
-                            ); 
-                        },
-                    ),
-                    
-
-                ],
-
-            ),
-*/
-
-            body: SingleChildScrollView(
-
-                padding: const EdgeInsets.all(16),
-
-                child: Column(
-
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                    children: [
-
-                        Text(
-                            'Scheda Paziente', 
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium, 
-                        ), 
-
-                        const SizedBox(height: 24), 
-
-                        Card(
-                            child: Padding(
-                                padding: const EdgeInsets.all(20), 
-                                child: Row(
-                                    children: [
-
-                                        CircleAvatar(
-                                            radius: 30, 
-                                            backgroundColor: Theme.of(context).colorScheme.primaryContainer, 
-                                            child: Icon(
-                                                Icons.person, 
-                                                size: 30,
-                                                color: Theme.of(context).colorScheme.onPrimaryContainer, 
-                                            ), 
-                                        ), 
-
-                                        const SizedBox(width: 16), 
-
-                                        Expanded(
-                                            child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start, 
+                                    Card(
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(20), 
+                                            child: Row(
                                                 children: [
 
-                                                    Text(
-                                                        '${patient.firstName} ${patient.lastName}', 
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .titleLarge
-                                                            ?.copyWith(
-                                                                fontWeight: FontWeight.w600,
-                                                            ), 
+                                                    CircleAvatar(
+                                                        radius: 30, 
+                                                        backgroundColor: Theme.of(context).colorScheme.primaryContainer, 
+                                                        child: Icon(
+                                                            Icons.person, 
+                                                            size: 30,
+                                                            color: Theme.of(context).colorScheme.onPrimaryContainer, 
+                                                        ), 
                                                     ), 
 
-                                                    const SizedBox(height: 6), 
+                                                    const SizedBox(width: 16), 
 
-                                                    Text(
-                                                        '${patient.sex} • BMI ${patient.bmi.toStringAsFixed(1)}',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium, 
+                                                    Expanded(
+                                                        child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start, 
+                                                            children: [
+
+                                                                Text(
+                                                                    '${patient.firstName} ${patient.lastName}', 
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .titleLarge
+                                                                        ?.copyWith(
+                                                                            fontWeight: FontWeight.w600,
+                                                                        ), 
+                                                                ), 
+                                   
+                                                            ], 
+                                                        ),
                                                     ),
+                                                ],
+                                            ),
 
-                                                ], 
+
+                                        ), 
+                                    ), 
+
+                                    const SizedBox(height: 24), 
+                                    
+                                    // Patient info 
+                                    Card(
+
+                                        child: Padding(
+
+                                            padding: const EdgeInsets.all(20), 
+
+                                            child: Column(
+
+                                                crossAxisAlignment: CrossAxisAlignment.start, 
+
+                                                children: [
+
+                                                    Row(
+
+                                                        children: [
+                                                            Expanded(
+                                                                child: Text(
+                                                                    'Informazioni', 
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .titleLarge, 
+                                                                ), 
+                                                            ), 
+
+                                                            IconButton(
+                                                                icon: const Icon(Icons.edit), 
+                                                                tooltip: 'Modifica informazioni', 
+                                                                onPressed: () async {
+                                                                    await Navigator.push(
+                                                                        context, 
+                                                                        MaterialPageRoute(
+                                                                            builder: (_) => EditPatientPage(
+                                                                                patient: patient, 
+                                                                            ), 
+                                                                        ),
+                                                                    );
+
+                                                                    ref.invalidate(patientsProvider); 
+                                                                }, 
+                                                            ), 
+                                                            
+                                                            // User Account 
+                                                            if (!isPatientAccount)
+                                                                IconButton(
+                                                                    icon: const Icon(Icons.delete), 
+                                                                    tooltip: 'Elimina paziente', 
+                                                                    onPressed: () {
+                                                                        _confirmDeletePatient(
+                                                                            context, 
+                                                                            ref, 
+                                                                            patient.id, 
+                                                                        ); 
+                                                                    }, 
+                                                                ),
+
+                                                            // Patient Account 
+                                                            if (isPatientAccount)
+                                                                IconButton(
+                                                                    icon: const Icon(Icons.person_off),
+                                                                    tooltip: 'Disattiva profilo',
+                                                                    onPressed: () {
+                                                                        _confirmDeactivateProfile(
+                                                                            context,
+                                                                            ref,
+                                                                            patient.id,
+                                                                        );
+                                                                    },
+                                                                ), 
+                                                        ],
+
+                                                    ), 
+
+
+                                                    const Divider(height: 24), 
+
+                                                    _infoRow(
+                                                        context, 
+                                                        'Nome', 
+                                                        patient.firstName, 
+                                                    ), 
+
+                                                    _infoRow(
+                                                        context, 
+                                                        'Cognome', 
+                                                        patient.lastName,
+                                                    ), 
+
+                                                    _infoRow(
+                                                        context, 
+                                                        'Data di Nascita', 
+                                                        DateFormat(
+                                                            'dd/MM/yyyy', 
+                                                        ).format(
+                                                            patient.birthDate, 
+                                                        ), 
+                                                    ), 
+
+                                                    _infoRow(
+                                                        context, 
+                                                        'Sesso',
+                                                        patient.sex, 
+                                                    ), 
+
+                                                    _infoRow(
+                                                        context, 
+                                                        'Altezza', 
+                                                        '${patient.height.toStringAsFixed(0)} cm', 
+                                                    ), 
+
+                                                    _infoRow(
+                                                        context, 
+                                                        'Peso', 
+                                                        '${patient.weight.toStringAsFixed(1)} kg',
+                                                    ), 
+
+                                                    _infoRow(
+                                                        context, 
+                                                        'BMI', 
+                                                        patient.bmi.toStringAsFixed(1), 
+                                                    ), 
+                                                
+                                                ],
                                             ),
                                         ),
-                                    ],
-                                ),
-
-
-                            ), 
-                        ), 
-
-                        const SizedBox(height: 24), 
-                        
-                        // Patient info 
-                        Card(
-
-                            child: Padding(
-
-                                padding: const EdgeInsets.all(20), 
-
-                                child: Column(
-
-                                    crossAxisAlignment: CrossAxisAlignment.start, 
-
-                                    children: [
-
-                                        Row(
-
-                                            children: [
-                                                Expanded(
-                                                    child: Text(
-                                                        'Informazioni', 
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .titleLarge, 
-                                                    ), 
-                                                ), 
-
-                                                IconButton(
-                                                    icon: const Icon(Icons.edit), 
-                                                    tooltip: 'Modifica informazioni', 
-                                                    onPressed: () async {
-                                                        await Navigator.push(
-                                                            context, 
-                                                            MaterialPageRoute(
-                                                                builder: (_) => EditPatientPage(
-                                                                    patient: patient, 
-                                                                ), 
-                                                            ),
-                                                        );
-
-                                                        ref.invalidate(patientsProvider); 
-                                                    }, 
-                                                ), 
-                                                
-                                                // User Account 
-                                                if (!isPatientAccount)
-                                                    IconButton(
-                                                        icon: const Icon(Icons.delete), 
-                                                        tooltip: 'Elimina paziente', 
-                                                        onPressed: () {
-                                                            _confirmDeletePatient(
-                                                                context, 
-                                                                ref, 
-                                                                patient.id, 
-                                                            ); 
-                                                        }, 
-                                                    ),
-
-                                                // Patient Account 
-                                                if (isPatientAccount)
-                                                    IconButton(
-                                                        icon: const Icon(Icons.person_off),
-                                                        tooltip: 'Disattiva profilo',
-                                                        onPressed: () {
-                                                            _confirmDeactivateProfile(
-                                                                context,
-                                                                ref,
-                                                                patient.id,
-                                                            );
-                                                        },
-                                                    ), 
-                                            ],
-
-                                        ), 
-
-
-                                        const Divider(height: 24), 
-
-                                        _infoRow(
-                                            context, 
-                                            'Nome', 
-                                            patient.firstName, 
-                                        ), 
-
-                                        _infoRow(
-                                            context, 
-                                            'Cognome', 
-                                            patient.lastName,
-                                        ), 
-
-                                        _infoRow(
-                                            context, 
-                                            'Data di Nascita', 
-                                            DateFormat(
-                                                'dd/MM/yyyy', 
-                                            ).format(
-                                                patient.birthDate, 
-                                            ), 
-                                        ), 
-
-                                        _infoRow(
-                                            context, 
-                                            'Sesso',
-                                            patient.sex, 
-                                        ), 
-
-                                        _infoRow(
-                                            context, 
-                                            'Altezza', 
-                                            '${patient.height.toStringAsFixed(0)} cm', 
-                                        ), 
-
-                                        _infoRow(
-                                            context, 
-                                            'Peso', 
-                                            '${patient.weight.toStringAsFixed(1)} kg',
-                                        ), 
-
-                                        _infoRow(
-                                            context, 
-                                            'BMI', 
-                                            patient.bmi.toStringAsFixed(1), 
-                                        ), 
-                                    
-                                    ],
-                                ),
-                            ),
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        // Medical history 
-                        _buildMedicalHistoryCard(
-                            context, 
-                            patient.id, 
-                        ), 
-
-                        const SizedBox(height: 24), 
-
-                        _buildLatestMeasurements(
-                            context, 
-                            ref, 
-                            patient.id, 
-                        ), 
-
-                        const SizedBox(height: 24), 
-
-
-                        Center(
-
-                            //width: double.infinity, 
-
-                            child: FilledButton.icon(
-
-                                icon: const Icon(
-                                    Icons.add,
-                                    size: 20, 
-                                ), 
-
-                                label: const Text(
-                                    'Nuova misurazione'
-                                ), 
-                                style: FilledButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24,
-                                        vertical: 14,
                                     ),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(14),
-                                    ),
-                                ),                            
 
-                                onPressed: () {
-                                    
-                                    Navigator.push(
+                                    const SizedBox(height: 24),
+
+                                    // Medical history 
+                                    _buildMedicalHistoryCard(
                                         context, 
-                                        MaterialPageRoute(
-                                            builder: (_) => AddMeasurementPage(
-                                                patientId: patient.id, 
-                                            ),
+                                        patient.id, 
+                                    ), 
+
+                                    const SizedBox(height: 24), 
+
+                                    _buildLatestMeasurements(
+                                        context, 
+                                        ref, 
+                                        patient.id, 
+                                    ), 
+
+                                    const SizedBox(height: 24), 
+
+
+                                    Center(
+
+                                        //width: double.infinity, 
+
+                                        child: FilledButton.icon(
+
+                                            icon: const Icon(
+                                                Icons.add,
+                                                size: 20, 
+                                            ), 
+
+                                            label: const Text(
+                                                'Nuova misurazione'
+                                            ), 
+                                            style: FilledButton.styleFrom(
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: 24,
+                                                    vertical: 14,
+                                                ),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(14),
+                                                ),
+                                            ),                            
+
+                                            onPressed: () {
+                                                
+                                                Navigator.push(
+                                                    context, 
+                                                    MaterialPageRoute(
+                                                        builder: (_) => AddMeasurementPage(
+                                                            patientId: patient.id, 
+                                                        ),
+                                                    ), 
+                                                ); 
+                                            }, 
+
                                         ), 
-                                    ); 
-                                }, 
+                                    ),
+                                
+                                ],
 
-                            ), 
-                        ),
-                    
-                    ],
+                            ),
 
+                        ), 
+
+                    ), 
                 ),
-
             ),
-
         );
 
     }
@@ -420,6 +375,8 @@ class PatientDetailPage extends ConsumerWidget {
                                 ),
                         ), 
                     ), 
+                    
+                    const SizedBox(width: 16),
 
                     Expanded(
                         child: Text(
@@ -498,23 +455,6 @@ class PatientDetailPage extends ConsumerWidget {
         WidgetRef ref, 
         String patientId, 
     ) {
-
-        /*
-        // filtering measurements 
-        final measurements = ref.watch(
-            bloodPressureMeasurementsProvider
-        ) 
-        .where(
-            (m) => m.patientId == patientId, 
-        )
-        .toList()
-        ..sort(
-            (a,b) => b.measurementDateTime
-                .compareTo(a.measurementDateTime), 
-        );
-
-        final latest = measurements.take(5).toList(); 
-        */
 
         // Measurements for the patient already sorted from newest to oldest 
         final measurements = ref.watch(

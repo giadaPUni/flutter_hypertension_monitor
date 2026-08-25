@@ -179,131 +179,266 @@ class _PatientFormState extends State<PatientForm> {
     @override
     Widget build(BuildContext context) {
 
-        return SingleChildScrollView(
+        final theme = Theme.of(context); 
+        final colors = theme.colorScheme; 
 
-            padding: const EdgeInsets.all(16), 
+        return SafeArea(
+        
+            child: SingleChildScrollView(
 
-            child: Column(
-                children: [
-                    TextField(
-                        controller: firstNameController, 
-                        textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(
-                            labelText: 'Nome',
-                        ),
-                    ),
+                padding: const EdgeInsets.all(16), 
 
-                    const SizedBox(height: 12), 
-
-                    TextField(
-                        controller: lastNameController,
-                        textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(
-                            labelText: 'Cognome',
-                        ),
-                    ), 
-
-                    const SizedBox(height: 12), 
-                    
-                    TextField(
-                        controller: heightController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true,
-                        ),
-                        decoration: const InputDecoration(
-                            labelText: 'Altezza (cm)',
-                        ),
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    TextField(
-                        controller: weightController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true,
-                        ),
-                        decoration: const InputDecoration(
-                            labelText: 'Peso (kg)',
-                        ),
-                    ),
-
-                    const SizedBox(height: 12),  
-
-                    ListTile(
-                        contentPadding: EdgeInsets.zero, 
-
-                        title: Text(
-                            'Data di nascita: '
-                            '${birthDate.day}/'
-                            '${birthDate.month}/'
-                            '${birthDate.year}',
+                child: Center(
+                    child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                            maxWidth: 700, 
                         ), 
 
-                        trailing: const Icon(
-                            Icons.calendar_month, 
-                        ), 
+                        child: Card(
+                            child: Padding(
+                                padding: const EdgeInsets.all(24), 
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start, 
 
-                        onTap: selectBirthDate, 
-                    ), 
+                                    children: [
 
-                    const SizedBox(height: 12), 
+                                        // --- Header --- 
+                                        Row(
+                                            children: [
+                                                Container(
+                                                    width: 48, 
+                                                    height: 48, 
+                                                    decoration: BoxDecoration(
+                                                        color: colors.primary.withValues(alpha: 0.10),
+                                                        shape: BoxShape.circle, 
+                                                    ),
 
-                    DropdownButtonFormField<String>(
-                        initialValue: sex, 
+                                                    child: Icon(
+                                                        Icons.person_outline, 
+                                                        color: colors.primary, 
+                                                    ), 
+                                                ), 
 
-                        decoration: const InputDecoration(
-                            labelText: 'Sesso', 
-                        ), 
+                                                const SizedBox(width: 16), 
 
-                        items: const [
+                                                Expanded(
+                                                    child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start, 
+                                                        children: [
+                                                            Text(
 
-                            DropdownMenuItem(
-                                value: 'M', 
-                                child: Text('Maschio'), 
-                            ), 
+                                                                widget.patient == null 
+                                                                    ? 'Profilo paziente'
+                                                                    : 'Informazioni paziente', 
 
-                            DropdownMenuItem(
-                                value: 'F', 
-                                child: Text('Femmina'), 
-                            ), 
-                        ], 
+                                                                style: theme.textTheme.titleLarge, 
+                                                            ), 
 
-                        onChanged: _saving
-                            ? null 
-                            : (value) {
-                                if (value == null) {
-                                    return; 
-                                }
+                                                            const SizedBox(height: 4), 
 
-                                setState(() {
-                                    sex = value; 
-                                }); 
-                            },
-                    ), 
+                                                            Text(
+                                                                widget.patient == null 
+                                                                    ? 'Inserisci le informazioni del paziente.'
+                                                                    : 'Modifica le informazioni del paziente.', 
 
-                    const SizedBox(height: 30), 
+                                                                style: theme.textTheme.bodyMedium,                                                                
+                                                            ), 
+                                                        ], 
+                                                    ), 
+                                                ), 
+                                            ], 
+                                        ), 
 
-                    SizedBox(
-                        width: double.infinity, 
+                                        const SizedBox(height: 28), 
 
-                        child: FilledButton(
-                            onPressed: _saving ? null : submit, 
+                                        // Name 
+                                        Text(
+                                            'Informazioni personali', 
+                                            style: theme.textTheme.titleMedium, 
+                                        ), 
+                                        const SizedBox(height: 16), 
 
-                            child: _saving
-                                ? const SizedBox(
-                                    width: 20, 
-                                    height: 20, 
-                                    child: CircularProgressIndicator(
-                                        strokeWidth: 2, 
-                                    ), 
-                                )
-                                : Text(widget.submitLabel),
+                                        TextField(
+                                            controller: firstNameController,
+                                            enabled: !_saving,  
+                                            textCapitalization: TextCapitalization.words,
+                                            decoration: const InputDecoration(
+                                                labelText: 'Nome',
+                                                prefixIcon: Icon(
+                                                    Icons.person_outline,
+                                                ), 
+                                            ),
+                                        ),
+
+                                        const SizedBox(height: 12), 
+
+                                        TextField(
+                                            controller: lastNameController,
+                                            enabled: !_saving, 
+                                            textCapitalization: TextCapitalization.words,
+                                            decoration: const InputDecoration(
+                                                labelText: 'Cognome',
+                                                prefixIcon: Icon(
+                                                    Icons.person_outline,
+                                                ),                                                 
+                                            ),
+                                        ), 
+
+                                        const SizedBox(height: 12), 
+                                        
+                                        // Birth date 
+
+                                        InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+
+                                            onTap: _saving
+                                                ? null
+                                                : selectBirthDate,
+
+                                            child: InputDecorator(
+
+                                                decoration:
+                                                    const InputDecoration(
+                                                        labelText:
+                                                            'Data di nascita',
+                                                        prefixIcon: Icon(
+                                                            Icons
+                                                                .calendar_month_outlined,
+                                                        ),
+                                                    ),
+
+                                                child: Text(
+                                                    '${birthDate.day.toString().padLeft(2, '0')}/'
+                                                    '${birthDate.month.toString().padLeft(2, '0')}/'
+                                                    '${birthDate.year}',
+                                                ),
+                                            ),
+                                        ),
+
+                                        const SizedBox(height: 12),
+                                        
+                                        // Sex
+
+                                        DropdownButtonFormField<String>(
+
+                                            initialValue: sex,
+
+                                            decoration:
+                                                const InputDecoration(
+                                                    labelText: 'Sesso',
+                                                    prefixIcon: Icon(
+                                                        Icons.wc_outlined,
+                                                    ),
+                                                ),
+
+                                            items: const [
+
+                                                DropdownMenuItem(
+                                                    value: 'M',
+                                                    child: Text('Maschio'),
+                                                ),
+
+                                                DropdownMenuItem(
+                                                    value: 'F',
+                                                    child: Text('Femmina'),
+                                                ),
+                                            ],
+
+                                            onChanged: _saving
+                                                ? null
+                                                : (value) {
+
+                                                    if (value == null) {
+                                                        return;
+                                                    }
+
+                                                    setState(() {
+                                                        sex = value;
+                                                    });
+                                                },
+                                        ),
+
+                                        const SizedBox(height: 28), 
+
+                                        // Physical information 
+
+                                        Text(
+                                            'Dati fisici',
+                                            style: theme.textTheme.titleMedium,
+                                        ),
+
+                                        const SizedBox(height: 16),
+
+                                        TextField(
+                                            controller: heightController,
+                                            enabled: !_saving, 
+                                            keyboardType: const TextInputType.numberWithOptions(
+                                                decimal: true,
+                                            ),
+                                            decoration: const InputDecoration(
+                                                labelText: 'Altezza (cm)',
+                                                prefixIcon: Icon(
+                                                    Icons.height, 
+                                                ), 
+                                            ),
+                                        ),
+
+                                        const SizedBox(height: 12),
+
+                                        TextField(
+                                            controller: weightController,
+                                            enabled: !_saving, 
+                                            keyboardType: const TextInputType.numberWithOptions(
+                                                decimal: true,
+                                            ),
+                                            decoration: const InputDecoration(
+                                                labelText: 'Peso (kg)',
+                                                prefixIcon: Icon(
+                                                    Icons.monitor_weight_outlined, 
+                                                ),                                                
+                                            ),
+                                        ),
+ 
+
+                                        const SizedBox(height: 30), 
+
+                                        SizedBox(
+                                            width: double.infinity, 
+
+                                            child: FilledButton.icon(
+                                                onPressed: _saving ? null : submit, 
+
+                                                icon: _saving
+                                                    ? const SizedBox(
+                                                        width: 20, 
+                                                        height: 20, 
+                                                        child: CircularProgressIndicator(
+                                                            strokeWidth: 2, 
+                                                        ), 
+                                                    )
+                                                    : const Icon(
+                                                        Icons.save_outlined, 
+                                                    ),
+
+                                                label: Text(
+                                                    _saving
+                                                        ? 'Salvataggio...'
+                                                        : widget.submitLabel, 
+                                                ), 
+                                            ),
+                                        ),
+                                    ],                                     
+                                ),
+                            ),
                         ),
                     ),
-                ], 
 
+
+                ),
             ),
-        ); 
+
+        );
     }
 
 }

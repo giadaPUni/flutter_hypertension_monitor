@@ -203,10 +203,6 @@ class PatientPage extends ConsumerWidget {
                 '${patient.firstName} ${patient.lastName}',
               ), 
 
-              subtitle: Text(
-                'BMI ${patient.bmi.toStringAsFixed(1)}',
-              ), 
-
               trailing: const Icon(Icons.chevron_right), 
 
               onTap: () {
