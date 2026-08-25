@@ -10,19 +10,6 @@ import 'package:flutter_hypertension_monitor/core/auth/current_session.dart';
 import 'package:flutter_hypertension_monitor/data/repositories/user_repository_provider.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 
-Future<String> getInitialRoute() async {
-
-  final currentSession = CurrentSession();
-
-  final userId = currentSession.getCurrentUserId();
-
-  if (userId != null) {
-    return AppRoutes.home;
-  }
-
-  return AppRoutes.login;
-
-}
 
 
 Future<void> main() async {
