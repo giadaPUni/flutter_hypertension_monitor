@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_hypertension_monitor/data/models/medical_history.dart';
 import 'package:flutter_hypertension_monitor/features/medical_history/medical_history_form_page.dart';
 import 'package:flutter_hypertension_monitor/features/medical_history/medical_history_provider.dart';
-
+import 'package:flutter_hypertension_monitor/features/medical_history/medical_information_service.dart';
 
 
 class MedicalHistoryDetailPage extends ConsumerWidget {
@@ -30,6 +30,38 @@ class MedicalHistoryDetailPage extends ConsumerWidget {
   final bool showBackButton;  
   final VoidCallback? onDeleted;
 
+
+  List<String> _getIcd10Codes(MedicalHistory history) {
+
+    final codes = <String>[]; 
+
+    if (history.diabetes) {
+      codes.add('E11.9');
+    }
+
+    if (history.cardiovascularDisease) {
+      codes.add('I25.9');
+    }
+
+    if (history.kidneyDisease) {
+      codes.add('N18.9');
+    }
+
+    if (history.dyslipidemia) {
+      codes.add('E78.5');
+    }
+
+    if (history.previousStroke) {
+      codes.add('I63.9');
+    }
+
+    if (history.sleepApnea) {
+      codes.add('G47.33');
+    }
+
+    return codes;
+
+  }
 
 
 
@@ -62,6 +94,8 @@ class MedicalHistoryDetailPage extends ConsumerWidget {
         ),
       );
     }
+
+    final icd10Codes = _getIcd10Codes(history);
 
     return Scaffold(
 
@@ -246,8 +280,59 @@ class MedicalHistoryDetailPage extends ConsumerWidget {
                     ],
                   ),
 
+                  if (icd10Codes.isNotEmpty) 
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.info_outline), 
+                      label: const Text('Informazioni sulle patologie'), 
+                      onPressed: () async {
+
+                        final service = MedicalInformationService();
+
+                        final results = <String>[]; 
+
+                        for (final code in icd10Codes) {
+                          
+                          final information = await service.getInformation(code); 
+                          
+                          if (information != null) {
+                            results.add(information);
+                          }
+                        }
+
+                        if (!context.mounted) {
+                          return; 
+                        }
+
+                        showDialog(
+                          context: context, 
+                          builder: (_) => AlertDialog(
+                            title: const Text(
+                              'Informazioni mediche', 
+                            ), 
+                            content: results.isEmpty
+                              ? const Text(
+                                  'Non è stato possibile recuperare '
+                                  'informazioni dal servizio remoto.',
+                                )
+                              : SingleChildScrollView(
+                                  child: Text(
+                                    results.join('\n\n'), 
+                                  ), 
+                                ), 
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context), 
+                                child: const Text('Chiudi'), 
+                              ), 
+                            ], 
+                          ), 
+                        ); 
+                      },
+                    ),
+
+
                   const SizedBox(
-                    height: 32,
+                    height: 16,
                   ),
 
                   OutlinedButton.icon(
