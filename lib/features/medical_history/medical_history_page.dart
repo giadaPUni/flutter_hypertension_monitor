@@ -87,15 +87,7 @@ class MedicalHistoryPage extends ConsumerWidget {
       return const Center(
         child: Text('Profilo paziente non disponibile'), 
       ); 
-      /*
-      return const Scaffold(
-        body: Center(
-          child: Text(
-            'Profilo paziente non disponibile', 
-          ), 
-        ),
-      ); 
-      */
+      
     }
 
     final histories = ref.watch(medicalHistoryProvider); 
