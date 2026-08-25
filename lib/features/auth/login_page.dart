@@ -57,7 +57,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     if (user == null) {
       setState(() {
-        errorMessage = 'Invalid username or password'; 
+        errorMessage = 'Username o password non validi'; 
       }); 
 
       return; 
@@ -92,114 +92,158 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
 
+    final colors = Theme.of(context).colorScheme; 
+
     return PopScope(
 
       canPop: false, 
 
       child: Scaffold(
-        body: Center(
+        backgroundColor: colors.surfaceContainerLowest, 
+        body: SafeArea(
+          child: Center(
 
-          child: Padding(
+            child: SingleChildScrollView(
 
-            padding: const EdgeInsets.all(24), 
+              padding: const EdgeInsets.all(24), 
 
-            child: Column(
-
-              mainAxisSize: MainAxisSize.min, 
-
-              children: [
-
-                TextField(
-
-                  controller: usernameController, 
-
-                  decoration: const InputDecoration(
-
-                    labelText: 'Username', 
-
-                  ), 
-
-                ), 
-
-                const SizedBox(
-                  height: 16, 
-                ), 
-
-                TextField(
-
-                  controller: passwordController, 
-
-                  obscureText: true, 
-
-                  decoration: const InputDecoration(
-
-                    labelText: 'Password',
-
-                  ), 
-
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 420,
                 ),
 
-                const SizedBox(
-                  height: 24, 
-                ), 
+                child: Card(
 
-                if (errorMessage != null)
-                  Text(
+                  child: Padding(
+                    padding: const EdgeInsets.all(28),
+                    child: Column (
+                      mainAxisSize: MainAxisSize.min, 
 
-                    errorMessage!, 
+                      children: [
+                        Container(
+                          width: 72, 
+                          height: 72, 
+                          decoration: BoxDecoration(
+                            color: colors.primaryContainer, 
+                            shape: BoxShape.circle, 
+                          ), 
 
-                    style: TextStyle(
+                          child: Icon(
+                            Icons.monitor_heart_outlined, 
+                            size: 40, 
+                            color: colors.onPrimaryContainer,
+                          ),
+                        ),
 
-                      color: Theme.of(context)
-                        .colorScheme
-                        .error, 
-                    ), 
+                        const SizedBox(height: 20), 
 
-                  ), 
+                        Text(
+                          'Hypertension Monitor', 
+                          textAlign: TextAlign.center, 
+                          style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall
+                            ?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                        ), 
 
-                  const SizedBox(
-                    height: 16, 
-                  ), 
+                        const SizedBox(height: 8), 
 
-                  ElevatedButton(
+                        Text(
+                          'Accedi per monitorare la pressione arteriosa',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium,                          
+                        ), 
 
-                    onPressed: _login,
+                        const SizedBox(height: 28), 
 
-                    child: const Text(
-                      'Login', 
-                    ), 
+                        TextField(
 
-                  ), 
+                          controller: usernameController, 
+                          textInputAction: TextInputAction.next, 
+                          decoration: const InputDecoration(
+                            labelText: 'Username', 
+                            prefixIcon: Icon(
+                              Icons.person_outline,
+                            ), 
 
+                          ), 
 
-                  const SizedBox(
-                    height: 16, 
-                  ), 
+                        ), 
 
-                  ElevatedButton(
+                        const SizedBox(height: 16), 
 
-                    onPressed: () {
+                        TextField(
+                          controller: passwordController, 
+                          obscureText: true, 
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_) => _login(),
+                          decoration: const InputDecoration(
+                            labelText: 'Password',
+                            prefixIcon: Icon(
+                              Icons.lock_outline, 
+                            ), 
+                          ), 
 
-                      Navigator.pushNamed(
-                        context, 
-                        AppRoutes.register, 
-                      ); 
+                        ), 
 
-                    }, 
+                        if (errorMessage != null) ...[
+                          const SizedBox(height: 16),
 
-                    child: const Text(
-                      'Create account',
-                    ), 
+                          Text(
+                            errorMessage!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: colors.error,
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 24), 
 
+                        SizedBox(
+                          width: double.infinity, 
+                          child: FilledButton.icon(
+                            onPressed: _login,
+                            icon: const Icon(
+                              Icons.login,
+                            ),
+                            label: const Text(
+                              'Accedi',
+                            ),
+                          ),                          
+                        ),
+                        const SizedBox(height: 12),
+
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.register,
+                              );
+                            },
+                            child: const Text(
+                              'Crea un account',
+                            ),
+                          ),
+                        ),
+
+                      ],                       
+                    ),
                   ),
-
-              ], 
+                ), 
+              ), 
 
             ), 
 
-          ), 
+          ),
 
-        ),
+        )
+
       ), 
 
     );
