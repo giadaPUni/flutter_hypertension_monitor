@@ -7,9 +7,7 @@ import 'package:flutter_hypertension_monitor/features/patients/edit_patient_page
 import 'package:flutter_hypertension_monitor/features/patients/patients_provider.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/measurements_provider.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/measurements_page.dart';
-import 'package:flutter_hypertension_monitor/data/models/blood_pressure_measurement.dart';
 import 'package:flutter_hypertension_monitor/features/measurements/measurement_detail_page.dart';
-import 'package:flutter_hypertension_monitor/features/medical_history/medical_history_detail_page.dart';
 import 'package:flutter_hypertension_monitor/features/medical_history/medical_history_page.dart';
 import 'package:flutter_hypertension_monitor/core/user/current_user_provider.dart';
 import 'package:flutter_hypertension_monitor/core/user/user_role.dart';
