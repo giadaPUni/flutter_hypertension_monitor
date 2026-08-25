@@ -38,53 +38,6 @@ class MeasurementsPage extends ConsumerWidget {
                 ); 
 
 
-
-        /*
-        if (measurements.isEmpty) {
-
-            return Center(
-                child: Column(
-                    
-                    mainAxisAlignment: MainAxisAlignment.center, 
-
-                    children: [
-
-                        Icon(
-
-                            Icons.monitor_heart_outlined, 
-
-                            size: 70, 
-
-                            color: Colors.grey.shade400, 
-                        ), 
-
-                        const SizedBox(height: 20), 
-
-                        Text(
-
-                            'Non sono presenti misurazioni', 
-
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium, 
-                        ), 
-
-                        const SizedBox(height: 8), 
-
-                        Text(
-                            'Aggiungi la prima misurazione.', 
-
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium, 
-                        ), 
-                    ],
-                ),
-            );
-
-        }
-        */
-
         final patients = ref.watch(
             patientsProvider, 
         ); 
