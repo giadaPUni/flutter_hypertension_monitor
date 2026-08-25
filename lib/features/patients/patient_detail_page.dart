@@ -141,42 +141,36 @@ class PatientDetailPage extends ConsumerWidget {
                         const SizedBox(height: 24), 
 
                         Card(
-
                             child: Padding(
-
                                 padding: const EdgeInsets.all(20), 
-
                                 child: Row(
-
                                     children: [
 
-                                        const CircleAvatar(
-
-                                            //radius: 34, 
-
+                                        CircleAvatar(
+                                            radius: 30, 
+                                            backgroundColor: Theme.of(context).colorScheme.primaryContainer, 
                                             child: Icon(
                                                 Icons.person, 
-                                                size: 34, 
+                                                size: 30,
+                                                color: Theme.of(context).colorScheme.onPrimaryContainer, 
                                             ), 
                                         ), 
 
-                                        const SizedBox(width: 20), 
+                                        const SizedBox(width: 16), 
 
                                         Expanded(
-
                                             child: Column(
-
                                                 crossAxisAlignment: CrossAxisAlignment.start, 
-
                                                 children: [
-
 
                                                     Text(
                                                         '${patient.firstName} ${patient.lastName}', 
-
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .headlineSmall, 
+                                                            .titleLarge
+                                                            ?.copyWith(
+                                                                fontWeight: FontWeight.w600,
+                                                            ), 
                                                     ), 
 
                                                     const SizedBox(height: 6), 
@@ -277,16 +271,19 @@ class PatientDetailPage extends ConsumerWidget {
                                         const Divider(height: 24), 
 
                                         _infoRow(
+                                            context, 
                                             'Nome', 
                                             patient.firstName, 
                                         ), 
 
                                         _infoRow(
+                                            context, 
                                             'Cognome', 
                                             patient.lastName,
                                         ), 
 
                                         _infoRow(
+                                            context, 
                                             'Data di Nascita', 
                                             DateFormat(
                                                 'dd/MM/yyyy', 
@@ -296,21 +293,25 @@ class PatientDetailPage extends ConsumerWidget {
                                         ), 
 
                                         _infoRow(
+                                            context, 
                                             'Sesso',
                                             patient.sex, 
                                         ), 
 
                                         _infoRow(
+                                            context, 
                                             'Altezza', 
                                             '${patient.height.toStringAsFixed(0)} cm', 
                                         ), 
 
                                         _infoRow(
+                                            context, 
                                             'Peso', 
                                             '${patient.weight.toStringAsFixed(1)} kg',
                                         ), 
 
                                         _infoRow(
+                                            context, 
                                             'BMI', 
                                             patient.bmi.toStringAsFixed(1), 
                                         ), 
@@ -339,28 +340,38 @@ class PatientDetailPage extends ConsumerWidget {
                         const SizedBox(height: 24), 
 
 
-                        SizedBox(
+                        Center(
 
-                            width: double.infinity, 
+                            //width: double.infinity, 
 
                             child: FilledButton.icon(
 
-                                icon: const Icon(Icons.add), 
+                                icon: const Icon(
+                                    Icons.add,
+                                    size: 20, 
+                                ), 
 
                                 label: const Text(
-                                    'Aggiungi misurazione'
+                                    'Nuova misurazione'
                                 ), 
-                            
+                                style: FilledButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24,
+                                        vertical: 14,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                    ),
+                                ),                            
 
                                 onPressed: () {
                                     
                                     Navigator.push(
                                         context, 
                                         MaterialPageRoute(
-                                            builder: (_) => 
-                                                AddMeasurementPage(
-                                                    patientId: patient.id, 
-                                                ),
+                                            builder: (_) => AddMeasurementPage(
+                                                patientId: patient.id, 
+                                            ),
                                         ), 
                                     ); 
                                 }, 
@@ -383,17 +394,13 @@ class PatientDetailPage extends ConsumerWidget {
     // info row 
 
     Widget _infoRow(
+        BuildContext context, 
         String label, 
         String value,
     ) {
         return Padding(
-
-            padding: const EdgeInsets.symmetric(
-                vertical: 6, 
-            ), 
-
+            padding: const EdgeInsets.symmetric(vertical: 6), 
             child: Row(
-
                 children: [
 
                     SizedBox(
@@ -403,14 +410,27 @@ class PatientDetailPage extends ConsumerWidget {
 
                             label, 
 
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w600, 
-                            ), 
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                ),
                         ), 
                     ), 
 
                     Expanded(
-                        child: Text(value), 
+                        child: Text(
+                            value, 
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                ),
+                        ), 
 
                     ), 
                 ], 
@@ -429,16 +449,26 @@ class PatientDetailPage extends ConsumerWidget {
             
             child: ListTile(
 
-                leading: const Icon(
-                    Icons.medical_information,
-                ), 
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20, 
+                    vertical: 8, 
+                ),
+
+                leading: CircleAvatar(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondaryContainer,
+                    child: Icon(
+                        Icons.medical_information_outlined,
+                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
+                ),
 
                 title: const Text(
                     'Anamnesi', 
                 ), 
 
                 subtitle: const Text(
-                    'Visualizza la storia clinica pregressa',
+                    'Visualizza la storia clinica del paziente',
                 ),
 
                 trailing: const Icon(
@@ -450,12 +480,6 @@ class PatientDetailPage extends ConsumerWidget {
                     Navigator.push(
                         context, 
                         MaterialPageRoute(
-                            /*
-                            builder: (_) => MedicalHistoryDetailPage(
-                                patientId: patientId,
-                                onDeleted: () => Navigator.pop(context),
-                            ), 
-                            */
                             builder: (_) => MedicalHistoryPage(
                                 patientId: patientId, 
                                 showBackButton: true, 
@@ -698,68 +722,68 @@ class PatientDetailPage extends ConsumerWidget {
     }
 
 
-// Patient Account 
-Future<void> _confirmDeactivateProfile(
-    BuildContext context,
-    WidgetRef ref,
-    String patientId,
-) async {
+    // Patient Account 
+    Future<void> _confirmDeactivateProfile(
+        BuildContext context,
+        WidgetRef ref,
+        String patientId,
+    ) async {
 
-    final confirm = await showDialog<bool>(
-        context: context,
-        builder: (_) => AlertDialog(
-            title: const Text(
-                'Disattiva profilo',
-            ),
-            content: const Text(
-                'Disattivando il profilo verranno eliminati '
-                'definitivamente il profilo paziente, '
-                'l\'anamnesi e tutte le misurazioni associate. '
-                'Questa operazione non può essere annullata.',
-            ),
-            actions: [
-
-                TextButton(
-                    onPressed: () {
-                        Navigator.pop(
-                            context,
-                            false,
-                        );
-                    },
-                    child: const Text(
-                        'Annulla',
-                    ),
+        final confirm = await showDialog<bool>(
+            context: context,
+            builder: (_) => AlertDialog(
+                title: const Text(
+                    'Disattiva profilo',
                 ),
-
-                FilledButton(
-                    onPressed: () {
-                        Navigator.pop(
-                            context,
-                            true,
-                        );
-                    },
-                    child: const Text(
-                        'Disattiva',
-                    ),
+                content: const Text(
+                    'Disattivando il profilo verranno eliminati '
+                    'definitivamente il profilo paziente, '
+                    'l\'anamnesi e tutte le misurazioni associate. '
+                    'Questa operazione non può essere annullata.',
                 ),
-            ],
-        ),
-    );
+                actions: [
 
-    if (confirm != true) {
-        return;
-    }
+                    TextButton(
+                        onPressed: () {
+                            Navigator.pop(
+                                context,
+                                false,
+                            );
+                        },
+                        child: const Text(
+                            'Annulla',
+                        ),
+                    ),
 
-    await ref
-        .read(patientsProvider.notifier)
-        .deactivatePatientProfile(
-            patientId,
+                    FilledButton(
+                        onPressed: () {
+                            Navigator.pop(
+                                context,
+                                true,
+                            );
+                        },
+                        child: const Text(
+                            'Disattiva',
+                        ),
+                    ),
+                ],
+            ),
         );
 
-    if (!context.mounted) {
-        return;
+        if (confirm != true) {
+            return;
+        }
+
+        await ref
+            .read(patientsProvider.notifier)
+            .deactivatePatientProfile(
+                patientId,
+            );
+
+        if (!context.mounted) {
+            return;
+        }
     }
-}
 
 
 }
