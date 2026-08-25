@@ -1,229 +1,67 @@
-# 
-
-
 # Flutter Hypertension Monitor 
 
-(hypertension-monitor-app) 
+## Descrizione del Progetto 
 
-## Architettura applicativa (baseline)
+Flutter Hypertension Monitor è un'applicazione mobile e web sviluppata con Flutter per la gestione ed il monitoraggio della pressione arteriosa, in particolare per soggetti a rischio di ipertensione. 
 
+L'applicazione permette di 
 
-### **Obiettivo applicazione**
+* gestire gli account degli utenti e i relativi profili paziente, 
+* registrare le misurazioni della pressione arteriosa e della frequenza cardiaca, 
+* consultare lo storico delle misurazioni, 
+* gestire l'anamnesi clinica, 
+* visualizzare statistiche sull'andamento della pressione. 
 
-Applicazione Flutter per la gestione ed il monitoraggio di pazienti con possibile ipertensione. 
+Inoltre, supporta la visualizzazione dei dati tramite un grafico, permettendo di osservare l'andamento della pressione sistolica e diastolica nel tempo. 
 
-### Uso 
-
-1. Uso personale 
-    * una persona registra i propri valori 
-    * gestisce il proprio profilo clinico
-    * monitora l'andamento e le statistiche 
-
-2. Uso multi-persona
-    * un utente può gestire più persone monitorate
-    * ogni paziente ha il proprio storico
-
-
-
-
-
-### Funzionalità
-* Registrazione utente (eseguita una sola volta, locale)
-* Login: autenticazione utente
-* Gestione dei pazienti (dati anagrafici)
-* Gestione anamnesi (dati clinici)
-* Registrazione delle misurazioni (valori di pressione sistolica, diastolica e frequenza cardiaca)
-* Visualizzazioni statistiche e trend (grafici)
-* Persistenza locale dei dati 
-* Interfaccia grafica responsive 
-
-
-## Framework e dipendenze
-
-Framework: 
-* Flutter 
-* Dart 
-
-State Management: 
-* Riverpod 
-
-Database locale: 
-* Hive CE (community edition, mantenuto attivamente)
-
-Grafici: 
-* f1_chart 
-
-Utility: 
-* uuid 
-* intl
-* shared_preferences 
-
-## Features / Screens / Pages 
-
-### Auth
-
-Autenticazione: registrazione - login 
-
-Funzionalità:
-* registrazione utente
-* login 
-* logout 
-* gestione sessionec
-
-login_page.dart, register_page.dart 
-
-### Dashboard 
-
-Funzionalità: 
-* riepilogo generale 
-* accesso rapido alle funzionalità - altre schermate
-* informazioni principali 
-
-Contenuti: 
-* numero pazienti
-* ultime misurazioni 
-* indicatori principali 
-* accessi rapidi
-
-### Patients 
-
-Dati anagrafici 
-
-Funzionalità: 
-* creazione paziente
-* modifica 
-* eliminazione
-* visualizzazione dettaglio 
-
-### Medical History 
-
-Funzionalità: 
-* gestione anamnesi 
-
-Separato da Patient in quanto un paziente potrebbe inserire o meno una storia clinica che potrebbe essere anche variabile nel tempo. 
-
-### Measurements 
-
-Misurazioni
-
-Funzionalità: 
-* registrazione valori clinici 
-
-Prima implementazione: pressione diastolica e sistolica, frequenza cardiaca (blood pressure)
-
-### Statistics 
-
-Analisi dei dati 
-
-Contiene:
-* grafici 
-* trend 
-* aggregazioni 
-* medie 
-* valori min/max 
-
-### Settings 
-
-Configurazione applicazione 
-
-Esempi:
-* preferenze
-* tema 
-* gestione dati locali 
-
-## Entità principali 
-
-* User: gestisce l'utente autenticato, chi accede all'app
-* Patient: rappresenta il paziente monitorato(relazionato con MedicalHistory e Measurements)
-* MedicalHistory: patologie, note, informazioni cliniche
-* BloodPressureMeasurement: pressione sistolica e diastolica, frequenza cardiaca, data/ora, note
-
-
-## Navigazione 
-
-* AdaptiveScaffold 
-* Drawer 
-* NavigationRail 
-* BottomNavigationBar
-
-Per mobile: BottomNavigationBar + Drawer 
-
-Per tablet: NavigationRail + Drawer 
-
-Per Desktop/Web: NavigationRail esteso 
-
-## Grafica responsive 
-
-* mobile verticale/orizzontale 
-* tablet 
-* desktop 
-* web 
-
-Breakpoints, ResponsiveLayout, AdaptiveScaffold 
-
-------
-
-
-
-## Info 
-
-
-
-
----
-
-Dashboard
-* ultima misurazione;
-* media degli ultimi 7 giorni;
-* numero totale di misurazioni;
-* indicatore visivo (verde, giallo, rosso).
-
-
-Storico
-
-Oltre alla lista:
-
-* ricerca;
-* filtro per data;
-* modifica;
-* eliminazione.
-* Grafici
-
-Non solo un grafico.
-
-Tre grafici separati:
-
-* pressione sistolica;
-* pressione diastolica;
-* frequenza cardiaca.
-
-Con filtri:
-
-* 7 giorni;
-* 30 giorni;
-* 6 mesi;
-* 1 anno.
-
-
-Profilo
-
-Anziché solo l'anagrafica:
-
-* peso;
-* altezza;
-* BMI calcolato automaticamente.
-
-Il BMI richiede solo peso e altezza, ma rende l'app più completa.
-
-
-
-## Persistenza in locale  
-
-Hive CE: 
-
-
-
-
+L'interfaccia utente è stata progettata per adattarsi a diverse dimensioni dello schermo e ai diversi orientamenti dei dispositivi. 
 
 --- 
+
+## Esperienza Utente 
+
+Una caratteristica fondamentale dell'applicazione è data dalla possibilità di poter scegliere la tipologia di Account che si vuole creare ed usare: 
+
+* Account Paziente, il soggetto che crea l'account agisce come unico paziente (Utente = Paziente)
+* Account Utente, il soggetto che crea l'account non intende usarla per scopi personali ed individuali, bensì di usarla per monitorare e gestire altri soggetti/pazienti (Utente != Paziente)
+
+La diversa tipologia comporta un'interazione differente con l'applicazione. 
+
+
+Le principali funzionalità dell'applicazione sono: 
+
+### Login e Registrazione 
+
+All'avvio l'utente può effettuare l'accesso inserendo username e password. Qualora non possieda ancora un account, può accedere alla schermata di registrazione e crerne uno con la tipologia che preferisce. 
+
+Dopo aver eseguito il login, l'utente viene indirizzato alla schermata principale (Home). 
+
+### Gestione dei Pazienti 
+
+Gli utenti che possono gestire più pazienti (Account Utente) possono visualizzare l'elenco dei profili disponibili e selezionare il paziente da gestire. 
+
+Per entrambe le tipologie di account, per ogni paziente è disponibile una scheda dedicata contenente le principali informazioni personali tra cui: 
+
+- nome e cognome;
+- data di nascita;
+- sesso;
+- altezza;
+- peso;
+- BMI.
+
+Dalla scheda paziente è possibile modificare le informazioni del profilo oppure eliminarlo.
+
+La creazione e la modifica del profilo utilizzano un form comune, che permette di inserire i dati che vengono richiesti. 
+
+### Gestione dell'Anamnesi 
+
+Sia dalla scheda paziente (tramite la pagina Pazienti) che dalla pagina Anamnesi, è possibile accedere e modificare le informazioni relative alla storia medica del paziente. 
+
+### Inserimento delle Misurazioni 
+
+Le misurazioni della pressione possono essere registrate direttamente dalla scheda del paziente oppure, nel caso dell' Account Paziente, anche dalla pagina Misurazioni.
+
+L'utente può inserire i valori relativi alla pressione sistolica, alla pressione diastolica e alla frequenza cardiaca, insieme alla data ed all'ora della misurazione tramite l'interfaccia dedicata. 
+
+Le misurazioni vengono visualizzate nello storico del paziente o nella pagina delle Misurazioni, ordinate dalla più recente alla più datata. 
 
