@@ -543,7 +543,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     value:
                                         measurementCount.toString(),
                                     label: 'Misurazioni',
-                                    color: AppColors.heartRate,
+                                    color: AppColors.primary,
                                     onTap: () {
 
                                         setState(() {
@@ -577,7 +577,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 value:
                                     measurementCount.toString(),
                                 label: 'Misurazioni',
-                                color: AppColors.heartRate,
+                                color: AppColors.primary,
                                 onTap: () {
 
                                     setState(() {
@@ -682,7 +682,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 decoration: BoxDecoration(
 
                                     color: color.withValues(
-                                        alpha: 0.10,
+                                        alpha: 0.08,
                                     ),
 
                                     borderRadius:

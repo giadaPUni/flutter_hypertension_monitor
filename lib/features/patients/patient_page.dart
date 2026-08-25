@@ -197,7 +197,10 @@ class PatientPage extends ConsumerWidget {
 
             child: ListTile(
 
-              leading: const Icon(Icons.person), 
+              leading: Icon(
+                Icons.person,
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.75),
+              ),
 
               title: Text(
                 '${patient.firstName} ${patient.lastName}',

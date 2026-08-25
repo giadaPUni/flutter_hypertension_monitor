@@ -78,10 +78,10 @@ class BloodPressureCard extends StatelessWidget {
                     children: [
 
                         Icon(
-                            Icons.favorite, 
-                            size: compact ? 18: 24, 
-                        ), 
-
+                        Icons.favorite_border,
+                        size: compact ? 18 : 24,
+                        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.75),
+                        ),
                         const SizedBox(width: 12), 
 
                         Expanded(
@@ -89,10 +89,12 @@ class BloodPressureCard extends StatelessWidget {
                             child: Text(
 
                                 '${measurement.systolicPressure}/${measurement.diastolicPressure} mmHg', 
-                                
-                                style: compact
-                                    ? Theme.of(context).textTheme.titleLarge
-                                    : Theme.of(context).textTheme.headlineMedium,  
+                                style: (compact
+                                        ? Theme.of(context).textTheme.titleLarge
+                                        : Theme.of(context).textTheme.headlineMedium)
+                                    ?.copyWith(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    ), 
                             ), 
                         ), 
 

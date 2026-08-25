@@ -200,9 +200,7 @@ class MedicalHistoryPage extends ConsumerWidget {
               : 'Anamnesi ancora da compilare',
             
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: hasHistory
-                ? colors.primary 
-                : colors.outline, 
+              color: colors.primary, 
             ),
           ),
         ),
