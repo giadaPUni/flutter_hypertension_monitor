@@ -10,7 +10,6 @@ enum NavigationSection {
     medicalHistory, 
 
     profile, 
-    settings, 
     logout, 
     
 }

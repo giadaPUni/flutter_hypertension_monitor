@@ -14,45 +14,39 @@ abstract final class AppDestinations {
 
     static const patients = AppNavigationDestination(
         section: NavigationSection.patients,
-        label: 'Patients', 
+        label: 'Pazienti', 
         icon: Icons.person_outline, 
         selectedIcon: Icons.person, 
     ); 
 
     static const medicalHistory = AppNavigationDestination(
         section: NavigationSection.medicalHistory,
-        label: 'Medical History', 
+        label: 'Anamnesi', 
         icon: Icons.assignment_outlined, 
         selectedIcon: Icons.assignment, 
     ); 
 
     static const measurements = AppNavigationDestination(
         section: NavigationSection.measurements,
-        label: 'Measurements', 
+        label: 'Misurazioni', 
         icon: Icons.favorite_outline, 
         selectedIcon: Icons.favorite, 
     ); 
 
     static const statistics = AppNavigationDestination(
         section: NavigationSection.statistics,
-        label: 'Statistics', 
+        label: 'Statistiche', 
         icon: Icons.bar_chart_outlined,
         selectedIcon: Icons.bar_chart, 
     ); 
 
     static const profile = AppNavigationDestination(
         section: NavigationSection.profile,
-        label: 'Profile',
+        label: 'Profilo',
         icon: Icons.person_outline,
         selectedIcon: Icons.person,
     );
 
-    static const settings = AppNavigationDestination(
-        section: NavigationSection.settings,
-        label: 'Settings', 
-        icon: Icons.settings_outlined, 
-        selectedIcon: Icons.settings, 
-    ); 
 
     static const logout = AppNavigationDestination(
         section: NavigationSection.logout, 
@@ -75,7 +69,6 @@ abstract final class AppDestinations {
         measurements, 
         medicalHistory,
         statistics,  
-        settings, 
         logout, 
     ]; 
 
@@ -87,19 +80,9 @@ abstract final class AppDestinations {
         medicalHistory, 
         statistics, 
         profile, 
-        settings, 
         logout, 
         
     ]; 
-/** 
-    static const mobileBottom = [
-        home, 
-        patients, 
-        measurements,
-        statistics, 
-        medicalHistory, 
-        settings, 
-    ]; 
-*/
+
 
 }

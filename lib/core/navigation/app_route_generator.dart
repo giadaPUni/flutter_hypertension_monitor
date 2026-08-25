@@ -7,9 +7,7 @@ import 'package:flutter_hypertension_monitor/features/medical_history/medical_hi
 import 'package:flutter_hypertension_monitor/features/measurements/measurements_page.dart'; 
 import 'package:flutter_hypertension_monitor/features/patients/patient_page.dart'; 
 import 'package:flutter_hypertension_monitor/features/profile/profile_page.dart';
-import 'package:flutter_hypertension_monitor/features/settings/settings_page.dart';
 import 'package:flutter_hypertension_monitor/features/statistics/statistics_page.dart';
-//import 'package:flutter_hypertension_monitor/features/measurements/add_measurement_page.dart';
 
 import 'app_routes.dart'; 
 
@@ -60,7 +58,7 @@ class AppRouteGenerator {
                     builder: (_) => const Scaffold(
                         body: Center(
                             child: Text(
-                                'Select a patient before adding a measurement',
+                                'Selezione un paziente prima di registrare una misurazione',
                             ),
                         ),
                     ),
@@ -74,11 +72,6 @@ class AppRouteGenerator {
             case AppRoutes.profile: 
                 return MaterialPageRoute(
                     builder: (_) => ProfilePage(), 
-                ); 
-
-            case AppRoutes.settings: 
-                return MaterialPageRoute(
-                    builder:(_) => SettingsPage(),
                 ); 
 
             default: 
