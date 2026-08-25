@@ -36,19 +36,12 @@ All'avvio l'utente può effettuare l'accesso inserendo username e password. Qual
 ![Schermata di registrazione](screenshots/registrazione.png)
 
 
-| Home Paziente | Home Utente |
-|:---:|:---:|
-| ![Home Paziente](screenshots/home_patient.png) | ![Home Utente](screenshots/home_user.png) |
-| *Home dell'Account Paziente* | *Home dell'Account Utente* |
-
-
 ### Home 
 Dopo aver eseguito il login, l'utente viene indirizzato alla schermata principale (**Home**). 
 Quest'ultima, in seguito aver creato il o un paziente ed in base alla tipologia di account, permette di consultare informazioni e di accedere alle varie sezioni senza ricorrere ai menu. 
 
 ![Home Paziente](screenshots/home_patient.png)
 ![Home Utente](screenshots/home_user.png)
-
 
 ### Gestione dei Pazienti 
 
