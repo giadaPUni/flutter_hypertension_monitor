@@ -364,146 +364,159 @@ class _StatisticsContent extends ConsumerWidget {
 
       padding: const EdgeInsets.all(16), 
 
-      child: Column(
-
-        crossAxisAlignment: CrossAxisAlignment.start, 
-
-        children: [
-          Text(
-            'Statistiche', 
-            style: Theme.of(context)
-              .textTheme
-              .headlineMedium, 
-          ),
-
-          const SizedBox(height: 8), 
-
-          Text(
-            '${statistics.measurementCount} misurazioni', 
-            style: Theme.of(context)
-              .textTheme
-              .bodyMedium, 
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.sizeOf(context).width >= 600
+              ? 1000
+              : double.infinity, 
           ), 
 
-          const SizedBox(height: 24), 
 
-          LayoutBuilder(
-            builder: (context, constraints) {
+          child: Column(
 
-              if (constraints.maxWidth < 500) {
+            crossAxisAlignment: CrossAxisAlignment.start, 
 
-                return Column(
-                  children: [
-
-                    _StatisticCard(
-                      title: 'Pressione sistolica',
-                      value: '${statistics.averageSystolic!.toStringAsFixed(0)} mmHg',
-                      icon: Icons.arrow_upward,
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    _StatisticCard(
-                      title: 'Pressione diastolica',
-                      value: '${statistics.averageDiastolic!.toStringAsFixed(0)} mmHg',
-                      icon: Icons.arrow_downward,
-                    ),
-                  ],
-                );
-              }
-
-              return Row(
-                children: [
-
-                  Expanded(
-                    child: _StatisticCard(
-                      title: 'Pressione sistolica',
-                      value: '${statistics.averageSystolic!.toStringAsFixed(0)} mmHg',
-                      icon: Icons.arrow_upward,
-                    ),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  Expanded(
-                    child: _StatisticCard(
-                      title: 'Pressione diastolica',
-                      value: '${statistics.averageDiastolic!.toStringAsFixed(0)} mmHg',
-                      icon: Icons.arrow_downward,
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-
-          const SizedBox(height: 12), 
-
-          _StatisticCard(
-            title: 'Frequenza cardiaca media', 
-            value: '${statistics.averageHeartRate!.toStringAsFixed(0)} bpm', 
-            icon: Icons.favorite, 
-          ), 
-
-          const SizedBox(height: 24), 
-
-          Text(
-            'Intervallo delle misurazioni', 
-            style: Theme.of(context)
-              .textTheme
-              .titleLarge, 
-          ), 
-
-          const SizedBox(height: 12), 
-
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16), 
-
-              child: Column(
-
-                children: [
-
-                  _RangeRow(
-                    label: 'Sistolica', 
-                    min: statistics.minSystolic!, 
-                    max: statistics.maxSystolic!, 
-                    unit: 'mmHg', 
-                  ), 
-
-                  const Divider(), 
-
-                  _RangeRow(
-                    label: 'Diastolica',
-                    min: statistics.minDiastolic!,
-                    max: statistics.maxDiastolic!,
-                    unit: 'mmHg',                    
-                  ), 
-                ], 
-              ), 
-            ), 
-          ), 
-
-          const SizedBox(height: 32), 
-
-          Text(
-            'Andamento', 
-            style: Theme.of(context)
-              .textTheme
-              .titleLarge,
-          ), 
-
-          const SizedBox(height: 12), 
-
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: _BloodPressureChart(
-                measurements: measurements,
+            children: [
+              Text(
+                'Statistiche', 
+                style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium, 
               ),
-            ),
-          ),
-        ], 
+
+              const SizedBox(height: 8), 
+
+              Text(
+                '${statistics.measurementCount} misurazioni', 
+                style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium, 
+              ), 
+
+              const SizedBox(height: 24), 
+
+              LayoutBuilder(
+                builder: (context, constraints) {
+
+                  if (constraints.maxWidth < 500) {
+
+                    return Column(
+                      children: [
+
+                        _StatisticCard(
+                          title: 'Pressione sistolica',
+                          value: '${statistics.averageSystolic!.toStringAsFixed(0)} mmHg',
+                          icon: Icons.arrow_upward,
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        _StatisticCard(
+                          title: 'Pressione diastolica',
+                          value: '${statistics.averageDiastolic!.toStringAsFixed(0)} mmHg',
+                          icon: Icons.arrow_downward,
+                        ),
+                      ],
+                    );
+                  }
+
+                  return Row(
+                    children: [
+
+                      Expanded(
+                        child: _StatisticCard(
+                          title: 'Pressione sistolica',
+                          value: '${statistics.averageSystolic!.toStringAsFixed(0)} mmHg',
+                          icon: Icons.arrow_upward,
+                        ),
+                      ),
+
+                      const SizedBox(width: 12),
+
+                      Expanded(
+                        child: _StatisticCard(
+                          title: 'Pressione diastolica',
+                          value: '${statistics.averageDiastolic!.toStringAsFixed(0)} mmHg',
+                          icon: Icons.arrow_downward,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+
+              const SizedBox(height: 12), 
+
+              _StatisticCard(
+                title: 'Frequenza cardiaca media', 
+                value: '${statistics.averageHeartRate!.toStringAsFixed(0)} bpm', 
+                icon: Icons.favorite, 
+              ), 
+
+              const SizedBox(height: 24), 
+
+              Text(
+                'Intervallo delle misurazioni', 
+                style: Theme.of(context)
+                  .textTheme
+                  .titleLarge, 
+              ), 
+
+              const SizedBox(height: 12), 
+
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16), 
+
+                  child: Column(
+
+                    children: [
+
+                      _RangeRow(
+                        label: 'Sistolica', 
+                        min: statistics.minSystolic!, 
+                        max: statistics.maxSystolic!, 
+                        unit: 'mmHg', 
+                      ), 
+
+                      const Divider(), 
+
+                      _RangeRow(
+                        label: 'Diastolica',
+                        min: statistics.minDiastolic!,
+                        max: statistics.maxDiastolic!,
+                        unit: 'mmHg',                    
+                      ), 
+                    ], 
+                  ), 
+                ), 
+              ), 
+
+              const SizedBox(height: 32), 
+
+              Text(
+                'Andamento', 
+                style: Theme.of(context)
+                  .textTheme
+                  .titleLarge,
+              ), 
+
+              const SizedBox(height: 12), 
+
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: _BloodPressureChart(
+                    measurements: measurements,
+                  ),
+                ),
+              ),
+            ], 
+          ), 
+
+
+        ),
       ), 
 
     );
@@ -719,8 +732,8 @@ class _BloodPressureChart extends StatelessWidget {
 
         AspectRatio(
           aspectRatio: MediaQuery.sizeOf(context).width < 600
-                ? 1.0
-                : 2.0,
+                ? 1.5
+                : 2.2,
 
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -851,6 +864,7 @@ class _BloodPressureChart extends StatelessWidget {
             },
           ),  
         ),
+
       ],
     );
   }
