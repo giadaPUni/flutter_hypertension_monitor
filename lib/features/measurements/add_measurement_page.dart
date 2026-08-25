@@ -394,7 +394,7 @@ class _AddMeasurementPageState extends ConsumerState<AddMeasurementPage> {
             lastDate: DateTime.now(),
         );
 
-        if (date == null) {
+        if (!mounted || date == null) {
             return;
         }
 
@@ -405,7 +405,7 @@ class _AddMeasurementPageState extends ConsumerState<AddMeasurementPage> {
             ),
         );
 
-        if (time == null) {
+        if (!mounted || time == null) {
             return;
         }
 

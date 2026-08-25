@@ -195,7 +195,7 @@ class _StatisticsPageState extends ConsumerState<StatisticsPage> {
                 ),
               )
             : _StatisticsContent(
-                patientId: selectedPatientId!, 
+                patientId: selectedPatientId, 
               ), 
         ), 
       ],
