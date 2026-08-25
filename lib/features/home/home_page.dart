@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_hypertension_monitor/core/navigation/navigation_section.dart'; 
-import 'package:flutter_hypertension_monitor/core/responsive/breakpoints.dart';
 import 'package:flutter_hypertension_monitor/shared/layout/main_layout.dart';
 
 import 'package:flutter_hypertension_monitor/features/patients/patient_page.dart'; 
@@ -45,9 +44,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     @override
     Widget build(BuildContext context) {
-
-        
-        final user = ref.watch(currentUserProvider); 
 
         return PopScope(
 
@@ -941,83 +937,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
             ),
         );
-    }
-
-    Widget _homeCard({
-
-        required BuildContext context, 
-
-        required IconData icon, 
-
-        required String title, 
-
-        required String subtitle, 
-
-        required Color color, 
-
-        required bool enabled, 
-
-        required VoidCallback onTap, 
-    }) {
-
-        return Opacity(
-
-            opacity: enabled ? 1.0 : 0.5, 
-            child: Card(
-                
-                clipBehavior: Clip.antiAlias, 
-
-                child: InkWell(
-
-                    onTap: enabled ? onTap : null, 
-
-                    child: Padding(
-
-                        padding: const EdgeInsets.all(20), 
-
-                        child: Column(
-
-                            crossAxisAlignment: CrossAxisAlignment.start, 
-
-                            children: [
-
-                                CircleAvatar(
-                                    
-                                    radius: 24, 
-
-                                    backgroundColor: color.withValues(
-                                        alpha: 0.12,
-                                    ),
-
-                                    child: Icon(
-                                        icon, 
-                                        color: color, 
-                                        size: 28,
-                                    ), 
-                                ),
-
-                                const SizedBox(height: 20), 
-
-                                Text(
-                                    title, 
-                                    style: Theme.of(context).textTheme.titleLarge, 
-                                ), 
-
-                                const SizedBox(height: 8), 
-
-                                Text(
-                                    subtitle, 
-                                    style: Theme.of(context).textTheme.bodyMedium,
-                                ), 
-                            ], 
-                        ),
-                    ),
-                ),
-            ), 
-
-        );
-        
-        
     }
 
     Widget _buildLatestMeasurementCard(BuildContext context) {
