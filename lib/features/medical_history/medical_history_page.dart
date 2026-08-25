@@ -39,7 +39,6 @@ class MedicalHistoryPage extends ConsumerWidget {
     //final histories = ref.watch(medicalHistoryProvider);
 
     if (currentUser == null) {
-      ////////////
       return const Center(
         child: Text(
           'Utente non autenticato', 
@@ -75,6 +74,8 @@ class MedicalHistoryPage extends ConsumerWidget {
 
   }
 
+  // ---- Patient View ---- 
+  
   Widget _buildPatientView(
     BuildContext context, 
     WidgetRef ref, 
@@ -161,11 +162,64 @@ class MedicalHistoryPage extends ConsumerWidget {
     Patient patient, 
     List<MedicalHistory> histories,
   ) {
+
+    final colors = Theme.of(context).colorScheme; 
+
+    final hasHistory = histories.any(
+      (history) => history.patientId == patient.id, 
+    ); 
+
     return Card(
+      margin: const EdgeInsets.only(bottom: 12), 
+      clipBehavior: Clip.antiAlias, 
       child: ListTile(
-        leading: const Icon(Icons.medical_information), 
-        title: Text('${patient.firstName} ${patient.lastName}'), 
-        trailing: const Icon(Icons.chevron_right), 
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20, 
+          vertical: 10, 
+        ),
+
+        leading: Container(
+          width: 48, 
+          height: 48, 
+          decoration: BoxDecoration(
+            color: colors.primaryContainer, 
+            shape: BoxShape.circle, 
+          ), 
+
+          child: Icon(
+            Icons.medical_information_outlined, 
+            color: colors.onPrimaryContainer, 
+          ), 
+        ), 
+      
+        //const Icon(Icons.medical_information), 
+        title: Text(
+          '${patient.firstName} ${patient.lastName}',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ), 
+        ), 
+
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4), 
+          child: Text(
+            hasHistory
+              ? 'Anamnesi disponibile'
+              : 'Anamnesi ancora da compilare',
+            
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: hasHistory
+                ? colors.primary 
+                : colors.outline, 
+            ),
+          ),
+        ),
+
+        trailing: Icon(
+          Icons.chevron_right, 
+          color: colors.outline, 
+        ), 
+
         onTap: () {
           final history = histories
             .where((h) => h.patientId == patient.id)
@@ -230,36 +284,63 @@ class _NoMedicalHistoryBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minHeight: MediaQuery.sizeOf(context).height,
-        ),
-        child: Center(
+    
+    final colors = Theme.of(context).colorScheme; 
+    
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            //minHeight: MediaQuery.sizeOf(context).height,
+            maxWidth: 420,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
 
-              Icon(
-                Icons.medical_information_outlined,
-                size: 64,
-                color: Theme.of(context)
-                  .colorScheme
-                  .primary,
-              ),
+              Container(
+                width: 88, 
+                height: 88, 
+                decoration: BoxDecoration(
+                  color: colors.primaryContainer, 
+                  shape: BoxShape.circle, 
+                ), 
 
-              const SizedBox(height: 16),
+                child: Icon(
+                  Icons.medical_information_outlined,
+                  size: 46,
+                  /*
+                  color: Theme.of(context)
+                    .colorScheme
+                    .primary,
+                  */
+                  color: colors.onPrimaryContainer, 
+                ),
+
+              ), 
+
+              const SizedBox(height: 24),
 
               Text(
                 'Nessuna anamnesi presente',
                 textAlign: TextAlign.center,
-                style: Theme.of(context)
-                  .textTheme
-                  .titleLarge,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w600, 
+                ),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
+              Text(
+                'L\'anamnesi contiene informazioni importanti '
+                'sulla storia clinica del paziente.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: colors.onSurfaceVariant,
+                ),
+              ),
+
+              const SizedBox(height: 28), 
 
               FilledButton.icon(
                 icon: const Icon(Icons.add),
@@ -282,8 +363,11 @@ class _NoMedicalHistoryBody extends StatelessWidget {
               ),
             ],
           ),
+          
         ),
-      ),
+
+      )
+
     );
   }
 

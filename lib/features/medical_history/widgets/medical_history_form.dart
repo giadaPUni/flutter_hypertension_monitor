@@ -128,7 +128,6 @@ class MedicalHistoryForm extends StatefulWidget {
 
 
 
-
     Widget _buildSwitch({
         required String title,
         required bool value,
@@ -148,233 +147,239 @@ class MedicalHistoryForm extends StatefulWidget {
     }
 
 
+    Widget _sectionCard({
+        required String title,
+        required Widget child,
+    }) {
+        final colors = Theme.of(context).colorScheme;
+
+        return Card(
+            child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        Row(
+                            children: [
+                                Container(
+                                    width: 6,
+                                    height: 22,
+                                    decoration: BoxDecoration(
+                                        color: colors.primary,
+                                        borderRadius: BorderRadius.circular(3),
+                                    ),
+                                ),
+
+                                const SizedBox(width: 10),
+
+                                Text(
+                                    title,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                        ),
+                                ),
+                            ],
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        child,
+                    ],
+                ),
+            ),
+        );
+    }
+
 
     Widget _familySection() {
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            children: [
-                Text(
-                    'Stato familiare',
-                    style: Theme.of(context).textTheme.titleLarge,
-                ),
-
-                _buildSwitch(
-                    title: 'Casi di ipertensione in famiglia',
-                    value: editedHistory.familyHistoryHypertension,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.familyHistoryHypertension = value;
-                        });
-                    },
-                ),
-
-            ],
+        return _sectionCard(
+            title: 'Stato familiare',
+            child: _buildSwitch(
+                title: 'Casi di ipertensione in famiglia',
+                value: editedHistory.familyHistoryHypertension,
+                onChanged: (value) {
+                    setState(() {
+                        editedHistory.familyHistoryHypertension = value;
+                    });
+                },
+            ),
         );
     }
 
 
-    // disease section 
     Widget _diseaseSection() {
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-                Text(
-                    'Patologie associate',
-                    style: Theme.of(context).textTheme.titleLarge,
-                ),
+        return _sectionCard(
+            title: 'Patologie associate',
+            child: Column(
+                children: [
+                    _buildSwitch(
+                        title: 'Diabete',
+                        value: editedHistory.diabetes,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.diabetes = value;
+                            });
+                        },
+                    ),
 
-                _buildSwitch(
-                    title: 'Diabete',
-                    value: editedHistory.diabetes,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.diabetes = value;
-                        });
-                    },
-                ),
+                    _buildSwitch(
+                        title: 'Malattie cardiovascolari',
+                        value: editedHistory.cardiovascularDisease,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.cardiovascularDisease = value;
+                            });
+                        },
+                    ),
 
-                _buildSwitch(
-                    title: 'Malattie cardiovascolari',
-                    value: editedHistory.cardiovascularDisease,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.cardiovascularDisease = value;
-                        });
-                    },
-                ),
+                    _buildSwitch(
+                        title: 'Malattia renale',
+                        value: editedHistory.kidneyDisease,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.kidneyDisease = value;
+                            });
+                        },
+                    ),
 
-                _buildSwitch(
-                    title: 'Malattia renale',
-                    value: editedHistory.kidneyDisease,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.kidneyDisease = value;
-                        });
-                    },
-                ),
+                    _buildSwitch(
+                        title: 'Dislipidemia',
+                        value: editedHistory.dyslipidemia,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.dyslipidemia = value;
+                            });
+                        },
+                    ),
 
-                _buildSwitch(
-                    title: 'Dislipidemia',
-                    value: editedHistory.dyslipidemia,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.dyslipidemia = value;
-                        });
-                    },
-                ),
+                    _buildSwitch(
+                        title: 'Precedenti di ictus',
+                        value: editedHistory.previousStroke,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.previousStroke = value;
+                            });
+                        },
+                    ),
 
-                _buildSwitch(
-                    title: 'Precedenti di ictus',
-                    value: editedHistory.previousStroke,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.previousStroke = value;
-                        });
-                    },
-                ),
-
-                _buildSwitch(
-                    title: 'Apne notturna',
-                    value: editedHistory.sleepApnea,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.sleepApnea = value;
-                        });
-                    },
-                ),
-
-                                
-            ],
+                    _buildSwitch(
+                        title: 'Apne notturna',
+                        value: editedHistory.sleepApnea,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.sleepApnea = value;
+                            });
+                        },
+                    ),
+                ],
+            ),
         );
     }
 
-
-    // lifestyle section 
     Widget _lifestyleSection() {
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        return _sectionCard(
+            title: 'Stile di vita',
+            child: Column(
+                children: [
+                    _buildSwitch(
+                        title: 'Fumatore',
+                        value: editedHistory.smoker,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.smoker = value;
+                            });
+                        },
+                    ),
 
-            children: [
-                Text(
-                    'Stile di vita',
-                    style: Theme.of(context).textTheme.titleLarge,
-                ),
+                    _buildSwitch(
+                        title: 'Consumo di alcool',
+                        value: editedHistory.alcoholConsumption,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.alcoholConsumption = value;
+                            });
+                        },
+                    ),
 
-                _buildSwitch(
-                    title: 'Fumatore',
-                    value: editedHistory.smoker,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.smoker = value;
-                        });
-                    },
-                ),
+                    _buildSwitch(
+                        title: 'Sedentarietà',
+                        value: editedHistory.sedentaryLifestyle,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.sedentaryLifestyle = value;
+                            });
+                        },
+                    ),
 
-                _buildSwitch(
-                    title: 'Consumo di alcool',
-                    value: editedHistory.alcoholConsumption,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.alcoholConsumption = value;
-                        });
-                    },
-                ),
-
-                _buildSwitch(
-                    title: 'Sedentarietà',
-                    value: editedHistory.sedentaryLifestyle,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.sedentaryLifestyle = value;
-                        });
-                    },
-                ),
-
-                _buildSwitch(
-                    title: 'Dieta ricca di sale',
-                    value: editedHistory.highSaltDiet,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.highSaltDiet = value;
-                        });
-                    },
-                ),
-
-            ],
+                    _buildSwitch(
+                        title: 'Dieta ricca di sale',
+                        value: editedHistory.highSaltDiet,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.highSaltDiet = value;
+                            });
+                        },
+                    ),
+                ],
+            ),
         );
     }
 
-
-
-    // therapy section 
     Widget _therapySection() {
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        return _sectionCard(
+            title: 'Terapia e note',
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                    _buildSwitch(
+                        title: 'Terapia antipertensiva',
+                        value: editedHistory.antihypertensiveTherapy,
+                        onChanged: (value) {
+                            setState(() {
+                                editedHistory.antihypertensiveTherapy = value;
+                            });
+                        },
+                    ),
 
-            children: [
-                Text(
-                    'Terapia e note',
-                    style: Theme.of(context).textTheme.titleLarge,
-                ),
+                    const SizedBox(height: 8),
 
-                const SizedBox(height: 12), 
+                    TextField(
+                        controller: therapyController,
+                        decoration: const InputDecoration(
+                            labelText: 'Farmaci o terapia attuale',
+                            prefixIcon: Icon(Icons.medication_outlined),
+                        ),
+                        maxLines: 2,
+                    ),
 
-                _buildSwitch(
-                    title: 'Terapia antipertensiva',
-                    value: editedHistory.antihypertensiveTherapy,
-                    onChanged:  (value) {
-                        setState(() {
-                            editedHistory.antihypertensiveTherapy = value;
-                        });
-                    },
-                ),
+                    const SizedBox(height: 12),
 
-                const SizedBox(height: 12),
+                    TextField(
+                        controller: allergiesController,
+                        decoration: const InputDecoration(
+                            labelText: 'Allergie',
+                            prefixIcon: Icon(Icons.warning_amber_outlined),
+                        ),
+                        maxLines: 2,
+                    ),
 
-                TextField(
-                    controller: therapyController, 
+                    const SizedBox(height: 12),
 
-                    decoration: const InputDecoration(
-                        labelText: 'Farmaci o terapia attuale',
-                    ), 
-
-                    maxLines: 2, 
-                ), 
-
-                const SizedBox(height: 12), 
-
-                TextField(
-                    controller: allergiesController, 
-                    
-                    decoration: const InputDecoration(
-                        labelText: 'Allergie', 
-                    ), 
-
-                    maxLines: 2, 
-                ), 
-
-                const SizedBox(height: 12), 
-
-                TextField(
-                    controller: notesController, 
-
-                    decoration: const InputDecoration(
-                        labelText: 'Note aggiuntive', 
-                    ), 
-
-                    maxLines: 3, 
-                ), 
-
-
-            ],
+                    TextField(
+                        controller: notesController,
+                        decoration: const InputDecoration(
+                            labelText: 'Note aggiuntive',
+                            prefixIcon: Icon(Icons.notes_outlined),
+                        ),
+                        maxLines: 3,
+                    ),
+                ],
+            ),
         );
     }
-
-
-
-
-
 
 
     @override
@@ -383,91 +388,58 @@ class MedicalHistoryForm extends StatefulWidget {
         //
         return Form(
 
-            key:
-                _formKey,
+            key: _formKey,
+
+            child: SafeArea(
+
+                child: SingleChildScrollView(
+
+                    padding: const EdgeInsets.all(16),
 
 
-            child:
-                SingleChildScrollView(
+                    child: Column(
 
-            padding:
-                const EdgeInsets.all(16),
+                        crossAxisAlignment: CrossAxisAlignment.start,
 
 
-            child: Column(
+                        children: [
 
-                crossAxisAlignment: CrossAxisAlignment.start,
+                            _familySection(),
 
+                            const SizedBox(height: 16),
 
-                children: [
+                            _diseaseSection(),
 
+                            const SizedBox(height: 16),
 
-                    _familySection(),
+                            _lifestyleSection(),
 
+                            const SizedBox(height: 16),
 
-                    const SizedBox(
-                        height: 24,
-                    ),
+                            _therapySection(),
 
+                            const SizedBox(height: 24),
 
-                    _diseaseSection(),
+                            SizedBox(
 
+                                width: double.infinity,
 
-                    const SizedBox(
-                        height: 24,
-                    ),
+                                child: FilledButton.icon(
 
-
-                    _lifestyleSection(),
-
-
-                    const SizedBox(
-                        height: 24,
-                    ),
-
-
-                    _therapySection(),
-
-
-                    const SizedBox(
-                        height: 32,
-                    ),
-
-
-
-                    SizedBox(
-
-                        width:
-                            double.infinity,
-
-
-                        child:
-                            FilledButton.icon(
-
-                            onPressed:
-                                _submit,
-
-
-                            icon:
-                                const Icon(
-                                    Icons.save,
-                                ),
-
-
-                            label:
-                                const Text(
-                                    'Salva',
+                                    onPressed: _submit,
+                                    icon: const Icon(Icons.save),
+                                    label: const Text('Salva'),
                                 ),
 
                             ),
 
+                            const SizedBox(height: 16), 
+
+                        ],
+
                     ),
 
-
-                ],
-
-            ),
-
+                ),                
             ),
 
         );
